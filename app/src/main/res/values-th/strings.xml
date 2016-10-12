@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">เทสต์มอดจูลส์</string>
+    <string name="select_language">เลือกภาษา</string>
+    <string name="go">ไป!</string>
+    <string name="test_change_language">ทดสอบการเปลี่ยนภาษา</string>
+    <string name="test_module_page_no_2">เทสต์มอจูลส์sน้า 2</string>
+    <string name="fragment_page_no_2">เฟรกเมนต์หน้า 2</string>
+    <string name="scan">แสกน</string>
+    <string name="label_one">หนึ่ง</string>
+    <string name="label_two">สอง</string>
+</resources>

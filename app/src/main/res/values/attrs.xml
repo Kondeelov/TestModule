@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="AppLockView">
+
+        <attr name="isSetEieieihi" format="boolean"/>
+        <attr name="textSize" format="float"/>
+        <attr name="textColor" format="integer"/>
+        <attr name="keyAmount" format="integer"/>
+        <attr name="keyboardBackgroundColor" format="integer"/>
+        <attr name="pinCodeColor" format="integer"/>
+    </declare-styleable>
+</resources>

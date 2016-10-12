@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">TestModule</string>
+    <string name="select_language">Select Language</string>
+    <string name="go">Go!</string>
+    <string name="test_change_language">Test Change Language</string>
+    <string name="test_module_page_no_2">Test Module Page No.2</string>
+    <string name="fragment_page_no_2">Fragment Page No.2</string>
+    <string name="scan">Scan</string>
+    <string name="label_one">ONE</string>
+    <string name="label_two">TWO</string>
+    <string name="drawer_opened">Drawer Opened</string>
+    <string name="drawer_closed">Drawer Closed</string>
+
+    <string-array name="language_item">
+        <item>English</item>
+        <item>ภาษาไทย</item>
+    </string-array>
+
+</resources>
