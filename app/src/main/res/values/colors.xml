@@ -7,6 +7,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="tab_title_selected">#000000</color>
     <color name="colorGrayLight">#616161</color>
+    <color name="colorGrayLightest">#9f9f9f</color>
     <color name="colorPinkLight">#ffbca5</color>
     <color name="white">#FFFFFF</color>
     <color name="textview_background">#88181818</color>

@@ -46,8 +46,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                AppLock.callAppLockActivityTo(getActivity(), FourthActivity.class);
-//                AppLockActivity.setImage(R.drawable.star);
+                AppLock.callAppLockActivityTo(getActivity(), FourthActivity.class, "1111", null , R.drawable.padlock);
 
             }
         });
@@ -55,7 +54,7 @@ public class MainFragment extends Fragment {
         binding.etTest.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
+                if (!hasFocus) {
                     hideKeyboard(v);
                 }
             }
@@ -63,7 +62,7 @@ public class MainFragment extends Fragment {
     }
 
     public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 

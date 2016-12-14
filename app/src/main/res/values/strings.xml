@@ -10,6 +10,10 @@
     <string name="label_two">TWO</string>
     <string name="drawer_opened">Drawer Opened</string>
     <string name="drawer_closed">Drawer Closed</string>
+    <string name="string_bottom_sheet_behavior">android.support.design.widget.BottomSheetBehavior</string>
+    <string name="text_pull_to_show_more">Pull to show more</string>
+    <string name="text_more_contet_to_user">more contet to user</string>
+    <string name="text_click_me">Click Me</string>
 
     <string-array name="language_item">
         <item>English</item>

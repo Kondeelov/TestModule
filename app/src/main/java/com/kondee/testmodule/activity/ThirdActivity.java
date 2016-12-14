@@ -33,6 +33,8 @@ public class ThirdActivity extends AppCompatActivity{
 
         setSupportActionBar(binding.toolbar);
 
+
+
         getSupportFragmentManager().beginTransaction()
                 .add(binding.contentContainer.getId(), MainFragmentActivityThird.newInstance(),"MainFragmentActivityThird")
                 .commit();

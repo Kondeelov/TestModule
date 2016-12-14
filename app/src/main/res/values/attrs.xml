@@ -10,4 +10,9 @@
         <attr name="keyboardBackgroundColor" format="integer"/>
         <attr name="pinCodeColor" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="SlidingUpDrawer">
+
+        <attr name="peekHeight" format="dimension"/>
+    </declare-styleable>
 </resources>

@@ -20,4 +20,22 @@
             android:icon="@drawable/placeholder"
             android:title="Loacation"/>
     </group>
+
+    <item
+        android:title="Sub items">
+        <menu>
+            <item
+                android:id="@+id/test1"
+                android:icon="@drawable/camera"
+                android:title="Sub item 1"
+                android:checkable="true"/>
+            <item
+                android:title="Sub item 2"
+                android:checkable="true"/>
+            <item
+                android:title="Sub item 3"
+                android:checkable="true"/>
+
+        </menu>
+    </item>
 </menu>

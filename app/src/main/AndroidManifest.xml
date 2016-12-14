@@ -3,6 +3,7 @@
     package="com.kondee.testmodule">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -54,6 +55,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AppLockActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.TestActivity"
             android:screenOrientation="portrait" />
 
         <!--card.io library-->

@@ -20,6 +20,7 @@ import com.kondee.testmodule.fragment.activity_second.MainFragmentActivitySecond
 import com.kondee.testmodule.databinding.ActivitySecondBinding;
 import com.kondee.testmodule.model.Modeller;
 import com.kondee.testmodule.transition.DetailsTransition;
+import com.kondee.testmodule.utils.Utils;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -61,7 +62,7 @@ public class SecondActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        overridePendingTransition(R.anim.anim_fade_in,R.anim.anim_fade_out);
+        overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
 
     }
 

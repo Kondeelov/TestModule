@@ -34,7 +34,20 @@ public class AppLockActivity extends AppCompatActivity {
             }
         });
 
-        binding.appLockView.setPinCode("1111");
+        Bundle bundle = getIntent().getBundleExtra("bundle");
+        String pinCode = bundle.getString("pinCode");
+        String title = bundle.getString("title");
+        int resId = bundle.getInt("resId");
+
+        if(title != null){
+            setTitle(title);
+        }
+
+        if (resId != 0) {
+            setImage(resId);
+        }
+
+        binding.appLockView.setPinCode(pinCode);
     }
 
     @Override
@@ -44,5 +57,11 @@ public class AppLockActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
     }
 
+    private void setTitle(String title) {
+        binding.tvLock.setText(title);
+    }
 
+    private void setImage(int resId) {
+        binding.imvLock.setImageResource(resId);
+    }
 }

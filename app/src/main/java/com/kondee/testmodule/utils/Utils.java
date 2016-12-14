@@ -5,13 +5,11 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.text.style.TtsSpan;
 import android.util.TypedValue;
-import android.view.View;
 import android.widget.TextView;
 
 import com.kondee.testmodule.R;
@@ -31,7 +29,7 @@ public class Utils {
             TextView tv = (TextView) activity.getLayoutInflater().inflate(R.layout.tab_title, null);
             if (i == viewPager.getCurrentItem()) tv.setSelected(true);
             tv.setText(viewPager.getAdapter().getPageTitle(i));
-            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
             tv.setTypeface(customFontTypeface, Typeface.BOLD);
             tabLayout.getTabAt(i).setCustomView(tv);
         }
@@ -41,7 +39,11 @@ public class Utils {
 
         Locale.setDefault(locale);
         Configuration config = new Configuration();
-        config.locale = locale;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            config.getLocales().get(0);
+        } else {
+            config.locale = locale;
+        }
         Resources resources = Contextor.getInstance().getContext().getResources();
         resources.updateConfiguration(config, resources.getDisplayMetrics());
 

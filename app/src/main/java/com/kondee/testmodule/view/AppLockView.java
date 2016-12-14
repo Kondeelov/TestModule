@@ -222,6 +222,7 @@ public class AppLockView extends View {
                 }
             });
         }
+
     }
 
     private void preparePaint() {
@@ -475,6 +476,7 @@ public class AppLockView extends View {
             @Override
             public void onAnimationEnd(Animator animation) {
                 pinCount = 0;
+                pinInsert = "";
             }
 
             @Override

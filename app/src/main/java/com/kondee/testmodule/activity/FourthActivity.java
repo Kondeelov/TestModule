@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.kondee.testmodule.R;
@@ -16,6 +17,7 @@ import com.kondee.testmodule.fragment.activity_fourth.LocationFragment;
 public class FourthActivity extends AppCompatActivity /*implements OnMapReadyCallback*/ {
 
     ActivityFourthBinding binding;
+    private LocationFragment fragment;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,17 +32,29 @@ public class FourthActivity extends AppCompatActivity /*implements OnMapReadyCal
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        fragment = LocationFragment.newInstance();
+
         getSupportFragmentManager().beginTransaction()
-                .add(binding.contentContainer.getId(), LocationFragment.newInstance(),"LocationFragment")
+                .add(binding.contentContainer.getId(),fragment , "LocationFragment")
                 .commit();
 
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.forth_activity_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             finish();
-            overridePendingTransition(R.anim.anim_fade_in,R.anim.anim_fade_out);
+            overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
+        } else if (item.getItemId() == R.id.menuSearch) {
+            if (getSupportFragmentManager().findFragmentById(R.id.contentContainer) == fragment){
+                fragment.startSearch();
+            }
         }
         return super.onOptionsItemSelected(item);
     }

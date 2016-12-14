@@ -24,7 +24,7 @@ public class MainApplication extends Application {
                 .setFontAttrId(R.attr.fontPath)
                 .build());
 
-        Utils.setApplicationLanguage(new Locale(Utils.sharedPreferences.getString("Language", "th")));
+//        Utils.setApplicationLanguage(new Locale(Utils.sharedPreferences.getString("Language", "th")));
 
     }
 

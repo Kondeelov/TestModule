@@ -2,6 +2,7 @@ package com.kondee.testmodule.fragment.activity_fourth;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -17,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
@@ -26,6 +29,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocomplete;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -40,12 +46,14 @@ import com.kondee.testmodule.model.Location;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LOCATION_SERVICE;
 
 public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
     private static final String TAG = "Kondee";
     private static final int FINE_LOCATION_REQUEST_CODE = 11245;
+    private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 11110;
     FragmentLocationBinding binding;
     private GoogleMap gMap;
 
@@ -71,6 +79,20 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
         binding.mapView.onResume();
 
         binding.mapView.getMapAsync(this);
+
+//        PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)getActivity().getSupportFragmentManager().findFragmentById(R.id.contentContainer);
+        startSearch();
+    }
+
+    public void startSearch() {
+        try {
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(getActivity());
+            startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
+        } catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        } catch (GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -102,6 +124,17 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
         getFineLocation(googleMap);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            Place place = PlaceAutocomplete.getPlace(getActivity(), data);
+            Log.d(TAG, "onActivityResult: " + place.getLatLng().toString());
+
+            gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),19));
+        }
     }
 
     private void getFineLocation(final GoogleMap googleMap) {
@@ -138,7 +171,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback {
 
                     android.location.Location location = locationManager.getLastKnownLocation(provider);
 
-                    Log.d(TAG, "onMyLocationButtonClick: "+(googleMap.getCameraPosition().zoom != 16));
+                    Log.d(TAG, "onMyLocationButtonClick: " + (googleMap.getCameraPosition().zoom != 16));
                     if (googleMap.getCameraPosition().zoom != 16)
                         googleMap.animateCamera(CameraUpdateFactory.zoomTo(16));
 

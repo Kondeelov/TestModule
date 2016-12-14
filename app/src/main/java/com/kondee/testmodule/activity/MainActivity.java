@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -39,6 +40,7 @@ import static com.kondee.testmodule.R.id.navItem1;
 import static com.kondee.testmodule.R.id.navItem2;
 import static com.kondee.testmodule.R.id.navItem3;
 import static com.kondee.testmodule.R.id.navItem4;
+import static com.kondee.testmodule.R.id.test1;
 
 public class MainActivity extends AppCompatActivity implements SecondFragment.FragmentListener {
 
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.Fr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Utils.setApplicationLanguage(new Locale(Utils.sharedPreferences.getString("Language", "th")));
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         initInstance();
@@ -73,15 +77,26 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.Fr
                 super.onDrawerClosed(drawerView);
                 if (getIntentClass() != null)
                     intentToAnotherActivity(getIntentClass());
+                supportInvalidateOptionsMenu();
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 setIntentClass(null);
+                supportInvalidateOptionsMenu();
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                binding.activityMain.setTranslationX(slideOffset * drawerView.getWidth());
+//                binding.drawerLayout.bringChildToFront(drawerView);
+//                binding.drawerLayout.requestLayout();
             }
         };
         binding.drawerLayout.addDrawerListener(drawerToggle);
+        binding.drawerLayout.setScrimColor(Color.TRANSPARENT);
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -128,9 +143,9 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.Fr
                                         Utils.setApplicationLanguage(new Locale("th"));
                                         break;
                                 }
-//                                Intent intent = new Intent(MainActivity.this,MainActivity.class);
+                                Intent intent = new Intent(MainActivity.this, MainActivity.class);
                                 finish();
-                                startActivity(getIntent());
+                                startActivity(intent);
                                 overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
                             }
                         });
@@ -160,6 +175,12 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.Fr
                         binding.drawerLayout.closeDrawers();
                         setIntentClass(FourthActivity.class);
                         return true;
+                    case test1:
+//                        binding.navigation.setCheckedItem(test1);
+                        setIntentClass(TestActivity.class);
+                        binding.drawerLayout.closeDrawers();
+                        return true;
+
                 }
                 return false;
             }
@@ -243,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.Fr
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, false); // default: false
         scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default: false
-        scanIntent.putExtra(CardIOActivity.EXTRA_KEEP_APPLICATION_THEME,true);
+        scanIntent.putExtra(CardIOActivity.EXTRA_KEEP_APPLICATION_THEME, true);
 
         // MY_SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
         startActivityForResult(scanIntent, MY_SCAN_REQUEST_CODE);
