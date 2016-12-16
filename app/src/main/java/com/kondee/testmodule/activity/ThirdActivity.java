@@ -33,6 +33,7 @@ public class ThirdActivity extends AppCompatActivity{
 
         setSupportActionBar(binding.toolbar);
 
+        getSupportActionBar().setTitle(R.string.app_name);
 
 
         getSupportFragmentManager().beginTransaction()

@@ -8,4 +8,5 @@
     <string name="scan">แสกน</string>
     <string name="label_one">หนึ่ง</string>
     <string name="label_two">สอง</string>
+    <string name="text_click_me">คลิกฉัน</string>
 </resources>

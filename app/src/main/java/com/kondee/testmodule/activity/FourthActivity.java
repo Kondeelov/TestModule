@@ -1,5 +1,6 @@
 package com.kondee.testmodule.activity;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -14,10 +15,18 @@ import com.kondee.testmodule.R;
 import com.kondee.testmodule.databinding.ActivityFourthBinding;
 import com.kondee.testmodule.fragment.activity_fourth.LocationFragment;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class FourthActivity extends AppCompatActivity /*implements OnMapReadyCallback*/ {
 
     ActivityFourthBinding binding;
     private LocationFragment fragment;
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,13 +38,14 @@ public class FourthActivity extends AppCompatActivity /*implements OnMapReadyCal
 
     private void initInstance() {
         setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         fragment = LocationFragment.newInstance();
 
         getSupportFragmentManager().beginTransaction()
-                .add(binding.contentContainer.getId(),fragment , "LocationFragment")
+                .add(binding.contentContainer.getId(), fragment, "LocationFragment")
                 .commit();
 
     }
@@ -52,7 +62,7 @@ public class FourthActivity extends AppCompatActivity /*implements OnMapReadyCal
             finish();
             overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
         } else if (item.getItemId() == R.id.menuSearch) {
-            if (getSupportFragmentManager().findFragmentById(R.id.contentContainer) == fragment){
+            if (getSupportFragmentManager().findFragmentById(R.id.contentContainer) == fragment) {
                 fragment.startSearch();
             }
         }

@@ -22,7 +22,7 @@
 
         <LinearLayout
             android:layout_width="320dp"
-            android:layout_height="wrap_content"
+            android:layout_height="160dp"
             android:background="@color/colorPinkLight"
             android:orientation="vertical">
 
@@ -34,20 +34,46 @@
                 android:text="Test"
                 android:textSize="36sp" />
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hahaha" />
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="320dp"
+                android:layout_height="match_parent">
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hahaha" />
+                <LinearLayout
+                    android:layout_width="320dp"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
 
-            <CheckBox
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hahaha" />
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hahaha" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hahaha" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hahaha" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hahaha" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hahaha" />
+
+                    <CheckBox
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hahaha" />
+                </LinearLayout>
+            </android.support.v4.widget.NestedScrollView>
         </LinearLayout>
     </com.kondee.testmodule.view.SlidingUpDrawer>
 </layout>

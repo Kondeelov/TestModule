@@ -50,6 +50,7 @@ public class SecondActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.toolbar);
 
+        getSupportActionBar().setTitle(R.string.app_name);
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

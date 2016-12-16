@@ -112,19 +112,6 @@ public class SlidingUpDrawer extends FrameLayout {
 
         initVelocityTracker(ev);
 
-//        switch (ev.getAction()) {
-//            case (MotionEvent.ACTION_DOWN):
-//                break;
-//            case (MotionEvent.ACTION_MOVE):
-//                velocityTracker.computeCurrentVelocity(1000);
-//                Log.d(TAG, "dispatchTouchEvent: " + velocityTracker.getXVelocity() + " " + velocityTracker.getYVelocity());
-//                slidingPanel.offsetTopAndBottom((int) (getMeasuredHeight() - slidingPanel.getMeasuredHeight() - ev.getRawY()));
-//                Log.d(TAG, "dispatchTouchEvent: " + (ev.getRawY() - getMeasuredHeight()));
-//                break;
-//            case MotionEvent.ACTION_UP:
-//                break;
-//        }
-
         return super.dispatchTouchEvent(ev);
     }
 
@@ -201,18 +188,18 @@ public class SlidingUpDrawer extends FrameLayout {
 //                    oldEventY = 0;
 //                    Log.d(TAG, "onTouchEvent: Up");
 
-//                    if (event.getEventTime() - event.getDownTime() <= 100) {
-//                        if (isExpended) {
-//                            animator = ObjectAnimator.ofFloat(slidingPanel, View.TRANSLATION_Y, getMeasuredHeight() - slidingPanel.getChildAt(0).getMeasuredHeight());
-//                            isExpended = false;
-//                        } else {
-//                            animator = ObjectAnimator.ofFloat(slidingPanel, View.TRANSLATION_Y, getMeasuredHeight() - slidingPanel.getMeasuredHeight());
-//                            isExpended = true;
-//                        }
-//                        animator.setDuration(250);
-//                        animator.setInterpolator(new DecelerateInterpolator(1.0f));
-//                        animator.start();
-//                    }
+                    if (event.getEventTime() - event.getDownTime() <= 100) {
+                        if (isExpended) {
+                            animator = ObjectAnimator.ofFloat(slidingPanel, View.TRANSLATION_Y, getMeasuredHeight() - slidingPanel.getChildAt(0).getMeasuredHeight());
+                            isExpended = false;
+                        } else {
+                            animator = ObjectAnimator.ofFloat(slidingPanel, View.TRANSLATION_Y, getMeasuredHeight() - slidingPanel.getMeasuredHeight());
+                            isExpended = true;
+                        }
+                        animator.setDuration(250);
+                        animator.setInterpolator(new DecelerateInterpolator(1.0f));
+                        animator.start();
+                    }
 
 //                    Log.d(TAG, "isExpended: " + isExpended);
 
