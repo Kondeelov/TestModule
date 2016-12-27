@@ -3,16 +3,23 @@
 
     <declare-styleable name="AppLockView">
 
-        <attr name="isSetEieieihi" format="boolean"/>
-        <attr name="textSize" format="float"/>
-        <attr name="textColor" format="integer"/>
-        <attr name="keyAmount" format="integer"/>
-        <attr name="keyboardBackgroundColor" format="integer"/>
-        <attr name="pinCodeColor" format="integer"/>
+        <attr name="isSetEieieihi" format="boolean" />
+        <attr name="textSize" format="float" />
+        <attr name="textColor" format="integer" />
+        <attr name="keyAmount" format="integer" />
+        <attr name="keyboardBackgroundColor" format="integer" />
+        <attr name="pinCodeColor" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="SlidingUpDrawer">
 
-        <attr name="peekHeight" format="dimension"/>
+        <attr name="peekHeight" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="PatternUnlockView">
+        <attr name="pressZoneSize" format="dimension" />
+        <attr name="pinRadius" format="dimension" />
+        <attr name="pinColor" format="color" />
+        <attr name="pressedColor" format="color" />
     </declare-styleable>
 </resources>

@@ -4,37 +4,38 @@
         <item
             android:id="@+id/navItem1"
             android:icon="@drawable/house"
-            android:title="Home"/>
+            android:title="Home" />
         <item
             android:id="@+id/navItem2"
             android:icon="@drawable/avatar"
-            android:title="Profile"/>
+            android:title="Profile" />
 
         <item
             android:id="@+id/navItem3"
             android:icon="@drawable/pie_chart"
-            android:title="About"/>
+            android:title="About" />
 
         <item
             android:id="@+id/navItem4"
             android:icon="@drawable/placeholder"
-            android:title="Loacation"/>
+            android:title="Loacation" />
     </group>
 
-    <item
-        android:title="Sub items">
+    <item android:title="Sub items">
         <menu>
             <item
                 android:id="@+id/test1"
+                android:checkable="true"
                 android:icon="@drawable/camera"
-                android:title="Sub item 1"
-                android:checkable="true"/>
+                android:title="Sub item 1" />
             <item
-                android:title="Sub item 2"
-                android:checkable="true"/>
+                android:id="@+id/test2"
+                android:checkable="true"
+                android:title="Sub item 2" />
             <item
-                android:title="Sub item 3"
-                android:checkable="true"/>
+                android:id="@+id/test3"
+                android:checkable="true"
+                android:title="Sub item 3" />
 
         </menu>
     </item>

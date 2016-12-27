@@ -3,12 +3,9 @@ package com.kondee.testmodule.activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -17,7 +14,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -27,7 +23,6 @@ import com.kondee.testmodule.adapter.MainFragmentPagerAdapter;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.databinding.ActivityMainBinding;
 import com.kondee.testmodule.fragment.activity_main.SecondFragment;
-import com.kondee.testmodule.manager.Contextor;
 import com.kondee.testmodule.utils.Utils;
 
 import java.util.Locale;
@@ -41,6 +36,7 @@ import static com.kondee.testmodule.R.id.navItem2;
 import static com.kondee.testmodule.R.id.navItem3;
 import static com.kondee.testmodule.R.id.navItem4;
 import static com.kondee.testmodule.R.id.test1;
+import static com.kondee.testmodule.R.id.test2;
 
 public class MainActivity extends AppCompatActivity implements SecondFragment.FragmentListener {
 
@@ -178,6 +174,10 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.Fr
                     case test1:
 //                        binding.navigation.setCheckedItem(test1);
                         setIntentClass(TestActivity.class);
+                        binding.drawerLayout.closeDrawers();
+                        return true;
+                    case test2:
+                        setIntentClass(TestTwoActivity.class);
                         binding.drawerLayout.closeDrawers();
                         return true;
 

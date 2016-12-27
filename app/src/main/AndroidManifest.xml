@@ -63,6 +63,9 @@
         <activity
             android:name=".activity.TestActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.TestTwoActivity"
+            android:screenOrientation="portrait" />
 
         <!--card.io library-->
         <activity

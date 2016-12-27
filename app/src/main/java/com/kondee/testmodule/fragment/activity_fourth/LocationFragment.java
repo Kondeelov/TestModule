@@ -1,6 +1,7 @@
 package com.kondee.testmodule.fragment.activity_fourth;
 
 import android.Manifest;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -8,8 +9,11 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +26,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -47,6 +52,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.SphericalUtil;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.activity.FourthActivity;
 import com.kondee.testmodule.activity.MainActivity;
@@ -70,6 +76,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
     private GoogleApiClient googleApiClient;
     private Marker marker;
     private CircleOptions circleOptions;
+    private LatLngBounds latLngBounds;
 
     public static LocationFragment newInstance() {
         return new LocationFragment();
@@ -103,9 +110,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
         try {
             Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(getActivity());
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
-        } catch (GooglePlayServicesRepairableException e) {
-            e.printStackTrace();
-        } catch (GooglePlayServicesNotAvailableException e) {
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
         }
     }
@@ -137,8 +142,8 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
 
             @Override
             public void onMarkerDrag(Marker marker) {
-                gMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
                 gMap.clear();
+                gMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
                 circleOptions = new CircleOptions()
                         .center(marker.getPosition())
                         .strokeColor(Color.argb(50, 70, 70, 70))
@@ -173,6 +178,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
                     .radius(50);
             gMap.addCircle(circleOptions);
 
+            latLngBounds = toBounds(marker.getPosition(), 500);
 
         }
     }
@@ -346,13 +352,19 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
 
             gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(now, 16));
 
-            LatLngBounds latLngBounds = LatLngBounds.createFromAttributes(getActivity(), null);
+//            LatLngBounds latLngBounds = LatLngBounds.createFromAttributes(getActivity(), null);
+
             if (latLngBounds.contains(now)) {
                 Log.d(TAG, "onLocationChanged: Fuck Yeah!!!");
                 Toast.makeText(getActivity(), "Yeah!", Toast.LENGTH_SHORT).show();
             }
-
         }
+    }
+
+    public LatLngBounds toBounds(LatLng center, double radius) {
+        LatLng southwest = SphericalUtil.computeOffset(center, radius * Math.sqrt(2.0), 225);
+        LatLng northeast = SphericalUtil.computeOffset(center, radius * Math.sqrt(2.0), 45);
+        return new LatLngBounds(southwest, northeast);
     }
 
     /************
@@ -362,24 +374,72 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
     View.OnClickListener onBtnGoClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+//            NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity());
+//
+//            Intent intent = new Intent(getActivity(), FourthActivity.class);
+//
+//            PendingIntent pendingIntent = PendingIntent.getActivities(getActivity(), (int) System.currentTimeMillis(), new Intent[]{intent}, 0);
+//
+//            builder.setSmallIcon(R.drawable.star)
+//                    .setContentTitle("Test Notification...Test Notification...Test Notification...Test Notification...")
+//                    .setContentText("")
+//                    .addAction(R.drawable.ic_media_play, "Play", pendingIntent)
+//                    .setStyle(new android.support.v4.app.NotificationCompat.BigTextStyle().bigText("Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n" +
+//                            "Test Test Test Test Test Test Test Test Test \n"))
+//                    .setAutoCancel(true);
+//
+//            Intent resultIntent = new Intent(getActivity(), FourthActivity.class);
+//
+//            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
+//            stackBuilder.addParentStack(FourthActivity.class);
+//            stackBuilder.addNextIntent(resultIntent);
+//
+//            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+//            builder.setContentIntent(resultPendingIntent);
+//
+//            NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+//            notificationManager.notify(1, builder.build());
+
+            RemoteViews remoteViews = new RemoteViews(getActivity().getPackageName(), R.layout.test_noti);
+            remoteViews.setTextViewText(R.id.title, "Hello");
+            remoteViews.setTextViewText(R.id.text, "World!!!");
+
             NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity());
+            builder.setAutoCancel(true)
+//                    .setSmallIcon(R.drawable.star)
+//                    .setContent(remoteViews);
+                    .setSmallIcon(R.drawable.ic_audiotrack)
+                    .setContentTitle("Set your title")
+                    .setContentText("Pull to view image!")
+                    .addAction(R.drawable.ic_media_play,"play",null);
 
-            builder.setSmallIcon(R.drawable.star)
-                    .setAutoCancel(true)
-                    .setContentTitle("Test Notification...")
-                    .setContentText("Hooray! I can do it.");
-
-            Intent resultIntent = new Intent(getActivity(), FourthActivity.class);
-
-            TaskStackBuilder stackBuilder = TaskStackBuilder.create(getActivity());
-            stackBuilder.addParentStack(FourthActivity.class);
-            stackBuilder.addNextIntent(resultIntent);
-
-            PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-            builder.setContentIntent(resultPendingIntent);
+            Bitmap bitmap_image = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.bg_nav_header);
+            NotificationCompat.BigPictureStyle s = new NotificationCompat.BigPictureStyle().bigPicture(bitmap_image);
+            s.setSummaryText("HaHaHa I got it!");
+            builder.setStyle(s);
 
             NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(1, builder.build());
+
         }
     };
 

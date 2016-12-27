@@ -4,8 +4,7 @@
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawerLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <!--Content-->
         <LinearLayout
@@ -42,13 +41,12 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            app:headerLayout="@layout/nav_header"
             android:background="@color/colorGrayLightest"
+            app:headerLayout="@layout/nav_header"
+            app:itemBackground="@drawable/bg_selector_color"
             app:itemIconTint="#333"
             app:itemTextColor="#333"
-            app:menu="@menu/nav_item_list"
-            app:itemBackground="@drawable/bg_selector_color"
-            />
+            app:menu="@menu/nav_item_list" />
 
     </android.support.v4.widget.DrawerLayout>
 </layout>

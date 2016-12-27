@@ -74,9 +74,7 @@ public class AppLockKeyButton {
         animator.start();
     }
 
-    /***********
-     *
+    /************
      * Interface
-     *
-     ***********/
+     ************/
 }

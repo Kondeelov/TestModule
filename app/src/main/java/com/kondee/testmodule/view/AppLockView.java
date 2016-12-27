@@ -34,8 +34,6 @@ import com.kondee.testmodule.R;
 import com.kondee.testmodule.handler.FingerprintHandler;
 import com.kondee.testmodule.manager.Contextor;
 
-import org.abego.treelayout.internal.util.java.lang.string.StringUtil;
-
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -60,7 +58,7 @@ public class AppLockView extends View {
 
 
     private enum FingerPrintStatus {
-        request, success, failed;
+        request, success, failed
     }
 
     private static final int NUM_KEY_COLUMN = 3;
