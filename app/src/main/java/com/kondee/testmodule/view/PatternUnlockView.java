@@ -37,7 +37,6 @@ public class PatternUnlockView extends View {
     private float pressZoneSize;
     private Paint rectPaint;
     private List<PatternUnlockRect> patternUnlockRects = new ArrayList<>();
-    private Paint textPaint;
     private float pinRadius;
     private Paint pressedPinPaint;
     private int pinColor;
@@ -123,7 +122,7 @@ public class PatternUnlockView extends View {
 
     private void preparePaint() {
         patternPinPaint = new Paint();
-        patternPinPaint.setColor(pinColor);
+        patternPinPaint.setColor(Color.BLACK);
         patternPinPaint.setAntiAlias(true);
         patternPinPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         patternPinPaint.setAntiAlias(true);
@@ -142,13 +141,10 @@ public class PatternUnlockView extends View {
         rectPaint.setStrokeWidth(3);
 
         linePaint = new Paint();
-        linePaint.setColor(pressedColor);
+        linePaint.setColor(Color.DKGRAY);
         linePaint.setStyle(Paint.Style.STROKE);
         linePaint.setStrokeWidth(5);
 
-        textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        textPaint.setColor(Color.BLACK);
-        textPaint.setTextSize(24);
     }
 
     private void addPinRect() {
