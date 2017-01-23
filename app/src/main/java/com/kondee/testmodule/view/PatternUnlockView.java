@@ -3,16 +3,12 @@ package com.kondee.testmodule.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -30,12 +26,10 @@ public class PatternUnlockView extends View {
     private float startY;
     private float stopX;
     private float stopY;
-    private Path path;
     PatternUnlockRect patternUnlockRect;
     private int rectWidth;
     private int rectHeight;
     private float pressZoneSize;
-    private Paint rectPaint;
     private List<PatternUnlockRect> patternUnlockRects = new ArrayList<>();
     private float pinRadius;
     private Paint pressedPinPaint;
@@ -44,6 +38,8 @@ public class PatternUnlockView extends View {
     private Paint linePaint;
     private String pressedValue;
     List<String> connectionOrder = new ArrayList<>();
+    private float pressPinRadius;
+    private float lineWidth;
 
     public PatternUnlockView(Context context) {
         super(context);
@@ -70,22 +66,25 @@ public class PatternUnlockView extends View {
     }
 
     private void init() {
-        preparePaint();
 
-        path = new Path();
     }
 
     private void initWithAttrs(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         TypedArray a = getContext().getTheme().obtainStyledAttributes(attrs,
-                R.styleable.AppLockView, defStyleAttr, defStyleRes);
+                R.styleable.PatternUnlockView, defStyleAttr, defStyleRes);
         try {
             pressZoneSize = a.getDimension(R.styleable.PatternUnlockView_pressZoneSize, dp2px(56));
             pinRadius = a.getDimension(R.styleable.PatternUnlockView_pinRadius, 15);
-            pinColor = a.getColor(R.styleable.PatternUnlockView_pinColor, ContextCompat.getColor(getContext(), R.color.tab_title_selected));
+            pinColor = a.getColor(R.styleable.PatternUnlockView_pinColor, ContextCompat.getColor(getContext(), R.color.colorBlack));
             pressedColor = a.getColor(R.styleable.PatternUnlockView_pinColor, ContextCompat.getColor(getContext(), R.color.colorGrayTransparent));
+            pressPinRadius = a.getDimension(R.styleable.PatternUnlockView_pressPinRadius, 35);
+            lineWidth = a.getDimension(R.styleable.PatternUnlockView_lineWidth, 5);
+
         } finally {
             a.recycle();
         }
+
+        preparePaint();
     }
 
     @Override
@@ -117,12 +116,13 @@ public class PatternUnlockView extends View {
 
         drawPatternPin(canvas);
         drawLinePattern(canvas);
+        drawCirclePattern(canvas);
         drawLineToTouchPoint(canvas);
     }
 
     private void preparePaint() {
         patternPinPaint = new Paint();
-        patternPinPaint.setColor(Color.BLACK);
+        patternPinPaint.setColor(pinColor);
         patternPinPaint.setAntiAlias(true);
         patternPinPaint.setStyle(Paint.Style.FILL_AND_STROKE);
         patternPinPaint.setAntiAlias(true);
@@ -135,20 +135,15 @@ public class PatternUnlockView extends View {
         pressedPinPaint.setAntiAlias(true);
         pressedPinPaint.setDither(true);
 
-        rectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        rectPaint.setColor(Color.GREEN);
-        rectPaint.setStyle(Paint.Style.STROKE);
-        rectPaint.setStrokeWidth(3);
-
         linePaint = new Paint();
-        linePaint.setColor(Color.DKGRAY);
+        linePaint.setColor(pressedColor);
         linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(5);
+        linePaint.setStrokeWidth(lineWidth);
 
     }
 
     private void addPinRect() {
-        int x = 0;
+        int x = (getMeasuredWidth() - viewWidth) / 2;
         int y = 0;
         for (int i = 1; i <= 9; i++) {
 
@@ -162,7 +157,7 @@ public class PatternUnlockView extends View {
                     false);
             x = x + rectWidth;
             if (i % 3 == 0) {
-                x = 0;
+                x = (getMeasuredWidth() - viewWidth) / 2;
                 y = y + rectHeight;
             }
 
@@ -172,11 +167,20 @@ public class PatternUnlockView extends View {
 
     private void drawPatternPin(Canvas canvas) {
         for (PatternUnlockRect patternUnlockRect : patternUnlockRects) {
-//            canvas.drawRect(patternUnlockRect.rect, rectPaint);
             canvas.drawCircle(patternUnlockRect.rect.exactCenterX(),
                     patternUnlockRect.rect.exactCenterY(),
                     pinRadius,
                     patternPinPaint);
+        }
+    }
+
+    private void drawCirclePattern(Canvas canvas) {
+        for (int i = 0; i < connectionOrder.size(); i++) {
+
+            canvas.drawCircle(patternUnlockRects.get(Integer.valueOf(connectionOrder.get(i)) - 1).rect.exactCenterX(),
+                    patternUnlockRects.get(Integer.valueOf(connectionOrder.get(i)) - 1).rect.exactCenterY(),
+                    pressPinRadius,
+                    pressedPinPaint);
         }
     }
 
@@ -286,5 +290,19 @@ public class PatternUnlockView extends View {
 
         DisplayMetrics displayMetrics = getContext().getResources().getDisplayMetrics();
         return dp * displayMetrics.density;
+    }
+
+    /***********
+     * Listener
+     ***********/
+
+    OnPatternDetectListener listener;
+
+    public interface OnPatternDetectListener {
+        void onPatternDetected(List<String> pattern);
+    }
+
+    public void setOnPatternDetectListener(OnPatternDetectListener listener) {
+        this.listener = listener;
     }
 }

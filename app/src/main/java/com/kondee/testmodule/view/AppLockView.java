@@ -33,6 +33,7 @@ import android.widget.Toast;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.handler.FingerprintHandler;
 import com.kondee.testmodule.manager.Contextor;
+import com.kondee.testmodule.utils.Utils;
 
 import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
@@ -55,6 +56,7 @@ import javax.crypto.SecretKey;
 public class AppLockView extends View {
 
     private OnPinCodeListener listener;
+    private int circleRadius;
 
 
     private enum FingerPrintStatus {
@@ -172,8 +174,7 @@ public class AppLockView extends View {
 
         try {
             //TODO: Set Styleable
-            isSetEieieihi = attr.getBoolean(R.styleable.AppLockView_isSetEieieihi, false);
-            textSize = attr.getFloat(R.styleable.AppLockView_textSize, 72);
+            textSize = attr.getFloat(R.styleable.AppLockView_textSize, Utils.dp2px(getContext(), 56));
             textColor = attr.getInt(R.styleable.AppLockView_textColor, Color.DKGRAY);
             keyAmount = attr.getInt(R.styleable.AppLockView_keyAmount, 4);
             keyboardBackgroundColor = attr.getInt(R.styleable.AppLockView_keyboardBackgroundColor,
@@ -188,7 +189,7 @@ public class AppLockView extends View {
         preparePaint();
     }
 
-    private void prepareFingerprintManager(){
+    private void prepareFingerprintManager() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             Log.d(TAG, "init: 1");
             fingerprintManager = (FingerprintManager) getContext().getSystemService(Context.FINGERPRINT_SERVICE);
@@ -231,9 +232,13 @@ public class AppLockView extends View {
         setPinCodeColor(pinCodeColor);
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        setKeyboardBackgroundColor(keyboardBackgroundColor);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(3.2f);
+        paint.setColor(ContextCompat.getColor(getContext(), R.color.colorPinkLight));
+//        setKeyboardBackgroundColor(keyboardBackgroundColor);
 
         textPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+        textPaint.setTextAlign(Paint.Align.CENTER);
         setTextColor(textColor);
         setTextSize(textSize);
         setTypeFace("fonts/thaisans.ttf");
@@ -288,18 +293,35 @@ public class AppLockView extends View {
 
     private void drawKeyPads(Canvas canvas) {
 
+
         for (AppLockKeyButton appLockKeyButton : appLockKeyButtons) {
 
-            canvas.drawRect(appLockKeyButton.rect, paint);
-//            Log.d(TAG, "drawKeyPads: "+appLockKeyButton.rect.exactCenterX()+" "+appLockKeyButton.rect.exactCenterY());
-//            Log.d(TAG, "drawKeyPads: "+(appLockKeyButton.rect.exactCenterX()-(textPaint.measureText(appLockKeyButton.value)/2)));
-            float keyLocationX = appLockKeyButton.rect.exactCenterX() - (textPaint.measureText(appLockKeyButton.value) / 2);
+//            canvas.drawRect(appLockKeyButton.rect, paint);
+////            Log.d(TAG, "drawKeyPads: "+appLockKeyButton.rect.exactCenterX()+" "+appLockKeyButton.rect.exactCenterY());
+////            Log.d(TAG, "drawKeyPads: "+(appLockKeyButton.rect.exactCenterX()-(textPaint.measureText(appLockKeyButton.value)/2)));
 
-            canvas.drawText(appLockKeyButton.value, keyLocationX, appLockKeyButton.rect.exactCenterY(), textPaint);
+            if (!Objects.equals(appLockKeyButton.value, "") && !Objects.equals(appLockKeyButton.value, eraseChar)) {
 
-            circlePaint.setAlpha(appLockKeyButton.rippleAlpha);
-            canvas.drawCircle(appLockKeyButton.rect.exactCenterX(), appLockKeyButton.rect.exactCenterY() - (int) (textPaint.getTextSize() / 2.5),
-                    appLockKeyButton.rippleRadius, circlePaint);
+                if (appLockKeyButton.rect.right - appLockKeyButton.rect.left < appLockKeyButton.rect.bottom - appLockKeyButton.rect.top) {
+                    circleRadius = (appLockKeyButton.rect.right - appLockKeyButton.rect.left) / 2;
+                    canvas.drawCircle(appLockKeyButton.rect.exactCenterX(), appLockKeyButton.rect.exactCenterY(), circleRadius, paint);
+                } else {
+                    circleRadius = (appLockKeyButton.rect.bottom - appLockKeyButton.rect.top) / 2;
+                    canvas.drawCircle(appLockKeyButton.rect.exactCenterX(), appLockKeyButton.rect.exactCenterY(), circleRadius, paint);
+                }
+            }
+
+//            float keyLocationX = appLockKeyButton.rect.exactCenterX() - (textPaint.measureText(appLockKeyButton.value) / 2);
+
+            Rect rect = new Rect();
+//            canvas.getClipBounds(appLockKeyButton.rect);
+            textPaint.getTextBounds(appLockKeyButton.value, 0, appLockKeyButton.value.length(), rect);
+            canvas.drawText(appLockKeyButton.value, appLockKeyButton.rect.exactCenterX(), appLockKeyButton.rect.exactCenterY() + rect.height() / 2, textPaint);
+//            canvas.drawCircle(50, 50, appLockKeyButton.rect.left - appLockKeyButton.rect.right, paint);
+
+//            circlePaint.setAlpha(appLockKeyButton.rippleAlpha);
+//            canvas.drawCircle(appLockKeyButton.rect.exactCenterX(), appLockKeyButton.rect.exactCenterY() - (int) (textPaint.getTextSize() / 2.5),
+//                    appLockKeyButton.rippleRadius, circlePaint);
         }
     }
 
@@ -398,7 +420,7 @@ public class AppLockView extends View {
             case MotionEvent.ACTION_DOWN:
                 for (AppLockKeyButton appLockKeyButton : appLockKeyButtons) {
 
-                    if (appLockKeyButton.rect.contains((int) event.getX(), (int) event.getY()) && !Objects.equals(appLockKeyButton.value, "")) {
+                    if (appLockKeyButton.rect.contains((int) event.getX(), (int) event.getY()) && !Objects.equals(appLockKeyButton.value, "") && !Objects.equals(appLockKeyButton.value, eraseChar)) {
                         Log.d(TAG, "appLockTouchEvent: Touch at " + appLockKeyButton.value);
                         if (!Objects.equals(appLockKeyButton.value, eraseChar)) {
                             pinCount += 1;
@@ -414,7 +436,7 @@ public class AppLockView extends View {
                             if (Objects.equals(pinInsert, pinCode)) {
                                 listener.onPinCorrect();
                             } else {
-                                playVibrateAnimation();
+//                                playVibrateAnimation();
                             }
                         }
                         appLockKeyButton.playRippleAnimation();

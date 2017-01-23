@@ -37,6 +37,7 @@ import static com.kondee.testmodule.R.id.navItem3;
 import static com.kondee.testmodule.R.id.navItem4;
 import static com.kondee.testmodule.R.id.test1;
 import static com.kondee.testmodule.R.id.test2;
+import static com.kondee.testmodule.R.id.test3;
 
 public class MainActivity extends AppCompatActivity implements SecondFragment.FragmentListener {
 
@@ -180,7 +181,10 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.Fr
                         setIntentClass(TestTwoActivity.class);
                         binding.drawerLayout.closeDrawers();
                         return true;
-
+                    case test3:
+                        setIntentClass(TestThreeActivity.class);
+                        binding.drawerLayout.closeDrawers();
+                        return true;
                 }
                 return false;
             }

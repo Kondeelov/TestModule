@@ -14,6 +14,8 @@
     <string name="text_pull_to_show_more">Pull to show more</string>
     <string name="text_more_contet_to_user">more contet to user</string>
     <string name="text_click_me">Click Me</string>
+    <string name="label_series">Series</string>
+    <string name="label_set">Set</string>
 
     <string-array name="language_item">
         <item>English</item>

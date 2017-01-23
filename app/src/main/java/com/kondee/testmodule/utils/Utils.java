@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.widget.TextView;
 
@@ -51,4 +52,10 @@ public class Utils {
         editor.putString("Language", locale.toString());
         editor.commit();
     }
+
+    public static int dp2px(Context context, int dp) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return (int) (dp * displayMetrics.scaledDensity);
+    }
+
 }
