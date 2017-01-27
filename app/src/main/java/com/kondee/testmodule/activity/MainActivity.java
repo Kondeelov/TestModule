@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -101,6 +102,7 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.Fr
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         binding.tabLayout.setupWithViewPager(binding.viewPager);
+
         binding.viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()));
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

@@ -6,7 +6,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.kondee.testmodule.manager.Contextor;
 
-public class HideSoftInputOnFocusChangeListener implements View.OnFocusChangeListener {
+public abstract class HideSoftInputOnFocusChangeListener implements View.OnFocusChangeListener {
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {

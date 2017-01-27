@@ -68,7 +68,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.TestThreeActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
 
         <!--card.io library-->
         <activity

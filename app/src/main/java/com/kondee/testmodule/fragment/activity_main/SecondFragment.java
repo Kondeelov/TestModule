@@ -46,7 +46,6 @@ public class SecondFragment extends Fragment {
         tvResult.setText(result);
     }
 
-
     /*******************
      * Listener Zone
      *******************/
