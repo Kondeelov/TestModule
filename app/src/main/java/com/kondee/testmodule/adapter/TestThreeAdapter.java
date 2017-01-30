@@ -44,7 +44,6 @@ public class TestThreeAdapter extends RecyclerView.Adapter<TestThreeViewHolder> 
 //            holder.binding.tvPosition.setText(String.valueOf(holder.getAdapterPosition() + 1));
             holder.binding.tvNumber.setText(numberList.get(holder.getAdapterPosition()));
         } else {
-            Log.d(TAG, "onBindViewHolder: !");
 //            holder.binding.tvPosition.setText("1");
             holder.binding.tvNumber.setText("00000");
             holder.binding.etAmount.setText("");
