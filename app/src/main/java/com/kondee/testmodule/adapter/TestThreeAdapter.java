@@ -35,25 +35,27 @@ public class TestThreeAdapter extends RecyclerView.Adapter<TestThreeViewHolder> 
     @Override
     public void onBindViewHolder(final TestThreeViewHolder holder, final int position) {
 
-        if (numberList != null && numberList.size() != 0) {
-//            holder.binding.tvPosition.setEnabled(true);
-            holder.binding.tvNumber.setEnabled(true);
-            holder.binding.etAmount.setEnabled(true);
-            holder.binding.imvCancel.setVisibility(View.VISIBLE);
+        holder.bind(numberList);
 
-//            holder.binding.tvPosition.setText(String.valueOf(holder.getAdapterPosition() + 1));
-            holder.binding.tvNumber.setText(numberList.get(holder.getAdapterPosition()));
-        } else {
-//            holder.binding.tvPosition.setText("1");
-            holder.binding.tvNumber.setText("00000");
-            holder.binding.etAmount.setText("");
-            holder.binding.etAmount.setHint("000");
-//            holder.binding.tvPosition.setEnabled(false);
-            holder.binding.tvNumber.setEnabled(false);
-            holder.binding.etAmount.setEnabled(false);
-            holder.binding.imvCancel.setVisibility(View.INVISIBLE);
-        }
-
+//        if (numberList != null && numberList.size() != 0) {
+////            holder.binding.tvPosition.setEnabled(true);
+//            holder.binding.tvNumber.setEnabled(true);
+//            holder.binding.etAmount.setEnabled(true);
+//            holder.binding.imvCancel.setVisibility(View.VISIBLE);
+//
+////            holder.binding.tvPosition.setText(String.valueOf(holder.getAdapterPosition() + 1));
+//            holder.binding.tvNumber.setText(numberList.get(holder.getAdapterPosition()));
+//        } else {
+////            holder.binding.tvPosition.setText("1");
+//            holder.binding.tvNumber.setText("00000");
+//            holder.binding.etAmount.setText("");
+//            holder.binding.etAmount.setHint("000");
+////            holder.binding.tvPosition.setEnabled(false);
+//            holder.binding.tvNumber.setEnabled(false);
+//            holder.binding.etAmount.setEnabled(false);
+//            holder.binding.imvCancel.setVisibility(View.INVISIBLE);
+//        }
+//
         holder.setOnCancelClickListener(new TestThreeViewHolder.onCancelClickListener() {
             @Override
             public void onClick(View v, int position) {
@@ -61,7 +63,6 @@ public class TestThreeAdapter extends RecyclerView.Adapter<TestThreeViewHolder> 
                     if (numberList != null) {
                         numberList.remove(position);
                         notifyItemRemoved(position);
-//                    notifyItemRangeChanged(0, numberList.size());
                     }
                 } catch (IndexOutOfBoundsException e) {
                     Log.d(TAG, "IndexOutOfBoundsException: " + e.toString());
@@ -78,4 +79,10 @@ public class TestThreeAdapter extends RecyclerView.Adapter<TestThreeViewHolder> 
         return numberList.size();
     }
 
+    @Override
+    public void onViewDetachedFromWindow(TestThreeViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+
+        holder.binding.etAmount.setText("");
+    }
 }
