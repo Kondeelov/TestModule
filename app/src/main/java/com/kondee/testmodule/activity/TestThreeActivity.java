@@ -1,6 +1,8 @@
 package com.kondee.testmodule.activity;
 
 import android.databinding.DataBindingUtil;
+import android.databinding.repacked.treelayout.internal.util.java.lang.string.StringUtil;
+import android.databinding.tool.util.StringUtils;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +19,7 @@ import com.kondee.testmodule.R;
 import com.kondee.testmodule.adapter.TestThreeAdapter;
 import com.kondee.testmodule.databinding.ActivityTestThreeBinding;
 import com.kondee.testmodule.listener.HideSoftInputOnFocusChangeListener;
+import com.kondee.testmodule.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,8 +36,7 @@ public class TestThreeActivity extends AppCompatActivity {
     private TestThreeAdapter adapter;
     private List<String> seriesList = new ArrayList<>();
     private List<String> setList = new ArrayList<>();
-    private int seriesAmount;
-    private ArrayList<String> oldNumberList= new ArrayList<>();
+    private ArrayList<String> oldNumberList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -131,8 +133,6 @@ public class TestThreeActivity extends AppCompatActivity {
 
             String showString;
 
-            int index = 1;
-
             for (int i = 0; i <= 2; i++) {
                 int baseNumber = Integer.parseInt(baseString) % 40 + (40 * i);
                 if (String.valueOf(baseNumber).length() == 1) {
@@ -148,11 +148,42 @@ public class TestThreeActivity extends AppCompatActivity {
                 setList.add(showString);
             }
 
-            numberList.addAll(1, setList);
+            for (int i = 0; i < setList.size(); i++) {
+//                Log.d(TAG, "numberList: " + numberList.size());
+                for (int j = 0; j <= numberList.size(); j++) {
+//
+                    if (j == numberList.size()) {
+                        numberList.add(j, setList.get(i));
+                        adapter.notifyItemInserted(j);
+                        break;
+                    } else {
+//                        Log.d(TAG, "toggle: " + setFullDigit(numberList.get(j)) + " - " + setFullDigit(setList.get(i)) + " : " + setFullDigit(numberList.get(j)).compareTo(setFullDigit(setList.get(i))));
 
-            adapter.notifyItemRangeInserted(index, setList.size());
+                        if (numberList.get(j).length() == setList.get(i).length()) {
+                            if (setFullDigit(numberList.get(j)).compareTo(setFullDigit(setList.get(i))) >= 0) {
+                                continue;
+                            } else {
+                                numberList.add(j, setList.get(i));
+                                adapter.notifyItemInserted(j);
+                                break;
+                            }
+                        } else if (numberList.get(j).length() > setList.get(i).length()) {
+                            continue;
+                        } else {
+                            numberList.add(j, setList.get(i));
+                            adapter.notifyItemInserted(j);
+                            break;
+                        }
 
-            sort();
+
+                    }
+                }
+            }
+
+            if (numberList.indexOf(binding.etNumber.getText().toString()) == 1) {
+                Collections.swap(numberList, 0, 1);
+                adapter.notifyItemMoved(0, 1);
+            }
 
         } else {
 
@@ -181,15 +212,35 @@ public class TestThreeActivity extends AppCompatActivity {
 
                 seriesString = seriesString.substring(1);
                 seriesList.add(seriesString);
-
-                seriesAmount++;
             }
 
-            numberList.addAll(1, seriesList);
+            for (int i = 0; i < seriesList.size(); i++) {
+                for (int j = 0; j <= numberList.size(); j++) {
 
-            adapter.notifyItemRangeInserted(1, seriesList.size());
+                    if (j == numberList.size()) {
+                        numberList.add(j, seriesList.get(i));
+                        adapter.notifyItemInserted(j);
+                        break;
+                    } else {
 
-            sort();
+//                        Log.d(TAG, "toggle: " + setFullDigit(numberList.get(j)) + " - " + setFullDigit(seriesList.get(i)) + " : " + setFullDigit(numberList.get(j)).compareTo(setFullDigit(seriesList.get(i))));
+
+
+                        if (setFullDigit(numberList.get(j)).compareTo(setFullDigit(seriesList.get(i))) >= 0) {
+                            continue;
+                        } else {
+                            numberList.add(j, seriesList.get(i));
+                            adapter.notifyItemInserted(j);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (numberList.indexOf(binding.etNumber.getText().toString()) == 1) {
+                Collections.swap(numberList, 0, 1);
+                adapter.notifyItemMoved(0, 1);
+            }
 
         } else {
 
@@ -199,32 +250,14 @@ public class TestThreeActivity extends AppCompatActivity {
                 adapter.notifyItemRemoved(removeSeriesList.get(i));
             }
 
-//            adapter.notifyItemRangeRemoved(1, seriesList.size());
-//            adapter.notifyItemRangeChanged(0, numberList.size(),numberList);
-
             seriesList.clear();
 
             binding.lnSeries.setBackground(ContextCompat.getDrawable(TestThreeActivity.this, R.drawable.bg_unselect));
         }
     }
 
-    private void sort() {
-        oldNumberList = (ArrayList<String>) numberList;
-
-        Collections.sort(numberList);
-
-        for (int i = 0; i < numberList.size(); i++) {
-            Log.d(TAG, "sort: " + oldNumberList.get(i) + "  " + numberList.get(i));
-//            adapter.notifyItemMoved(i, oldNumberList.indexOf(numberList.get(i)));
-        }
-
-
-        if (numberList.indexOf(binding.etNumber.getText().toString()) == 1) {
-            Collections.swap(numberList, 0, 1);
-            adapter.notifyItemMoved(0, 1);
-        }
-
-        adapter.notifyItemRangeChanged(0, numberList.size(), numberList);
+    private String setFullDigit(String digit) {
+        return ("00000" + digit).substring(digit.length());
     }
 
     public List<Integer> removeAll(List<?> baseCollection, List<?> removeListCollection) {
