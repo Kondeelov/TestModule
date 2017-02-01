@@ -63,16 +63,6 @@ public class MainFragment extends Fragment {
             }
         });
 
-        String one = "12345";
-        String two = "45";
-
-        Log.d(TAG, "initInstance: " + setFullDigit(two));
-
-        Log.d(TAG, "initInstance: " + one.compareTo(setFullDigit(two)));
-    }
-
-    private String setFullDigit(String digit) {
-        return ("00000" + digit).substring(digit.length());
     }
 
     public void hideKeyboard(View view) {
