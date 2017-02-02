@@ -22,6 +22,7 @@ public class TestThreeAdapter extends RecyclerView.Adapter<TestThreeViewHolder> 
     ItemTestThreeListBinding binding;
     public TestThreeViewHolder viewHolder;
     private onEditTextChangedListener textChangedListener;
+    private onCancelClickListener listener;
 
     public TestThreeAdapter(List<String> numberList) {
         this.numberList = numberList;
@@ -47,13 +48,9 @@ public class TestThreeAdapter extends RecyclerView.Adapter<TestThreeViewHolder> 
         holder.setOnCancelClickListener(new TestThreeViewHolder.onCancelClickListener() {
             @Override
             public void onClick(View v, int position) {
-                try {
-                    if (numberList != null) {
-                        numberList.remove(position);
-                        notifyItemRemoved(position);
-                    }
-                } catch (IndexOutOfBoundsException e) {
-                    Log.d(TAG, "IndexOutOfBoundsException: " + e.toString());
+
+                if (listener != null) {
+                    listener.onClick(v,position);
                 }
             }
         });
@@ -108,5 +105,13 @@ public class TestThreeAdapter extends RecyclerView.Adapter<TestThreeViewHolder> 
 
     public void setOnEditTextChangedListener(onEditTextChangedListener textChangedListener) {
         this.textChangedListener = textChangedListener;
+    }
+
+    public interface onCancelClickListener {
+        void onClick(View v, int position);
+    }
+
+    public void setOnCancelClickListener(onCancelClickListener listener) {
+        this.listener = listener;
     }
 }

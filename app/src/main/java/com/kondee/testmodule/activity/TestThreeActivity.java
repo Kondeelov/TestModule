@@ -153,6 +153,23 @@ public class TestThreeActivity extends AppCompatActivity {
                 binding.btnPurchase.setEnabled(isPurchaseEnabled());
             }
         });
+
+        adapter.setOnCancelClickListener(new TestThreeAdapter.onCancelClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+
+                try {
+                    if (numberList != null) {
+                        numberList.remove(position);
+                        adapter.notifyItemRemoved(position);
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    Log.d(TAG, "IndexOutOfBoundsException: " + e.toString());
+                }
+
+                isPurchaseEnabled();
+            }
+        });
     }
 
     private boolean isPurchaseEnabled() {
