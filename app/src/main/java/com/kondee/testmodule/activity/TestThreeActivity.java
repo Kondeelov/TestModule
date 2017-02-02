@@ -33,12 +33,9 @@ public class TestThreeActivity extends AppCompatActivity {
     private TestThreeAdapter adapter;
     private List<String> seriesList = new ArrayList<>();
     private List<String> setList = new ArrayList<>();
-    //    private ArrayList<String> oldNumberList = new ArrayList<>();
     private List<String> setSeriesList = new ArrayList<>();
     private boolean isSetSeriesEnabled;
     private List<Integer> userSelectedDigits = new ArrayList<>();
-    private int numberListSize = 0;
-//    private boolean isPurchaseEnabled;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -160,8 +157,7 @@ public class TestThreeActivity extends AppCompatActivity {
 
     private boolean isPurchaseEnabled() {
         int childCount = binding.recyclerView.getChildCount();
-
-        Log.d(TAG, "isPurchaseEnabled: " + childCount);
+        int totalAmount = 0;
 
         for (int i = 0; i < childCount; i++) {
             if (binding.recyclerView.findViewHolderForAdapterPosition(i) instanceof TestThreeViewHolder) {
@@ -170,7 +166,10 @@ public class TestThreeActivity extends AppCompatActivity {
                 if (holder.binding.etAmount.getText().length() == 0) {
                     return false;
                 }
+
+                totalAmount = totalAmount + Integer.valueOf(holder.binding.etAmount.getText().toString());
             }
+            binding.tvTotalAmount.setText(String.valueOf(totalAmount));
         }
 
         return true;
@@ -204,7 +203,6 @@ public class TestThreeActivity extends AppCompatActivity {
                 }
 
                 userSelectedDigits.add(numberList.size());
-                numberListSize = numberList.size();
 
                 setSetSeriesEnabled(true);
             }
@@ -329,9 +327,7 @@ public class TestThreeActivity extends AppCompatActivity {
 
 //                    User Select Another Digits to buy!
                     try {
-//                        if (numberList.get(j).equals(userSelectedDigits.get(userSelectedDigits.size() - 2))) {
                         if (j == (numberList.size() - (userSelectedDigits.get(userSelectedDigits.size() - 1)) + 1)) {
-//                        if (j == (numberList.size() - numberListSize + 1)) {
                             numberList.add(j, list.get(i));
                             adapter.notifyItemInserted(j);
                             break;
