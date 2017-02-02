@@ -2,6 +2,8 @@ package com.kondee.testmodule.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 
@@ -13,14 +15,13 @@ import java.util.List;
 public class TestThreeViewHolder extends RecyclerView.ViewHolder {
 
     private static final String TAG = "Kondee";
-    ItemTestThreeListBinding binding;
+    public ItemTestThreeListBinding binding;
     private onCancelClickListener listener;
+//    private onEditTextChangedListener textChangedListener;
 
     public TestThreeViewHolder(View itemView) {
         super(itemView);
         binding = DataBindingUtil.bind(itemView);
-
-//        binding.tvPosition.setEnabled(false);
         binding.tvNumber.setEnabled(false);
         binding.etAmount.setEnabled(false);
 
@@ -39,29 +40,41 @@ public class TestThreeViewHolder extends RecyclerView.ViewHolder {
                 }
             }
         });
+
+        binding.etAmount.addTextChangedListener(textWatcher);
     }
 
     public void bind(List<String> numberList) {
         if (numberList != null && numberList.size() != 0) {
-//            holder.binding.tvPosition.setEnabled(true);
             binding.tvNumber.setEnabled(true);
             binding.etAmount.setEnabled(true);
             binding.imvCancel.setVisibility(View.VISIBLE);
 
-//            holder.binding.tvPosition.setText(String.valueOf(holder.getAdapterPosition() + 1));
+//            binding.etAmount.addTextChangedListener(textWatcher);
+
             binding.tvNumber.setText(numberList.get(getAdapterPosition()));
         } else {
-//            holder.binding.tvPosition.setText("1");
             binding.tvNumber.setText("00000");
             binding.etAmount.setText("");
             binding.etAmount.setHint("000");
-//            holder.binding.tvPosition.setEnabled(false);
             binding.tvNumber.setEnabled(false);
             binding.etAmount.setEnabled(false);
             binding.imvCancel.setVisibility(View.INVISIBLE);
         }
 
     }
+
+    /***********
+     * Listener
+     ***********/
+
+//    public interface onEditTextChangedListener {
+//        void onTextCompleted(boolean completed);
+//    }
+//
+//    public void setOnEditTextChangedListener(onEditTextChangedListener textChangedListener) {
+//        this.textChangedListener = textChangedListener;
+//    }
 
     public interface onCancelClickListener {
         void onClick(View v, int position);
@@ -70,4 +83,27 @@ public class TestThreeViewHolder extends RecyclerView.ViewHolder {
     public void setOnCancelClickListener(onCancelClickListener listener) {
         this.listener = listener;
     }
+
+    private TextWatcher textWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+//            if (textChangedListener != null) {
+//                if (s.length() == 0) {
+//                    textChangedListener.onTextCompleted(false);
+//                } else {
+//                    textChangedListener.onTextCompleted(true);
+//                }
+//            }
+        }
+    };
 }

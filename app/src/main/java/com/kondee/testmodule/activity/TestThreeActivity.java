@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.adapter.TestThreeAdapter;
+import com.kondee.testmodule.adapter.TestThreeViewHolder;
 import com.kondee.testmodule.databinding.ActivityTestThreeBinding;
 import com.kondee.testmodule.listener.HideSoftInputOnFocusChangeListener;
 
@@ -32,8 +33,11 @@ public class TestThreeActivity extends AppCompatActivity {
     private TestThreeAdapter adapter;
     private List<String> seriesList = new ArrayList<>();
     private List<String> setList = new ArrayList<>();
-    private ArrayList<String> oldNumberList = new ArrayList<>();
+    //    private ArrayList<String> oldNumberList = new ArrayList<>();
     private List<String> setSeriesList = new ArrayList<>();
+    private boolean isSetSeriesEnabled;
+    private List<Integer> userSelectedDigits = new ArrayList<>();
+//    private boolean isPurchaseEnabled;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,6 +61,22 @@ public class TestThreeActivity extends AppCompatActivity {
 
         binding.btnPurchase.setEnabled(false);
 
+        binding.btnPurchase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                int childCount = binding.recyclerView.getChildCount();
+
+                for (int i = 0; i < childCount; i++) {
+                    if (binding.recyclerView.findViewHolderForAdapterPosition(i) instanceof TestThreeViewHolder) {
+                        TestThreeViewHolder holder = (TestThreeViewHolder) binding.recyclerView.findViewHolderForAdapterPosition(i);
+
+                        Log.d(TAG, "onClick: " + holder.binding.etAmount.getText().toString());
+                    }
+                }
+            }
+        });
+
         binding.etNumber.setOnFocusChangeListener(new HideSoftInputOnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -64,6 +84,18 @@ public class TestThreeActivity extends AppCompatActivity {
 
                 if (!hasFocus) {
                     addNumber();
+                } else {
+                    binding.etNumber.setText("");
+
+                    isSet = false;
+                    binding.lnSet.setBackground(ContextCompat.getDrawable(TestThreeActivity.this, R.drawable.bg_unselect));
+                    setList.clear();
+
+                    isSeries = false;
+                    binding.lnSeries.setBackground(ContextCompat.getDrawable(TestThreeActivity.this, R.drawable.bg_unselect));
+                    seriesList.clear();
+
+                    setSetSeriesEnabled(false);
                 }
             }
         });
@@ -85,11 +117,15 @@ public class TestThreeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                isSet = !isSet;
+                if (isSetSeriesEnabled) {
+                    isSet = !isSet;
 
-                toggleSet();
+                    toggleSet();
 
-                toggleSetSeries();
+                    toggleSetSeries();
+
+                    binding.btnPurchase.setEnabled(false);
+                }
 
             }
         });
@@ -98,28 +134,80 @@ public class TestThreeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                isSeries = !isSeries;
+                if (isSetSeriesEnabled) {
+                    isSeries = !isSeries;
 
-                toggleSeries();
+                    toggleSeries();
 
-                toggleSetSeries();
+                    toggleSetSeries();
 
+                    binding.btnPurchase.setEnabled(false);
+                }
             }
         });
+
+        adapter.setOnEditTextChangedListener(new TestThreeAdapter.onEditTextChangedListener() {
+            @Override
+            public void onTextCompleted(boolean completed) {
+                binding.btnPurchase.setEnabled(isPurchaseEnabled());
+            }
+        });
+    }
+
+    private boolean isPurchaseEnabled() {
+        int childCount = binding.recyclerView.getChildCount();
+
+        Log.d(TAG, "isPurchaseEnabled: " + childCount);
+
+        for (int i = 0; i < childCount; i++) {
+            if (binding.recyclerView.findViewHolderForAdapterPosition(i) instanceof TestThreeViewHolder) {
+                TestThreeViewHolder holder = (TestThreeViewHolder) binding.recyclerView.findViewHolderForAdapterPosition(i);
+
+                if (holder.binding.etAmount.getText().length() == 0) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private void setSetSeriesEnabled(boolean setSeriesEnabled) {
+
+        isSetSeriesEnabled = setSeriesEnabled;
+
+        if (isSetSeriesEnabled) {
+            binding.tvSeries.setEnabled(true);
+            binding.tvSet.setEnabled(true);
+        } else {
+            binding.tvSeries.setEnabled(false);
+            binding.tvSet.setEnabled(false);
+        }
     }
 
     private void addNumber() {
 
         String number = binding.etNumber.getText().toString();
         if (!number.equals("") && number.length() >= 2) {
-            numberList.add(0, number);
 
-            if (numberList.size() == 1)
-                adapter.notifyItemChanged(0);
-            else
-                adapter.notifyItemInserted(0);
+            if (!numberList.contains(number)) {
+                numberList.add(0, number);
+
+                if (numberList.size() == 1) {
+                    adapter.notifyItemChanged(0);
+                } else {
+                    adapter.notifyItemInserted(0);
+                }
+
+                userSelectedDigits.add(numberList.size());
+
+                setSetSeriesEnabled(true);
+            }
         } else {
+
             binding.etNumber.setText("");
+
+            setSetSeriesEnabled(false);
         }
     }
 
@@ -150,12 +238,6 @@ public class TestThreeActivity extends AppCompatActivity {
             addItemToList(setSeriesList);
         }
 
-
-//        else if (isSeries) {
-//
-//        } else if (isSet) {
-//
-//        }
     }
 
     private void toggleSet() {
@@ -179,20 +261,17 @@ public class TestThreeActivity extends AppCompatActivity {
                     continue;
                 }
 
-                setList.add(showString);
+                if (!numberList.contains(showString))
+                    setList.add(showString);
             }
 
             addItemToList(setList);
 
         } else {
 
-            List<Integer> removeSetList = removeAll(numberList, setList);
+            removeAll(numberList, setList);
 
-            for (int i = removeSetList.size() - 1; i >= 0; i--) {
-                adapter.notifyItemRemoved(removeSetList.get(i));
-            }
-
-            setList.clear();
+            removeAll(numberList, setSeriesList);
 
             binding.lnSet.setBackground(ContextCompat.getDrawable(TestThreeActivity.this, R.drawable.bg_unselect));
         }
@@ -210,20 +289,18 @@ public class TestThreeActivity extends AppCompatActivity {
             for (int i = getString.length() - 1; i >= 2; i--) {
 
                 seriesString = seriesString.substring(1);
-                seriesList.add(seriesString);
+
+                if (!numberList.contains(seriesString))
+                    seriesList.add(seriesString);
             }
 
             addItemToList(seriesList);
 
         } else {
 
-            List<Integer> removeSeriesList = removeAll(numberList, seriesList);
+            removeAll(numberList, seriesList);
 
-            for (int i = removeSeriesList.size() - 1; i >= 0; i--) {
-                adapter.notifyItemRemoved(removeSeriesList.get(i));
-            }
-
-            seriesList.clear();
+            removeAll(numberList, setSeriesList);
 
             binding.lnSeries.setBackground(ContextCompat.getDrawable(TestThreeActivity.this, R.drawable.bg_unselect));
         }
@@ -236,14 +313,28 @@ public class TestThreeActivity extends AppCompatActivity {
     private void addItemToList(List<String> list) {
         for (int i = 0; i < list.size(); i++) {
             for (int j = 0; j <= numberList.size(); j++) {
+
+
                 if (j == numberList.size()) {
                     numberList.add(j, list.get(i));
                     adapter.notifyItemInserted(j);
                     break;
                 } else {
 
+//                    User Select Another Digits to buy!
+                    try {
+//                        if (numberList.get(j).equals(userSelectedDigits.get(userSelectedDigits.size() - 2))) {
+                        if (j == (numberList.size() - (userSelectedDigits.get(userSelectedDigits.size() - 1)) + 1)) {
+                            numberList.add(j, list.get(i));
+                            adapter.notifyItemInserted(j);
+                            break;
+                        }
+                    } catch (ArrayIndexOutOfBoundsException e) {
+                        Log.d(TAG, "addItemToList: No digits user select before");
+                    }
+
+
                     if (numberList.get(j).length() == list.get(i).length()) {
-//                        Log.d(TAG, "toggle: " + setFullDigit(numberList.get(j)) + " - " + setFullDigit(list.get(i)) + " : " + setFullDigit(numberList.get(j)).compareTo(setFullDigit(list.get(i))));
                         if (setFullDigit(numberList.get(j)).compareTo(setFullDigit(list.get(i))) <= 0) {
                             continue;
                         } else {
@@ -258,9 +349,9 @@ public class TestThreeActivity extends AppCompatActivity {
                         adapter.notifyItemInserted(j);
                         break;
                     }
-
-
                 }
+
+
             }
         }
 
@@ -276,7 +367,7 @@ public class TestThreeActivity extends AppCompatActivity {
         }
     }
 
-    public List<Integer> removeAll(List<?> baseCollection, List<?> removeListCollection) {
+    public void removeAll(List<?> baseCollection, List<?> removeListCollection) {
         List<Integer> integerList = new ArrayList<>();
 
         for (int i = 0; i < baseCollection.size(); i++) {
@@ -290,10 +381,14 @@ public class TestThreeActivity extends AppCompatActivity {
         for (int j = integerList.size() - 1; j >= 0; j--) {
 
             baseCollection.remove((int) (integerList.get(j)));
+            adapter.notifyItemRemoved(integerList.get(j));
+
         }
 
-        return integerList;
+        removeListCollection.clear();
+
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
