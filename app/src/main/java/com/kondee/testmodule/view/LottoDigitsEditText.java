@@ -88,25 +88,26 @@ public class LottoDigitsEditText extends LinearLayout {
         executeEditText(attrs, defStyleAttr);
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(Utils.dp2px(getContext(), fontSize) * 2, MeasureSpec.EXACTLY);
-
-        super.onMeasure(widthMeasureSpec, newHeightMeasureSpec);
-
-        setMeasuredDimension(widthMeasureSpec, newHeightMeasureSpec);
-    }
+//    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//
+//        newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(Utils.dp2px(getContext(), fontSize), MeasureSpec.EXACTLY);
+//
+//        super.onMeasure(widthMeasureSpec, newHeightMeasureSpec);
+//
+//        setMeasuredDimension(widthMeasureSpec, newHeightMeasureSpec);
+//    }
 
     private void executeEditText(AttributeSet attrs, int defStyleAttr) {
 
-        setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_unselect));
+//        setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bg_unselect));
 
         for (int i = 0; i < digitsAmount; i++) {
 
             final EditText editText = new EditText(getContext(), attrs, defStyleAttr);
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+            params.gravity = Gravity.BOTTOM;
             editText.setLayoutParams(params);
 
 //            editText.setGravity(Gravity.CENTER);

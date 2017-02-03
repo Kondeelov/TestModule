@@ -16,7 +16,6 @@
     </declare-styleable>
 
     <declare-styleable name="LottoDigitsEditText">
-
         <attr name="digits" format="integer" />
         <attr name="fontSize" format="dimension" />
     </declare-styleable>

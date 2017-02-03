@@ -27,18 +27,8 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <EditText
-                    android:id="@+id/etNumber"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:background="@drawable/shape_test"
-                    android:digits="1234567890"
-                    android:imeOptions="actionDone"
-                    android:inputType="number"
-                    android:padding="16dp" />
-
                 <com.kondee.testmodule.view.LottoDigitsEditText
+                    android:background="@drawable/shape_test"
                     android:id="@+id/etLottoDigits"
                     android:layout_marginBottom="8dp"
                     android:layout_width="match_parent"

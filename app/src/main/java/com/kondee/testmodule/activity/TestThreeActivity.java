@@ -27,11 +27,13 @@ import java.util.List;
 public class TestThreeActivity extends AppCompatActivity {
 
     private static final String TAG = "Kondee";
+
     ActivityTestThreeBinding binding;
+    private TestThreeAdapter adapter;
+
     private List<String> numberList = new ArrayList<>();
     private boolean isSet;
     private boolean isSeries;
-    private TestThreeAdapter adapter;
     private List<String> seriesList = new ArrayList<>();
     private List<String> setList = new ArrayList<>();
     private List<String> setSeriesList = new ArrayList<>();
@@ -62,36 +64,7 @@ public class TestThreeActivity extends AppCompatActivity {
 
         binding.btnPurchase.setEnabled(isPurchaseEnabled());
 
-        binding.btnPurchase.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                int childCount = binding.recyclerView.getChildCount();
-
-                for (int i = 0; i < childCount; i++) {
-                    if (binding.recyclerView.findViewHolderForAdapterPosition(i) instanceof TestThreeViewHolder) {
-                        TestThreeViewHolder holder = (TestThreeViewHolder) binding.recyclerView.findViewHolderForAdapterPosition(i);
-
-                        Log.d(TAG, "onClick: " + holder.binding.etAmount.getText().toString());
-                    }
-                }
-            }
-        });
-
-        binding.etNumber.setOnFocusChangeListener(new HideSoftInputOnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                super.onFocusChange(v, hasFocus);
-
-                if (!hasFocus) {
-//                    addNumber();
-                } else {
-                    binding.etNumber.setText("");
-
-                    disableSetSeries();
-                }
-            }
-        });
+        binding.btnPurchase.setOnClickListener(onBtnPurchaseClickListener);
 
         binding.etLottoDigits.setOnFocusChangeListener(new LottoDigitsEditText.onFocusChangeListener() {
             @Override
@@ -108,51 +81,9 @@ public class TestThreeActivity extends AppCompatActivity {
             }
         });
 
-        binding.etNumber.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
+        binding.lnSet.setOnClickListener(onLnSetClickListener);
 
-                    binding.etNumber.clearFocus();
-
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        binding.lnSet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (isSetSeriesEnabled) {
-                    isSet = !isSet;
-
-                    toggleSet();
-
-                    toggleSetSeries();
-
-                    binding.btnPurchase.setEnabled(false);
-                }
-
-            }
-        });
-
-        binding.lnSeries.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (isSetSeriesEnabled) {
-                    isSeries = !isSeries;
-
-                    toggleSeries();
-
-                    toggleSetSeries();
-
-                    binding.btnPurchase.setEnabled(false);
-                }
-            }
-        });
+        binding.lnSeries.setOnClickListener(onLnSeriesClickListener);
 
         adapter.setOnEditTextChangedListener(new TestThreeAdapter.onEditTextChangedListener() {
             @Override
@@ -459,5 +390,52 @@ public class TestThreeActivity extends AppCompatActivity {
      * Listener
      ***********/
 
+    View.OnClickListener onBtnPurchaseClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
 
+            int childCount = binding.recyclerView.getChildCount();
+
+            for (int i = 0; i < childCount; i++) {
+                if (binding.recyclerView.findViewHolderForAdapterPosition(i) instanceof TestThreeViewHolder) {
+                    TestThreeViewHolder holder = (TestThreeViewHolder) binding.recyclerView.findViewHolderForAdapterPosition(i);
+
+                    Log.d(TAG, "onClick: " + holder.binding.etAmount.getText().toString());
+                }
+            }
+        }
+    };
+
+    View.OnClickListener onLnSetClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            if (isSetSeriesEnabled) {
+                isSet = !isSet;
+
+                toggleSet();
+
+                toggleSetSeries();
+
+                binding.btnPurchase.setEnabled(false);
+            }
+
+        }
+    };
+
+    View.OnClickListener onLnSeriesClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            if (isSetSeriesEnabled) {
+                isSeries = !isSeries;
+
+                toggleSeries();
+
+                toggleSetSeries();
+
+                binding.btnPurchase.setEnabled(false);
+            }
+        }
+    };
 }
