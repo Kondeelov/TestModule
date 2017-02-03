@@ -37,6 +37,7 @@ public class TestThreeActivity extends AppCompatActivity {
     private List<String> setSeriesList = new ArrayList<>();
     private boolean isSetSeriesEnabled;
     private List<Integer> userSelectedDigits = new ArrayList<>();
+    private String getString;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -83,7 +84,7 @@ public class TestThreeActivity extends AppCompatActivity {
                 super.onFocusChange(v, hasFocus);
 
                 if (!hasFocus) {
-                    addNumber();
+//                    addNumber();
                 } else {
                     binding.etNumber.setText("");
 
@@ -97,11 +98,10 @@ public class TestThreeActivity extends AppCompatActivity {
             public void onFocusChange(View v, boolean hasFocus) {
 
                 if (!hasFocus) {
-//                    addNumber();
+                    addNumber();
 
                     Log.d(TAG, "onFocusChange: " + binding.etLottoDigits.getText());
                 } else {
-//                    binding.etNumber.setText("");
 
                     disableSetSeries();
                 }
@@ -240,7 +240,7 @@ public class TestThreeActivity extends AppCompatActivity {
 
     private void addNumber() {
 
-        String number = binding.etNumber.getText().toString();
+        String number = binding.etLottoDigits.getText();
         if (!number.equals("") && number.length() >= 2) {
 
             if (!numberList.contains(number)) {
@@ -254,11 +254,13 @@ public class TestThreeActivity extends AppCompatActivity {
 
                 userSelectedDigits.add(numberList.size());
 
+                getString = binding.etLottoDigits.getText();
+
                 setSetSeriesEnabled(true);
             }
         } else {
 
-            binding.etNumber.setText("");
+            binding.etLottoDigits.setText("");
 
             setSetSeriesEnabled(false);
         }
@@ -298,8 +300,8 @@ public class TestThreeActivity extends AppCompatActivity {
         if (isSet) {
             binding.lnSet.setBackground(ContextCompat.getDrawable(TestThreeActivity.this, R.drawable.bg_select));
 
-            String frontString = binding.etNumber.getText().toString().substring(0, binding.etNumber.length() - 2);
-            String baseString = binding.etNumber.getText().toString().substring(binding.etNumber.length() - 2);
+            String frontString = getString.substring(0, getString.length() - 2);
+            String baseString = getString.substring(getString.length() - 2);
 
             String showString;
 
@@ -311,7 +313,7 @@ public class TestThreeActivity extends AppCompatActivity {
                     showString = frontString + String.valueOf(baseNumber);
                 }
 
-                if (showString.equals(binding.etNumber.getText().toString()) || baseNumber >= 100) {
+                if (showString.equals(getString) || baseNumber >= 100) {
                     continue;
                 }
 
@@ -333,7 +335,6 @@ public class TestThreeActivity extends AppCompatActivity {
     }
 
     private void toggleSeries() {
-        String getString = binding.etNumber.getText().toString();
 
         if (isSeries) {
             binding.lnSeries.setBackground(ContextCompat.getDrawable(TestThreeActivity.this, R.drawable.bg_select));
@@ -408,10 +409,10 @@ public class TestThreeActivity extends AppCompatActivity {
             }
         }
 
-        if (numberList.indexOf(binding.etNumber.getText().toString()) == 1) {
+        if (numberList.indexOf(getString) == 1) {
             Collections.swap(numberList, 0, 1);
             adapter.notifyItemMoved(0, 1);
-        } else if (numberList.indexOf(binding.etNumber.getText().toString()) == 2) {
+        } else if (numberList.indexOf(getString) == 2) {
             Collections.swap(numberList, 1, 2);
             adapter.notifyItemMoved(1, 2);
 
