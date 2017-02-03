@@ -38,6 +38,12 @@
                     android:inputType="number"
                     android:padding="16dp" />
 
+                <com.kondee.testmodule.view.LottoDigitsEditText
+                    android:id="@+id/etLottoDigits"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -56,7 +62,6 @@
                             android:id="@+id/tvSet"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:enabled="false"
                             android:gravity="center"
                             android:minWidth="81dp"
                             android:padding="12dp"
@@ -75,7 +80,6 @@
                             android:id="@+id/tvSeries"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:enabled="false"
                             android:gravity="center"
                             android:minWidth="81dp"
                             android:padding="12dp"

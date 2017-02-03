@@ -18,6 +18,7 @@ import com.kondee.testmodule.adapter.TestThreeAdapter;
 import com.kondee.testmodule.adapter.TestThreeViewHolder;
 import com.kondee.testmodule.databinding.ActivityTestThreeBinding;
 import com.kondee.testmodule.listener.HideSoftInputOnFocusChangeListener;
+import com.kondee.testmodule.view.LottoDigitsEditText;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,7 +59,7 @@ public class TestThreeActivity extends AppCompatActivity {
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setNestedScrollingEnabled(false);
 
-        binding.btnPurchase.setEnabled(false);
+        binding.btnPurchase.setEnabled(isPurchaseEnabled());
 
         binding.btnPurchase.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,17 +87,23 @@ public class TestThreeActivity extends AppCompatActivity {
                 } else {
                     binding.etNumber.setText("");
 
-                    isSet = false;
-                    binding.lnSet.setBackground(ContextCompat.getDrawable(TestThreeActivity.this, R.drawable.bg_unselect));
-                    setList.clear();
+                    disableSetSeries();
+                }
+            }
+        });
 
-                    isSeries = false;
-                    binding.lnSeries.setBackground(ContextCompat.getDrawable(TestThreeActivity.this, R.drawable.bg_unselect));
-                    seriesList.clear();
+        binding.etLottoDigits.setOnFocusChangeListener(new LottoDigitsEditText.onFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
 
-                    setSeriesList.clear();
+                if (!hasFocus) {
+//                    addNumber();
 
-                    setSetSeriesEnabled(false);
+                    Log.d(TAG, "onFocusChange: " + binding.etLottoDigits.getText());
+                } else {
+//                    binding.etNumber.setText("");
+
+                    disableSetSeries();
                 }
             }
         });
@@ -170,11 +177,33 @@ public class TestThreeActivity extends AppCompatActivity {
                 isPurchaseEnabled();
             }
         });
+
+        setSetSeriesEnabled(false);
+    }
+
+    private void disableSetSeries() {
+        isSet = false;
+        binding.lnSet.setBackground(ContextCompat.getDrawable(TestThreeActivity.this, R.drawable.bg_unselect));
+        setList.clear();
+
+        isSeries = false;
+        binding.lnSeries.setBackground(ContextCompat.getDrawable(TestThreeActivity.this, R.drawable.bg_unselect));
+        seriesList.clear();
+
+        setSeriesList.clear();
+
+        setSetSeriesEnabled(false);
     }
 
     private boolean isPurchaseEnabled() {
         int childCount = binding.recyclerView.getChildCount();
         int totalAmount = 0;
+
+        if (childCount == 0) {
+            disableSetSeries();
+
+            return false;
+        }
 
         for (int i = 0; i < childCount; i++) {
             if (binding.recyclerView.findViewHolderForAdapterPosition(i) instanceof TestThreeViewHolder) {
@@ -199,9 +228,13 @@ public class TestThreeActivity extends AppCompatActivity {
         if (isSetSeriesEnabled) {
             binding.tvSeries.setEnabled(true);
             binding.tvSet.setEnabled(true);
+            binding.lnSeries.setClickable(true);
+            binding.lnSet.setClickable(true);
         } else {
             binding.tvSeries.setEnabled(false);
             binding.tvSet.setEnabled(false);
+            binding.lnSeries.setClickable(false);
+            binding.lnSet.setClickable(false);
         }
     }
 
@@ -409,7 +442,6 @@ public class TestThreeActivity extends AppCompatActivity {
 
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home)
@@ -421,4 +453,10 @@ public class TestThreeActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
     }
+
+    /***********
+     * Listener
+     ***********/
+
+
 }

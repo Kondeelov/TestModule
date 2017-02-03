@@ -15,6 +15,12 @@
         <attr name="peekHeight" format="dimension" />
     </declare-styleable>
 
+    <declare-styleable name="LottoDigitsEditText">
+
+        <attr name="digits" format="integer" />
+        <attr name="fontSize" format="dimension" />
+    </declare-styleable>
+
     <declare-styleable name="PatternUnlockView">
         <attr name="pressZoneSize" format="dimension" />
         <attr name="pinRadius" format="dimension" />

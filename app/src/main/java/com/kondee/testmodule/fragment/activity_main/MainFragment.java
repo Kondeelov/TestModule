@@ -21,6 +21,8 @@ import com.kondee.testmodule.applock.AppLock;
 import com.kondee.testmodule.databinding.FragmentMainBinding;
 import com.kondee.testmodule.view.AppLockView;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class MainFragment extends Fragment {
@@ -63,6 +65,21 @@ public class MainFragment extends Fragment {
             }
         });
 
+//        String version = "1.0.1";
+//        String compareVersion = "1.0.0";
+//        List<String> numberList1 = Arrays.asList(version.split("\\."));
+//        List<String> numberList2 = Arrays.asList(compareVersion.split("\\."));
+//
+//        for (int i = 0; i < numberList1.size(); i++) {
+//            if (numberList2.get(i).compareTo(numberList1.get(i)) > 0) {
+//                Log.d(TAG, "initInstance: numberList 2 greater than 1");
+//            } else if (numberList2.get(i).compareTo(numberList1.get(i)) < 0) {
+//                Log.d(TAG, "initInstance: numberList 2 less than 1");
+//            } else {
+//                Log.d(TAG, "initInstance: numberList 2 equal 1");
+//            }
+//            Log.d(TAG, "initInstance: Ja tum a rai kor leaw tae mung eieieihi");
+//        }
     }
 
     public void hideKeyboard(View view) {

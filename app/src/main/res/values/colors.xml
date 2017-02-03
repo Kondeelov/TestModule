@@ -8,6 +8,7 @@
     <color name="colorBlack">#000000</color>
     <color name="colorGrayLight">#616161</color>
     <color name="colorGrayLightest">#9f9f9f</color>
+    <color name="colorGrayLightestTransparent">#ba9f9f9f</color>
     <color name="colorPinkLight">#ffbca5</color>
     <color name="colorGreen">#0ec900</color>
     <color name="white">#FFFFFF</color>
