@@ -400,7 +400,7 @@ public class TestThreeActivity extends AppCompatActivity {
                 if (binding.recyclerView.findViewHolderForAdapterPosition(i) instanceof TestThreeViewHolder) {
                     TestThreeViewHolder holder = (TestThreeViewHolder) binding.recyclerView.findViewHolderForAdapterPosition(i);
 
-                    Log.d(TAG, "onClick: " + holder.binding.etAmount.getText().toString());
+                    Log.d(TAG, "onItemClick: " + holder.binding.etAmount.getText().toString());
                 }
             }
         }

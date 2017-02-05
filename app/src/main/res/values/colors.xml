@@ -14,5 +14,7 @@
     <color name="white">#FFFFFF</color>
     <color name="textview_background">#88181818</color>
     <color name="colorGrayTransparent">#5e616161</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorBlue">#0000ff</color>
 
 </resources>

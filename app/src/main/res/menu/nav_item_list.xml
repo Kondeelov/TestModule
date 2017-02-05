@@ -36,6 +36,10 @@
                 android:id="@+id/test3"
                 android:checkable="true"
                 android:title="Sub item 3" />
+            <item
+                android:id="@+id/test4"
+                android:checkable="true"
+                android:title="Sub item 4" />
 
         </menu>
     </item>

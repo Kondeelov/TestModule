@@ -50,8 +50,6 @@ public class TestThreeViewHolder extends RecyclerView.ViewHolder {
             binding.etAmount.setEnabled(true);
             binding.imvCancel.setVisibility(View.VISIBLE);
 
-//            binding.etAmount.addTextChangedListener(textWatcher);
-
             binding.tvNumber.setText(numberList.get(getAdapterPosition()));
         } else {
             binding.tvNumber.setText("00000");
@@ -67,14 +65,6 @@ public class TestThreeViewHolder extends RecyclerView.ViewHolder {
     /***********
      * Listener
      ***********/
-
-//    public interface onEditTextChangedListener {
-//        void onTextCompleted(boolean completed);
-//    }
-//
-//    public void setOnEditTextChangedListener(onEditTextChangedListener textChangedListener) {
-//        this.textChangedListener = textChangedListener;
-//    }
 
     public interface onCancelClickListener {
         void onClick(View v, int position);

@@ -24,5 +24,29 @@
         <item name="android:focusableInTouchMode">true</item>
     </style>
 
+    <style name="TextViewStyle"></style>
+
+    <style name="EditTextStyle">
+
+    </style>
+
+    <style name="EditTextStyle.NumberOnly">
+        <item name="android:digits">1234567890</item>
+        <item name="android:inputType">number</item>
+    </style>
+
+    <style name="ButtonStyle"></style>
+
+    <style name="ButtonStyle.Transparent">
+        <item name="android:background">@drawable/shape_test</item>
+    </style>
+
+    <style name="AlertDialogTheme" parent="Base.Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/colorBlue</item>
+    </style>
+
+    <style name="TextViewStyle.Small">
+        <item name="android:textSize">12sp</item>
+    </style>
 
 </resources>
