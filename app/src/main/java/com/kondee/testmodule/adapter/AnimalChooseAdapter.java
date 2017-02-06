@@ -5,22 +5,27 @@ import android.content.res.TypedArray;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.databinding.ItemAnimalListBinding;
 import com.kondee.testmodule.manager.Contextor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AnimalChooseAdapter extends RecyclerView.Adapter<AnimalChooseViewHolder> {
 
     private static final String TAG = "Kondee";
     private final TypedArray animalImage;
-    private final Context context;
+    private List<EditText> editTextList = new ArrayList<>();
     ItemAnimalListBinding binding;
 
-    public AnimalChooseAdapter(Context context) {
+    public AnimalChooseAdapter(ArrayList<EditText> editTextList) {
         animalImage = Contextor.getInstance().getContext().getResources().obtainTypedArray(R.array.AnimalNumber);
-        this.context = context;
+        this.editTextList = editTextList;
     }
 
     @Override
@@ -34,7 +39,7 @@ public class AnimalChooseAdapter extends RecyclerView.Adapter<AnimalChooseViewHo
     @Override
     public void onBindViewHolder(final AnimalChooseViewHolder holder, int position) {
 
-        holder.bind(animalImage);
+        holder.bind(animalImage,editTextList);
 
         holder.setOnItemClickListener(new AnimalChooseViewHolder.onItemClickListener() {
             @Override
@@ -51,6 +56,12 @@ public class AnimalChooseAdapter extends RecyclerView.Adapter<AnimalChooseViewHo
         if (animalImage == null)
             return 0;
         return animalImage.length();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(AnimalChooseViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+//        animalImage.recycle();
     }
 
     /***********

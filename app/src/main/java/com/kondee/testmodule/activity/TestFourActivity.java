@@ -1,5 +1,6 @@
 package com.kondee.testmodule.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
@@ -19,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,6 +32,7 @@ import com.kondee.testmodule.adapter.TestFourAdapter;
 import com.kondee.testmodule.databinding.ActivityTestFourBinding;
 import com.kondee.testmodule.databinding.AlertChooseAnimalBinding;
 import com.kondee.testmodule.listener.HideSoftInputOnFocusChangeListener;
+import com.kondee.testmodule.manager.Contextor;
 import com.kondee.testmodule.model.AnimalDigits;
 
 import java.util.ArrayList;
@@ -101,10 +104,36 @@ public class TestFourActivity extends AppCompatActivity {
             final int finalI = i;
             editTextList.get(i).setOnFocusChangeListener(new HideSoftInputOnFocusChangeListener() {
                 @Override
-                public void onFocusChange(View v, boolean hasFocus) {
+                public void onFocusChange(final View v, final boolean hasFocus) {
                     super.onFocusChange(v, hasFocus);
 
                     if (!hasFocus) {
+                        for (EditText editText : editTextList) {
+
+                            if (editTextList.get(finalI) != editText) {
+                                if (editTextList.get(finalI).getText().toString().equals(editText.getText().toString())) {
+                                    if (!editTextList.get(finalI).getText().toString().equals("")) {
+
+                                        final AlertDialog.Builder builder = new AlertDialog.Builder(TestFourActivity.this);
+                                        builder.setTitle("Duplicated!")
+                                                .setMessage("Your number is duplicated!\nPlease input new number")
+                                                .setCancelable(false)
+                                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        editTextList.get(finalI).setText("");
+                                                        editTextList.get(finalI).requestFocus();
+                                                        imageViewList.get(finalI).setImageResource(R.drawable.dog_paw);
+                                                    }
+                                                });
+
+                                        AlertDialog dialog = builder.create();
+                                        dialog.show();
+                                    }
+                                }
+
+                            }
+                        }
                         setAnimalImage(editTextList.get(finalI), imageViewList.get(finalI));
                     }
                 }
@@ -142,7 +171,9 @@ public class TestFourActivity extends AppCompatActivity {
                     final AlertChooseAnimalBinding chooseAnimalBinding = DataBindingUtil.inflate(inflater, R.layout.alert_choose_animal,
                             null, false);
 
-                    final AnimalChooseAdapter animalChooseAdapter = new AnimalChooseAdapter(TestFourActivity.this);
+                    final AnimalChooseAdapter animalChooseAdapter = new AnimalChooseAdapter(editTextList);
+
+//                    TODO : Item was wrong when scrolled;
 
                     chooseAnimalBinding.recyclerView.setHasFixedSize(true);
                     chooseAnimalBinding.recyclerView.setLayoutManager(new GridLayoutManager(TestFourActivity.this, 4, LinearLayoutManager.VERTICAL, false));
@@ -158,15 +189,25 @@ public class TestFourActivity extends AppCompatActivity {
                                 if (chooseAnimalBinding.recyclerView.findViewHolderForAdapterPosition(j) instanceof AnimalChooseViewHolder) {
                                     AnimalChooseViewHolder chooseAnimalHolder = (AnimalChooseViewHolder) chooseAnimalBinding.recyclerView.findViewHolderForAdapterPosition(j);
 
-                                    chooseAnimalHolder.binding.imvAnimal.setBackground(ContextCompat.getDrawable(TestFourActivity.this, R.drawable.bg_border_stroke_black));
-                                    chooseAnimalHolder.binding.tvNumber.setTextColor(Color.BLACK);
-                                    chooseAnimalHolder.binding.tvName.setTextColor(Color.BLACK);
+                                    for (EditText editText : editTextList) {
+                                        if (!editText.getText().toString().equals("")) {
+                                            if (Integer.parseInt(editText.getText().toString()) == (j + 1)) {
+                                                chooseAnimalHolder.binding.imvAnimal.setBackground(ContextCompat.getDrawable(TestFourActivity.this, R.drawable.bg_border_stroke_black));
+                                                chooseAnimalHolder.binding.tvNumber.setEnabled(false);
+                                                chooseAnimalHolder.binding.tvName.setEnabled(false);
+                                            } else {
+                                                chooseAnimalHolder.binding.imvAnimal.setBackground(ContextCompat.getDrawable(TestFourActivity.this, R.drawable.bg_border_stroke_black));
+                                                chooseAnimalHolder.binding.tvNumber.setTextColor(Color.BLACK);
+                                                chooseAnimalHolder.binding.tvName.setTextColor(Color.BLACK);
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
 //                            TODO : Check if item is not duplicated!
 
-                            holder.binding.imvAnimal.setBackgroundColor(ContextCompat.getColor(TestFourActivity.this, R.color.colorGreen));
+                            holder.binding.imvAnimal.setBackground(ContextCompat.getDrawable(TestFourActivity.this, R.drawable.bg_border_stroke_black_background_green));
                             holder.binding.tvName.setTextColor(ContextCompat.getColor(TestFourActivity.this, R.color.colorGreen));
                             holder.binding.tvNumber.setTextColor(ContextCompat.getColor(TestFourActivity.this, R.color.colorGreen));
 
@@ -241,6 +282,12 @@ public class TestFourActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        animalImage.recycle();
     }
 
     /***********
