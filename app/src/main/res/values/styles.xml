@@ -38,7 +38,7 @@
     <style name="ButtonStyle"></style>
 
     <style name="ButtonStyle.Transparent">
-        <item name="android:background">@drawable/shape_test</item>
+        <item name="android:background">@drawable/selector_bg_transparent_button</item>
     </style>
 
     <style name="AlertDialogTheme" parent="Base.Theme.AppCompat.Light.Dialog.Alert">

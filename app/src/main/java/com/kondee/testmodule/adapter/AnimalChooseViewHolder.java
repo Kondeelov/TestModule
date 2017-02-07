@@ -3,6 +3,7 @@ package com.kondee.testmodule.adapter;
 import android.content.res.TypedArray;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -10,7 +11,9 @@ import android.widget.EditText;
 
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.databinding.ItemAnimalListBinding;
+import com.kondee.testmodule.manager.Contextor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,6 +21,7 @@ public class AnimalChooseViewHolder extends RecyclerView.ViewHolder {
 
     private static final String TAG = "Kondee";
     public ItemAnimalListBinding binding;
+    private List<Integer> integerList = new ArrayList<>();
 
     public AnimalChooseViewHolder(View itemView) {
         super(itemView);
@@ -34,31 +38,40 @@ public class AnimalChooseViewHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    public void bind(TypedArray animalImage, List<EditText> editTextList) {
+    public void bind(TypedArray animalImage, List<EditText> editTextList, int[] selectedItem) {
 
-        binding.imvAnimal.setBackgroundResource(R.drawable.bg_border_stroke_black);
+        for (EditText editText : editTextList) {
+            if (!editText.getText().toString().equals("")) {
+                integerList.add(Integer.valueOf(editText.getText().toString()) - 1);
+            }
+        }
+
         binding.imvAnimal.setImageResource(animalImage.getResourceId(getAdapterPosition(), -1));
         binding.tvNumber.setText(String.valueOf(getAdapterPosition() + 1));
 
-        for (EditText editText : editTextList) {
+        if (getAdapterPosition() == selectedItem[0]) {
+            binding.imvAnimal.setBackgroundResource(R.drawable.bg_border_stroke_black_background_green);
+            binding.tvName.setTextColor(ContextCompat.getColor(Contextor.getInstance().getContext(), R.color.colorGreen));
+            binding.tvNumber.setTextColor(ContextCompat.getColor(Contextor.getInstance().getContext(), R.color.colorGreen));
+        } else {
+            binding.imvAnimal.setBackgroundResource(R.drawable.bg_border_stroke_black);
+            binding.tvName.setTextColor(ContextCompat.getColor(Contextor.getInstance().getContext(), R.color.colorBlack));
+            binding.tvNumber.setTextColor(ContextCompat.getColor(Contextor.getInstance().getContext(), R.color.colorBlack));
+        }
 
-            if (!editText.getText().toString().equals("")) {
-                if (Integer.parseInt(editText.getText().toString()) == (getAdapterPosition() + 1)) {
+        if (integerList.contains(getAdapterPosition())) {
+            Log.d(TAG, "bind: " + (getAdapterPosition() + 1));
+            binding.getRoot().setClickable(false);
 
-                    Log.d(TAG, "bind: ");
+            binding.imvAnimal.setColorFilter(Color.argb(200, 255, 255, 255));
+            binding.tvName.setEnabled(false);
+            binding.tvNumber.setEnabled(false);
+        } else {
+            binding.getRoot().setClickable(true);
 
-                    binding.getRoot().setClickable(false);
-
-                    binding.imvAnimal.setColorFilter(Color.argb(200, 255, 255, 255));
-                    binding.tvName.setEnabled(false);
-                    binding.tvNumber.setEnabled(false);
-                } else {
-
-                    binding.imvAnimal.setEnabled(true);
-                    binding.tvName.setEnabled(true);
-                    binding.tvNumber.setEnabled(true);
-                }
-            }
+            binding.imvAnimal.setColorFilter(Color.TRANSPARENT);
+            binding.tvName.setEnabled(true);
+            binding.tvNumber.setEnabled(true);
         }
     }
 

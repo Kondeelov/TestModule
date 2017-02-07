@@ -107,7 +107,7 @@ public class LottoDigitsEditText extends LinearLayout {
             final EditText editText = new EditText(getContext(), attrs, defStyleAttr);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
-            params.gravity = Gravity.BOTTOM;
+            params.gravity = Gravity.BOTTOM | Gravity.CENTER;
             editText.setLayoutParams(params);
 
 //            editText.setGravity(Gravity.CENTER);

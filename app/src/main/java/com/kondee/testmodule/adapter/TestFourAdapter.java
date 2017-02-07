@@ -1,6 +1,8 @@
 package com.kondee.testmodule.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,13 +38,16 @@ public class TestFourAdapter extends RecyclerView.Adapter<TestFourViewHolder> {
 
         holder.setOnCancelClickListener(new TestFourViewHolder.onCancelClickListener() {
             @Override
-            public void onClick (View v,int position){
+            public void onClick(View v, int position) {
 
                 if (listener != null) {
                     listener.onClick(v, position);
                 }
             }
         });
+
+        holder.binding.etAmount.addTextChangedListener(onEtAmountTextChangeListener);
+
     }
 
     @Override
@@ -54,18 +59,55 @@ public class TestFourAdapter extends RecyclerView.Adapter<TestFourViewHolder> {
         return animalDigitsList.size();
     }
 
+    @Override
+    public void onViewDetachedFromWindow(TestFourViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+
+        holder.binding.etAmount.setText("");
+        holder.binding.etAmount.setHint("Amount");
+    }
+
     /***********
      * Listener
      ***********/
 
     private onCancelClickListener listener;
 
+    private onTextChangeListener textChangeListener;
 
     public interface onCancelClickListener {
         void onClick(View v, int position);
+
     }
 
     public void setOnCancelClickListener(onCancelClickListener listener) {
         this.listener = listener;
     }
+
+    public interface onTextChangeListener {
+        void onTextChange();
+    }
+
+    public void setOnTextChangeListener(onTextChangeListener textChangeListener) {
+        this.textChangeListener = textChangeListener;
+    }
+
+    private TextWatcher onEtAmountTextChangeListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (textChangeListener != null) {
+                textChangeListener.onTextChange();
+            }
+        }
+    };
 }

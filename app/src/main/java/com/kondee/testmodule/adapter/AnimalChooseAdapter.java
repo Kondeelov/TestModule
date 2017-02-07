@@ -20,12 +20,14 @@ public class AnimalChooseAdapter extends RecyclerView.Adapter<AnimalChooseViewHo
 
     private static final String TAG = "Kondee";
     private final TypedArray animalImage;
+    private final int[] selectedItem;
     private List<EditText> editTextList = new ArrayList<>();
-    ItemAnimalListBinding binding;
+    private ItemAnimalListBinding binding;
 
-    public AnimalChooseAdapter(ArrayList<EditText> editTextList) {
+    public AnimalChooseAdapter(ArrayList<EditText> editTextList, int[] selectedItem) {
         animalImage = Contextor.getInstance().getContext().getResources().obtainTypedArray(R.array.AnimalNumber);
         this.editTextList = editTextList;
+        this.selectedItem = selectedItem;
     }
 
     @Override
@@ -39,7 +41,7 @@ public class AnimalChooseAdapter extends RecyclerView.Adapter<AnimalChooseViewHo
     @Override
     public void onBindViewHolder(final AnimalChooseViewHolder holder, int position) {
 
-        holder.bind(animalImage,editTextList);
+        holder.bind(animalImage, editTextList, selectedItem);
 
         holder.setOnItemClickListener(new AnimalChooseViewHolder.onItemClickListener() {
             @Override
@@ -56,12 +58,6 @@ public class AnimalChooseAdapter extends RecyclerView.Adapter<AnimalChooseViewHo
         if (animalImage == null)
             return 0;
         return animalImage.length();
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(AnimalChooseViewHolder holder) {
-        super.onViewDetachedFromWindow(holder);
-//        animalImage.recycle();
     }
 
     /***********

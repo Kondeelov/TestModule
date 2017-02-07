@@ -29,6 +29,7 @@ import com.kondee.testmodule.R;
 import com.kondee.testmodule.adapter.AnimalChooseAdapter;
 import com.kondee.testmodule.adapter.AnimalChooseViewHolder;
 import com.kondee.testmodule.adapter.TestFourAdapter;
+import com.kondee.testmodule.adapter.TestFourViewHolder;
 import com.kondee.testmodule.databinding.ActivityTestFourBinding;
 import com.kondee.testmodule.databinding.AlertChooseAnimalBinding;
 import com.kondee.testmodule.listener.HideSoftInputOnFocusChangeListener;
@@ -71,12 +72,15 @@ public class TestFourActivity extends AppCompatActivity {
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setNestedScrollingEnabled(false);
 
-        binding.btnOk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        adapter.setOnCancelClickListener(onCancelClickListener);
 
-            }
-        });
+        adapter.setOnTextChangeListener(onTextChangeListener);
+
+        binding.btnOk.setOnClickListener(onBtnOkClickListener);
+
+        binding.btnPurchase.setEnabled(isPurchaseEnabled());
+
+        binding.btnPurchase.setOnClickListener(onBtnPurchaseClickListener);
 
         binding.etAnimal3.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -131,7 +135,6 @@ public class TestFourActivity extends AppCompatActivity {
                                         dialog.show();
                                     }
                                 }
-
                             }
                         }
                         setAnimalImage(editTextList.get(finalI), imageViewList.get(finalI));
@@ -166,14 +169,13 @@ public class TestFourActivity extends AppCompatActivity {
                 @Override
                 public void onClick(final View v) {
                     final int[] animalPosition = {-1};
+                    final int[] selectedItem = {-1};
 
                     LayoutInflater inflater = LayoutInflater.from(TestFourActivity.this);
                     final AlertChooseAnimalBinding chooseAnimalBinding = DataBindingUtil.inflate(inflater, R.layout.alert_choose_animal,
                             null, false);
 
-                    final AnimalChooseAdapter animalChooseAdapter = new AnimalChooseAdapter(editTextList);
-
-//                    TODO : Item was wrong when scrolled;
+                    final AnimalChooseAdapter animalChooseAdapter = new AnimalChooseAdapter(editTextList, selectedItem);
 
                     chooseAnimalBinding.recyclerView.setHasFixedSize(true);
                     chooseAnimalBinding.recyclerView.setLayoutManager(new GridLayoutManager(TestFourActivity.this, 4, LinearLayoutManager.VERTICAL, false));
@@ -183,33 +185,9 @@ public class TestFourActivity extends AppCompatActivity {
                         @Override
                         public void onItemClick(AnimalChooseViewHolder holder, int position) {
 
-                            int itemCount = animalChooseAdapter.getItemCount();
+                            selectedItem[0] = position;
 
-                            for (int j = 0; j < itemCount; j++) {
-                                if (chooseAnimalBinding.recyclerView.findViewHolderForAdapterPosition(j) instanceof AnimalChooseViewHolder) {
-                                    AnimalChooseViewHolder chooseAnimalHolder = (AnimalChooseViewHolder) chooseAnimalBinding.recyclerView.findViewHolderForAdapterPosition(j);
-
-                                    for (EditText editText : editTextList) {
-                                        if (!editText.getText().toString().equals("")) {
-                                            if (Integer.parseInt(editText.getText().toString()) == (j + 1)) {
-                                                chooseAnimalHolder.binding.imvAnimal.setBackground(ContextCompat.getDrawable(TestFourActivity.this, R.drawable.bg_border_stroke_black));
-                                                chooseAnimalHolder.binding.tvNumber.setEnabled(false);
-                                                chooseAnimalHolder.binding.tvName.setEnabled(false);
-                                            } else {
-                                                chooseAnimalHolder.binding.imvAnimal.setBackground(ContextCompat.getDrawable(TestFourActivity.this, R.drawable.bg_border_stroke_black));
-                                                chooseAnimalHolder.binding.tvNumber.setTextColor(Color.BLACK);
-                                                chooseAnimalHolder.binding.tvName.setTextColor(Color.BLACK);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-//                            TODO : Check if item is not duplicated!
-
-                            holder.binding.imvAnimal.setBackground(ContextCompat.getDrawable(TestFourActivity.this, R.drawable.bg_border_stroke_black_background_green));
-                            holder.binding.tvName.setTextColor(ContextCompat.getColor(TestFourActivity.this, R.color.colorGreen));
-                            holder.binding.tvNumber.setTextColor(ContextCompat.getColor(TestFourActivity.this, R.color.colorGreen));
+                            animalChooseAdapter.notifyDataSetChanged();
 
                             animalPosition[0] = position;
                         }
@@ -251,8 +229,6 @@ public class TestFourActivity extends AppCompatActivity {
 
     private void setAnimalImage(EditText etAnimal, ImageView imvAnimal) {
 
-//        TODO : Check if animalDigit is not duplicated!
-
         if (!etAnimal.getText().toString().equals("")) {
             int animalDigit = Integer.parseInt(etAnimal.getText().toString()) % 40;
 
@@ -270,6 +246,63 @@ public class TestFourActivity extends AppCompatActivity {
 
             imvAnimal.setImageResource(animalImage.getResourceId(animalDigit - 1, -1));
         }
+    }
+
+    private boolean isPurchaseEnabled() {
+        int childCount = binding.recyclerView.getChildCount();
+        int totalAmount = 0;
+
+        if (childCount == 0) {
+            binding.tvAmount.setEnabled(false);
+            binding.tvAmount.setText("Amount");
+
+            return false;
+        }
+
+        for (int i = 0; i < childCount; i++) {
+            if (binding.recyclerView.findViewHolderForAdapterPosition(i) instanceof TestFourViewHolder) {
+
+                TestFourViewHolder holder = (TestFourViewHolder) binding.recyclerView.findViewHolderForAdapterPosition(i);
+
+                if (holder.binding.etAmount.getText().length() == 0) {
+                    return false;
+                }
+
+                totalAmount = totalAmount + Integer.valueOf(holder.binding.etAmount.getText().toString());
+            }
+            if (totalAmount == 0) {
+                binding.tvAmount.setEnabled(false);
+                binding.tvAmount.setText("Amount");
+            } else {
+                binding.tvAmount.setEnabled(true);
+                binding.tvAmount.setText(String.valueOf(totalAmount));
+            }
+        }
+        return true;
+    }
+
+    private void addAnimalListItem() {
+        AnimalDigits animalDigits = new AnimalDigits();
+        animalDigits.setDigitOne(binding.etAnimal1.getText().toString())
+                .setDigitTwo(binding.etAnimal2.getText().toString())
+                .setDigitThree(binding.etAnimal3.getText().toString());
+
+        for (AnimalDigits list : animalDigitsList) {
+            if (list.getDigitsList().containsAll(animalDigits.getDigitsList())) {
+                Log.d(TAG, "addAnimalListItem: Duplicate!");
+                return;
+            }
+        }
+
+        animalDigitsList.add(0, animalDigits);
+
+        if (animalDigitsList.size() == 1) {
+            adapter.notifyItemChanged(0);
+        } else {
+            adapter.notifyItemInserted(0);
+        }
+
+        binding.btnPurchase.setEnabled(false);
     }
 
     @Override
@@ -294,5 +327,41 @@ public class TestFourActivity extends AppCompatActivity {
      * Listener
      ***********/
 
+    View.OnClickListener onBtnOkClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            addAnimalListItem();
+        }
+    };
+
+    View.OnClickListener onBtnPurchaseClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+
+        }
+    };
+
+    TestFourAdapter.onCancelClickListener onCancelClickListener = new TestFourAdapter.onCancelClickListener() {
+        @Override
+        public void onClick(View v, int position) {
+
+            try {
+                animalDigitsList.remove(position);
+                adapter.notifyItemRemoved(position);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                Log.d(TAG, "onCancelClickListener : ArrayIndexOutOfBoundsException");
+            }
+        }
+    };
+
+    TestFourAdapter.onTextChangeListener onTextChangeListener = new TestFourAdapter.onTextChangeListener() {
+        @Override
+        public void onTextChange() {
+
+            binding.btnPurchase.setEnabled(isPurchaseEnabled());
+        }
+    };
 
 }

@@ -21,6 +21,7 @@ import com.kondee.testmodule.applock.AppLock;
 import com.kondee.testmodule.databinding.FragmentMainBinding;
 import com.kondee.testmodule.view.AppLockView;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -80,6 +81,23 @@ public class MainFragment extends Fragment {
 //            }
 //            Log.d(TAG, "initInstance: Ja tum a rai kor leaw tae mung eieieihi");
 //        }
+
+//        List<String> a = new ArrayList<>(5);
+//        List<String> b = new ArrayList<>(5);
+//
+//        a.add("apple");
+//        a.add("orange");
+//        a.add("pear");
+//        a.add("lemon");
+//        a.add("mango");
+//        a.add("papaya");
+//
+//        b.add("mango");
+//        b.add("pear");
+//        b.add("papaya");
+//
+//        Log.d(TAG, "initInstance: " + a.containsAll(b));
+//        Log.d(TAG, "initInstance: " + a.toString());
     }
 
     public void hideKeyboard(View view) {

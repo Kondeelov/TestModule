@@ -30,6 +30,7 @@
             android:layout_weight="1"
             android:enabled="false"
             android:hint="@string/label_amount"
+            android:imeOptions="actionDone"
             android:textSize="18dp" />
 
         <TextView

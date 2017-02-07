@@ -132,6 +132,8 @@ public class TestThreeActivity extends AppCompatActivity {
 
         if (childCount == 0) {
             disableSetSeries();
+            binding.tvTotalAmount.setEnabled(false);
+            binding.tvTotalAmount.setText("Amount");
 
             return false;
         }
@@ -146,7 +148,14 @@ public class TestThreeActivity extends AppCompatActivity {
 
                 totalAmount = totalAmount + Integer.valueOf(holder.binding.etAmount.getText().toString());
             }
-            binding.tvTotalAmount.setText(String.valueOf(totalAmount));
+
+            if (totalAmount == 0) {
+                binding.tvTotalAmount.setEnabled(false);
+                binding.tvTotalAmount.setText("Amount");
+            } else {
+                binding.tvTotalAmount.setEnabled(true);
+                binding.tvTotalAmount.setText(String.valueOf(totalAmount));
+            }
         }
 
         return true;

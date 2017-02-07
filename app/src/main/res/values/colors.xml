@@ -16,5 +16,8 @@
     <color name="colorGrayTransparent">#5e616161</color>
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlue">#0000ff</color>
+    <color name="colorGreenTranslucent">#5b00ac42</color>
+    <color name="colorTranslucentLight">#44000000</color>
+    <color name="colorGray">#848484</color>
 
 </resources>

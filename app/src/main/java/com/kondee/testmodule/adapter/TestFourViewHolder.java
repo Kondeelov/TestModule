@@ -2,6 +2,8 @@ package com.kondee.testmodule.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 
 import com.kondee.testmodule.R;
@@ -73,4 +75,6 @@ public class TestFourViewHolder extends RecyclerView.ViewHolder {
     public void setOnCancelClickListener(onCancelClickListener listener) {
         this.listener = listener;
     }
+
+
 }
