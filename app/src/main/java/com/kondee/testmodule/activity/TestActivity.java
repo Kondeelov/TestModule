@@ -43,9 +43,6 @@ public class TestActivity extends AppCompatActivity {
 
             ViewPagerItemBinding binding;
 
-            private List<CardView> mViews = new ArrayList<>();
-            private float mBaseElevation;
-
             @Override
             public int getCount() {
                 return 5;
@@ -60,30 +57,22 @@ public class TestActivity extends AppCompatActivity {
             public Object instantiateItem(ViewGroup container, int position) {
                 binding = ViewPagerItemBinding.inflate(LayoutInflater.from(container.getContext()), container, false);
                 container.addView(binding.getRoot());
-
-                CardView cardView = binding.cardView;
-
+                
                 binding.titleTextView.setText(String.valueOf(position));
 
-                if (mBaseElevation == 0) {
-                    mBaseElevation = cardView.getCardElevation();
-                }
-
-//                mViews.set(position, cardView);
                 return binding.getRoot();
             }
 
             @Override
             public void destroyItem(ViewGroup container, int position, Object object) {
                 container.removeView((View) object);
-//                mViews.set(position, null);
             }
 
         });
 
-        binding.viewPager.setOffscreenPageLimit(4);
+        binding.viewPager.setOffscreenPageLimit(3);
         binding.viewPager.setPageMargin(Utils.dp2px(this, 24));
-        binding.viewPager.setPageTransformer(false, new ViewPagerTransformer(binding.viewPager));
+        binding.viewPager.setPageTransformer(false, new ViewPagerTransformer());
 
         binding.viewPager.setCurrentItem(2);
     }

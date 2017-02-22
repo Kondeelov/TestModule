@@ -1,8 +1,6 @@
 package com.kondee.testmodule.fragment.activity_main;
 
 import android.databinding.DataBindingUtil;
-import android.databinding.repacked.google.common.base.Function;
-import android.databinding.repacked.google.common.collect.Lists;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
