@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -41,9 +42,8 @@ import static com.kondee.testmodule.R.id.test2;
 import static com.kondee.testmodule.R.id.test3;
 import static com.kondee.testmodule.R.id.test4;
 
-public class MainActivity extends AppCompatActivity implements SecondFragment.FragmentListener {
+public class MainActivity extends AppCompatActivity {
 
-    private static final int MY_SCAN_REQUEST_CODE = 11110;
     ActivityMainBinding binding;
     private static String TAG = "Kondee";
     ActionBarDrawerToggle drawerToggle;
@@ -90,12 +90,14 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.Fr
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
                 binding.activityMain.setTranslationX(slideOffset * drawerView.getWidth());
-//                binding.drawerLayout.bringChildToFront(drawerView);
-//                binding.drawerLayout.requestLayout();
+                binding.testTv.setTranslationX(slideOffset * drawerView.getWidth());
+
             }
         };
         binding.drawerLayout.addDrawerListener(drawerToggle);
-        binding.drawerLayout.setScrimColor(Color.TRANSPARENT);
+
+        Log.d(TAG, "initInstance: " + binding.testTv.getX());
+//        binding.drawerLayout.setScrimColor(Color.TRANSPARENT);
 
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -210,37 +212,6 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.Fr
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == MY_SCAN_REQUEST_CODE) {
-            String resultDisplayStr;
-            CreditCard scanResult = null;
-            if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
-                scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
-
-                // Never log a raw card number. Avoid displaying it, but if necessary use getFormattedCardNumber()
-                resultDisplayStr = "Card Number: " + scanResult.getRedactedCardNumber() + "\n";
-
-                // Do something with the raw number, e.g.:
-                // myService.setCardNumber( scanResult.cardNumber );
-
-                if (scanResult.isExpiryValid()) {
-                    resultDisplayStr += "Expiration Date: " + scanResult.expiryMonth + "/" + scanResult.expiryYear + "\n";
-                }
-            } else {
-                resultDisplayStr = "Scan was canceled.";
-            }
-
-            // do something with resultDisplayStr, maybe display it in a textView
-            // resultTextView.setText(resultDisplayStr);
-//            Log.d(TAG, "onActivityResult: viewpager.getcurrentpage = " + binding.viewPager.getCurrentItem());
-//            May be must set if(binding.viewPager.getCurrentItem()==1){}
-            if (scanResult != null)
-                SecondFragment.setScanResult(scanResult.getFormattedCardNumber());
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     protected void onPostCreate(@Nullable Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
         drawerToggle.syncState();
@@ -266,23 +237,5 @@ public class MainActivity extends AppCompatActivity implements SecondFragment.Fr
             startActivity(intent);
             overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
         }
-    }
-
-    public void runScanCardActivity() {
-        Intent scanIntent = new Intent(this, CardIOActivity.class);
-
-        // customize these values to suit your needs.
-        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true); // default: false
-        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, false); // default: false
-        scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_POSTAL_CODE, false); // default: false
-        scanIntent.putExtra(CardIOActivity.EXTRA_KEEP_APPLICATION_THEME, true);
-
-        // MY_SCAN_REQUEST_CODE is arbitrary and is only used within this activity.
-        startActivityForResult(scanIntent, MY_SCAN_REQUEST_CODE);
-    }
-
-    @Override
-    public void onButtonScanClicked() {
-        runScanCardActivity();
     }
 }

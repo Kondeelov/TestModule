@@ -5,4 +5,5 @@
     <dimen name="edittext_lotto_size">32sp</dimen>
     <dimen name="animal_lotto_view">56dp</dimen>
     <dimen name="padding_bottom_layout">16dp</dimen>
+    <dimen name="card_padding">60dp</dimen>
 </resources>

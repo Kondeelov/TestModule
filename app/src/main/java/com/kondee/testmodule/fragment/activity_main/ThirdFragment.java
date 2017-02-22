@@ -1,11 +1,14 @@
 package com.kondee.testmodule.fragment.activity_main;
 
 import android.databinding.DataBindingUtil;
+import android.databinding.repacked.google.common.base.Function;
+import android.databinding.repacked.google.common.collect.Lists;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,19 +19,29 @@ import com.kondee.testmodule.databinding.FragmentThirdBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-import rx.Observable;
-import rx.Observer;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Maybe;
+import io.reactivex.MaybeObserver;
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Predicate;
+import io.reactivex.observables.GroupedObservable;
+import io.reactivex.schedulers.Schedulers;
 
 public class ThirdFragment extends Fragment {
 
     private static final String TAG = "Kondee";
     FragmentThirdBinding binding;
-    String[] test = {"Hello","It's","Me","I","Forgot","That","Can","Heal","You","And","Must","Be"};
+    String[] test = {"Hello", "It's", "Me", "I", "Forgot", "That", "Can", "Heal", "You", "And", "Must", "Be"};
     private ArrayAdapter adapter;
 
     public static ThirdFragment newInstance() {
@@ -50,53 +63,59 @@ public class ThirdFragment extends Fragment {
 
         Arrays.sort(test);
 
-        adapter = new ArrayAdapter(getActivity(),android.R.layout.simple_list_item_1,test);
+        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getNameList());
 
         binding.listView.setAdapter(adapter);
 
-        binding.etSearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        Observable<String> observable1 = Observable.fromIterable(getNameList())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
 
-            }
+        Observable<String> observable2 = Observable.fromIterable(getVersionList())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    adapter.getFilter().filter(s);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-//        Observable<List<String>> observable = Observable.fromCallable(new Callable<List<String>>() {
-//            @Override
-//            public List<String> call() throws Exception {
-//                return getNameList();
-//            }
-//        })
+//        Observable<String> observable = Observable.zip(observable1,
+//                observable2,
+//                (o, o2) -> String.valueOf(o) + " " + String.valueOf(o2))
+//                .skip(5)
 //                .subscribeOn(Schedulers.io())
 //                .observeOn(AndroidSchedulers.mainThread());
-//
-//        Observer observer = new Observer<String>() {
-//            @Override
-//            public void onCompleted() {
-//                Log.d(TAG, "onCompleted: ");
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//                Log.d(TAG, "onError: " + e);
-//            }
-//
-//            @Override
-//            public void onNext(String s) {
-//                Log.d(TAG, "onNext: CodeName " + s);
-//            }
-//        };
-//
-//        observable.subscribe(observer);
+
+        Observable<Integer> observable = Observable.fromIterable(getIntList())
+                .zipWith(Observable.fromIterable(getReverseIntList()).subscribeOn(Schedulers.io()), new BiFunction<Integer, Integer, Integer>() {
+                    @Override
+                    public Integer apply(Integer integer, Integer integer2) throws Exception {
+                        return integer + integer2;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+
+        Observer observer = new Observer<Integer>() {
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "onError: " + e);
+            }
+
+            @Override
+            public void onComplete() {
+                Log.d(TAG, "onComplete: ");
+            }
+
+            @Override
+            public void onSubscribe(Disposable d) {
+                Log.d(TAG, "onSubscribe: ");
+            }
+
+            @Override
+            public void onNext(Integer i) {
+                Log.d(TAG, "onNext: " + i);
+            }
+        };
+
+        observable.subscribe(observer);
     }
 
     public List<String> getNameList() {
@@ -113,6 +132,59 @@ public class ThirdFragment extends Fragment {
                 "Lollipop",
                 "Marshmallow",
                 "Nougat"));
+        return nameList;
+    }
+
+    public List<String> getVersionList() {
+        List<String> nameList = new ArrayList<>(Arrays.asList(
+                "1.0",
+                "1.6",
+                "2.1",
+                "2.1",
+                "2.2",
+                "2.3",
+                "4.2",
+                "4.3",
+                "4.4",
+                "5",
+                "6",
+                "7"));
+        return nameList;
+    }
+
+    public List<Integer> getIntList() {
+        List<Integer> nameList = new ArrayList<>(Arrays.asList(
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12));
+        return nameList;
+    }
+
+    public List<Integer> getReverseIntList() {
+        List<Integer> nameList = new ArrayList<>(Arrays.asList(
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13));
+        Collections.reverse(nameList);
         return nameList;
     }
 }

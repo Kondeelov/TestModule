@@ -20,7 +20,6 @@ public class TestThreeAdapter extends RecyclerView.Adapter<TestThreeViewHolder> 
     private static final String TAG = "Kondee";
     private final List<String> numberList;
     ItemTestThreeListBinding binding;
-    public TestThreeViewHolder viewHolder;
     private onEditTextChangedListener textChangedListener;
     private onCancelClickListener listener;
 
@@ -42,8 +41,6 @@ public class TestThreeAdapter extends RecyclerView.Adapter<TestThreeViewHolder> 
 
 
         holder.bind(numberList);
-
-        viewHolder =   holder;
 
         holder.setOnCancelClickListener(new TestThreeViewHolder.onCancelClickListener() {
             @Override

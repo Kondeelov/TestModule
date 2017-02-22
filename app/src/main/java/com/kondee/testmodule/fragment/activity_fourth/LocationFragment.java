@@ -59,6 +59,8 @@ import com.kondee.testmodule.activity.MainActivity;
 import com.kondee.testmodule.activity.SecondActivity;
 import com.kondee.testmodule.databinding.FragmentLocationBinding;
 
+import java.util.concurrent.TimeUnit;
+
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LOCATION_SERVICE;
 
@@ -133,6 +135,22 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
         });
 
         googleMap.getUiSettings().setMapToolbarEnabled(false);
+
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(location)
+                .title("1");
+
+        gMap.addMarker(markerOptions);
+
+        gMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+                marker.hideInfoWindow();
+                marker.getTitle();
+
+                return false;
+            }
+        });
 
         gMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
             @Override
@@ -371,9 +389,8 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
      * Listener
      ************/
 
-    View.OnClickListener onBtnGoClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
+    View.OnClickListener onBtnGoClickListener = v -> {
+
 //            NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity());
 //
 //            Intent intent = new Intent(getActivity(), FourthActivity.class);
@@ -419,28 +436,27 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
 //            NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
 //            notificationManager.notify(1, builder.build());
 
-            RemoteViews remoteViews = new RemoteViews(getActivity().getPackageName(), R.layout.test_noti);
-            remoteViews.setTextViewText(R.id.title, "Hello");
-            remoteViews.setTextViewText(R.id.text, "World!!!");
+        RemoteViews remoteViews = new RemoteViews(getActivity().getPackageName(), R.layout.test_noti);
+        remoteViews.setTextViewText(R.id.title, "Hello");
+        remoteViews.setTextViewText(R.id.text, "World!!!");
 
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity());
-            builder.setAutoCancel(true)
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getActivity());
+        builder.setAutoCancel(true)
 //                    .setSmallIcon(R.drawable.star)
 //                    .setContent(remoteViews);
-                    .setSmallIcon(R.drawable.ic_audiotrack)
-                    .setContentTitle("Set your title")
-                    .setContentText("Pull to view image!")
-                    .addAction(R.drawable.ic_media_play,"play",null);
+                .setSmallIcon(R.drawable.ic_audiotrack)
+                .setContentTitle("Set your title")
+                .setContentText("Pull to view image!")
+                .addAction(R.drawable.ic_media_play, "play", null);
 
-            Bitmap bitmap_image = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.bg_nav_header);
-            NotificationCompat.BigPictureStyle s = new NotificationCompat.BigPictureStyle().bigPicture(bitmap_image);
-            s.setSummaryText("HaHaHa I got it!");
-            builder.setStyle(s);
+        Bitmap bitmap_image = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.bg_nav_header);
+        NotificationCompat.BigPictureStyle s = new NotificationCompat.BigPictureStyle().bigPicture(bitmap_image);
+        s.setSummaryText("HaHaHa I got it!");
+        builder.setStyle(s);
 
-            NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
-            notificationManager.notify(1, builder.build());
+        NotificationManager notificationManager = (NotificationManager) getActivity().getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, builder.build());
 
-        }
     };
 
 }

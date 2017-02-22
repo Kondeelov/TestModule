@@ -1,79 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.kondee.testmodule.view.SlidingUpDrawer
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/colorPinkLight">
+        android:fitsSystemWindows="true">
 
-        <android.support.design.widget.CoordinatorLayout
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab1"
+            android:layout_width="56dp"
+            android:layout_height="56dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab2"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_margin="64dp"
+            android:scaleX="1.2"
+            android:scaleY="1.2"
+            app:backgroundTint="@color/colorGreen" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorGrayLightest">
+            android:layout_height="330dp"
+            android:layout_gravity="bottom|center"
+            android:clipToPadding="false"
+            android:foregroundGravity="center"
+            android:overScrollMode="never"
+            android:paddingBottom="56dp"
+            android:paddingEnd="@dimen/card_padding"
+            android:paddingLeft="@dimen/card_padding"
+            android:paddingRight="@dimen/card_padding"
+            android:paddingStart="@dimen/card_padding"
+            android:paddingTop="24dp" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Test" />
-
-        </android.support.design.widget.CoordinatorLayout>
-
-        <LinearLayout
-            android:layout_width="320dp"
-            android:layout_height="160dp"
-            android:background="@color/colorPinkLight"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Test"
-                android:textSize="36sp" />
-
-            <android.support.v4.widget.NestedScrollView
-                android:layout_width="320dp"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="320dp"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hahaha" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hahaha" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hahaha" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hahaha" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hahaha" />
-
-                    <CheckBox
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Hahaha" />
-                </LinearLayout>
-            </android.support.v4.widget.NestedScrollView>
-        </LinearLayout>
-    </com.kondee.testmodule.view.SlidingUpDrawer>
+    </android.support.design.widget.CoordinatorLayout>
 </layout>
