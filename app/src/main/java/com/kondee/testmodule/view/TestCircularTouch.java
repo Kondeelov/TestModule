@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
@@ -18,8 +19,13 @@ public class TestCircularTouch extends View {
 
     private static final String TAG = "Kondee";
     private Paint paint;
-    private Rect rect;
+    private RectF rect;
     float radius;
+    private int outerRadius = 20;
+    private int centerX;
+    private int centerY;
+    private static final int PRESS_RADIUS = 20;
+    private RectF pressedRect;
 
     public TestCircularTouch(Context context) {
         super(context);
@@ -62,29 +68,52 @@ public class TestCircularTouch extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
-        rect = new Rect(getMeasuredWidth() / 4, getMeasuredWidth() / 4, getMeasuredWidth() - getMeasuredWidth() / 4, getMeasuredWidth() - getMeasuredWidth() / 4);
+        rect = new RectF(getMeasuredWidth() / 4, getMeasuredWidth() / 4, getMeasuredWidth() - getMeasuredWidth() / 4, getMeasuredWidth() - getMeasuredWidth() / 4);
+
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        centerX = w / 2;
+        centerY = h / 2;
+        outerRadius = Math.min(w, h) / 2;
+        pressedRect = new RectF(PRESS_RADIUS, PRESS_RADIUS, (centerY - PRESS_RADIUS / 2) * 2, (centerX - PRESS_RADIUS / 2) * 2);
+
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawCircle(rect.exactCenterX(), rect.exactCenterY(), radius, paint);
+//        canvas.drawCircle(rect.exactCenterX(), rect.exactCenterY(), radius, paint);
+//        canvas.drawCircle(rect.centerX(), rect.centerY(), outerRadius, paint);
+        canvas.drawArc(pressedRect, 0, 360, false, paint);
+
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        float x = event.getX();
+        float y = event.getY();
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.d(TAG, "inCircle: " + inCircle(event.getRawX(), event.getRawY(), rect.exactCenterX(), rect.exactCenterY(), radius));
-                Log.d(TAG, "checkIsTouchInCircle: " + checkIsTouchInCircle(event.getRawX(), event.getRawY(), rect.exactCenterX(), rect.exactCenterY(), radius));
+                if (x > PRESS_RADIUS && x < centerX * 2 - PRESS_RADIUS) {
+
+                    float upY = (float) Math.sqrt(Math.pow((outerRadius - PRESS_RADIUS / 2), 2) - Math.pow((outerRadius - x), 2));
+                    if (y > centerY - upY && y < centerY) {
+                        Log.d(TAG, "onTouchEvent: true");
+                    } else if (y > centerY && y < centerY + upY) {
+                        Log.d(TAG, "onTouchEvent: true");
+                    }
+                }
                 return true;
             case MotionEvent.ACTION_MOVE:
-                Log.d(TAG, "inCircle: " + inCircle(event.getRawX(), event.getRawY(), rect.exactCenterX(), rect.exactCenterY(), radius));
-                Log.d(TAG, "checkIsTouchInCircle: " + checkIsTouchInCircle(event.getRawX(), event.getRawY(), rect.exactCenterX(), rect.exactCenterY(), radius));
+
                 return true;
             case MotionEvent.ACTION_UP:
+
                 return true;
         }
 

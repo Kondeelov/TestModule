@@ -57,7 +57,9 @@ public class TestActivity extends AppCompatActivity {
             public Object instantiateItem(ViewGroup container, int position) {
                 binding = ViewPagerItemBinding.inflate(LayoutInflater.from(container.getContext()), container, false);
                 container.addView(binding.getRoot());
-                
+
+                binding.getRoot().setId(position);
+
                 binding.titleTextView.setText(String.valueOf(position));
 
                 return binding.getRoot();
@@ -72,7 +74,7 @@ public class TestActivity extends AppCompatActivity {
 
         binding.viewPager.setOffscreenPageLimit(3);
         binding.viewPager.setPageMargin(Utils.dp2px(this, 24));
-        binding.viewPager.setPageTransformer(false, new ViewPagerTransformer());
+        binding.viewPager.setPageTransformer(false, new ViewPagerTransformer(binding.viewPager));
 
         binding.viewPager.setCurrentItem(2);
     }
