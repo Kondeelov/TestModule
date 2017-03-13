@@ -94,22 +94,22 @@ public class ThirdFragment extends Fragment {
 
             @Override
             public void onError(Throwable e) {
-                Log.d(TAG, "onError: " + e);
+//                Log.d(TAG, "onError: " + e);
             }
 
             @Override
             public void onComplete() {
-                Log.d(TAG, "onComplete: ");
+//                Log.d(TAG, "onComplete: ");
             }
 
             @Override
             public void onSubscribe(Disposable d) {
-                Log.d(TAG, "onSubscribe: ");
+//                Log.d(TAG, "onSubscribe: ");
             }
 
             @Override
             public void onNext(Integer i) {
-                Log.d(TAG, "onNext: " + i);
+//                Log.d(TAG, "onNext: " + i);
             }
         };
 

@@ -19,7 +19,21 @@
             android:drawableLeft="@android:drawable/ic_search_category_default"
             android:text="@string/go" />
 
-        <EditText
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_normal"
+            android:layout_marginTop="@dimen/dimen_normal" />
+
+        <TextView
+            android:id="@+id/tvAddress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dimen_normal"
+            android:layout_marginTop="@dimen/dimen_normal" />
+
+        <AutoCompleteTextView
             android:id="@+id/etTest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
@@ -33,6 +47,15 @@
             android:id="@+id/etTest3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
+        <!--<com.kondee.testmodule.view.BadgeTextView-->
+        <!--android:id="@+id/tvTestBadge"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_margin="@dimen/activity_horizontal_margin"-->
+        <!--android:text="1"-->
+        <!--android:textColor="@color/white" />-->
 
     </LinearLayout>
 </layout>

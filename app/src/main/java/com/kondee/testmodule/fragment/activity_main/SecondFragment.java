@@ -1,14 +1,11 @@
 package com.kondee.testmodule.fragment.activity_main;
 
 import android.content.Context;
-import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -18,14 +15,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.databinding.FragmentSecondBinding;
-import com.kondee.testmodule.manager.Contextor;
+import com.kondee.testmodule.view.TestCircularViews;
 
 public class SecondFragment extends Fragment implements LoaderManager.LoaderCallbacks<Object> {
 
@@ -42,7 +36,7 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
     @Override
     public Loader<Object> onCreateLoader(int id, Bundle args) {
         if (id == 1) {
-            return new AdderAsynceTestLoader(getActivity(), 10, 20);
+            return new AdderAsynTestLoader(getActivity(), 10, 20);
         }
         return null;
     }
@@ -77,6 +71,10 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     private void initInstance() {
+        binding.test.setOnCircleClickListener(position -> {
+            Log.d(TAG, "onClick: " + position);
+        });
+
 //        thread = new Thread(new Runnable() {
 //            @Override
 //            public void run() {
@@ -178,13 +176,13 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
                 .initLoader(1, null, this);
     }
 
-    static class AdderAsynceTestLoader extends AsyncTaskLoader<Object> {
+    static class AdderAsynTestLoader extends AsyncTaskLoader<Object> {
 
         int a;
         int b;
         Integer result;
 
-        public AdderAsynceTestLoader(Context context, int a, int b) {
+        public AdderAsynTestLoader(Context context, int a, int b) {
             super(context);
             this.a = a;
             this.b = b;

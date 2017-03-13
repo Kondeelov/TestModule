@@ -191,13 +191,11 @@ public class AppLockView extends View {
 
     private void prepareFingerprintManager() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.d(TAG, "init: 1");
             fingerprintManager = (FingerprintManager) getContext().getSystemService(Context.FINGERPRINT_SERVICE);
         }
 
         generateKey();
         if (cipherInit()) {
-            Log.d(TAG, "init: 2");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 cryptoObject = new FingerprintManager.CryptoObject(cipher);
             }
@@ -206,7 +204,6 @@ public class AppLockView extends View {
             helper.setOnAuthenticationListener(new FingerprintHandler.OnAuthenticationListener() {
                 @Override
                 public void onSuccess(FingerprintManager.AuthenticationResult result) {
-                    Log.d(TAG, "onSuccess: success " + result.toString());
                     status = FingerPrintStatus.success;
                     pinCount = 4;
                     invalidate();
@@ -217,7 +214,6 @@ public class AppLockView extends View {
                 public void onFailed() {
                     status = FingerPrintStatus.failed;
                     playVibrateAnimation();
-                    Log.d(TAG, "onFailed: failed");
                 }
             });
         }
@@ -356,8 +352,6 @@ public class AppLockView extends View {
     @TargetApi(Build.VERSION_CODES.M)
     private void generateKey() {
 
-        Log.d(TAG, "generateKey: ");
-
         try {
             keyStore = KeyStore.getInstance("AndroidKeyStore");
         } catch (KeyStoreException e) {
@@ -393,7 +387,6 @@ public class AppLockView extends View {
                     KeyProperties.BLOCK_MODE_CBC + "/" +
                     KeyProperties.ENCRYPTION_PADDING_PKCS7);
         } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            Log.e(TAG, "cipherInit: 1", e);
             e.printStackTrace();
         }
 
@@ -408,7 +401,6 @@ public class AppLockView extends View {
                 | NoSuchAlgorithmException | CertificateException
                 | IOException | InvalidKeyException e) {
 //            throw new RuntimeException("Failed to get Cipher",e);
-            Log.e(TAG, "cipherInit: 2" + e.toString(), e);
             e.printStackTrace();
             return false;
         }
@@ -421,7 +413,6 @@ public class AppLockView extends View {
                 for (AppLockKeyButton appLockKeyButton : appLockKeyButtons) {
 
                     if (appLockKeyButton.rect.contains((int) event.getX(), (int) event.getY()) && !Objects.equals(appLockKeyButton.value, "") && !Objects.equals(appLockKeyButton.value, eraseChar)) {
-                        Log.d(TAG, "appLockTouchEvent: Touch at " + appLockKeyButton.value);
                         if (!Objects.equals(appLockKeyButton.value, eraseChar)) {
                             pinCount += 1;
                             pinInsert = pinInsert + appLockKeyButton.value;
@@ -432,7 +423,6 @@ public class AppLockView extends View {
                             }
                         }
                         if (pinCount == keyAmount) {
-                            Log.d(TAG, "appLockTouchEvent: " + pinInsert + " " + pinCode);
                             if (Objects.equals(pinInsert, pinCode)) {
                                 listener.onPinCorrect();
                             } else {

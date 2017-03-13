@@ -29,12 +29,8 @@
         <attr name="lineWidth" format="dimension" />
     </declare-styleable>
 
-    <declare-styleable name="MultiViewPager">
-        <!-- Child view inside a page to match the page size against. -->
-        <attr name="matchChildWidth" format="reference" />
-        <!-- Maximum size. -->
-        <attr name="android:maxWidth" />
-        <!-- Maximum size. -->
-        <attr name="android:maxHeight" />
+    <declare-styleable name="BadgeTextView">
+        <attr name="test" format="string" />
     </declare-styleable>
+
 </resources>

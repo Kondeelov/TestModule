@@ -3,59 +3,75 @@ package com.kondee.testmodule.fragment.activity_main;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.GnssStatus;
+import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.TextWatcher;
-import android.text.method.DigitsKeyListener;
-import android.text.method.KeyListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
+import android.widget.ArrayAdapter;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationAvailability;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.kondee.testmodule.LocationTracker;
 import com.kondee.testmodule.R;
-import com.kondee.testmodule.activity.AppLockActivity;
 import com.kondee.testmodule.activity.FourthActivity;
-import com.kondee.testmodule.activity.ThirdActivity;
 import com.kondee.testmodule.applock.AppLock;
 import com.kondee.testmodule.databinding.FragmentMainBinding;
-import com.kondee.testmodule.eventbus.TestBus;
-import com.kondee.testmodule.view.AppLockView;
+import com.kondee.testmodule.exception.PermissionException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import io.reactivex.Scheduler;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
+public class MainFragment extends Fragment implements
+        GoogleApiClient.ConnectionCallbacks,
+        com.google.android.gms.location.LocationListener,
+        GoogleApiClient.OnConnectionFailedListener {
 
-public class MainFragment extends Fragment {
-
+    private static final long MIN_UPDATE_TIME = 1000 * 10;
+    private static final float MIN_UPDATE_DISTANCE = 10;
     private static final String TAG = "Kondee";
     private static final int REQUEST_CODE = 12345;
     FragmentMainBinding binding;
-    private TestBus testBus;
+    private static final String[] COUNTRIES = new String[]{
+            "Belgium", "France", "Italy", "Germany", "Spain"
+    };
     private LocationManager locationManager;
+    private boolean isGPSEnabled;
+    private boolean isNetworkEnabled;
+    private String providerName = "";
+    private double latitude;
+    private double longitude;
+    private GoogleApiClient googleApiClient;
+    private LocationRequest locationRequest;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -74,7 +90,8 @@ public class MainFragment extends Fragment {
     }
 
     private void initInstance() {
-        testBus = TestBus.newInstance();
+//        testBus = TestBus.newInstance();
+        buildGoogleApiClient();
 
         binding.btnGo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,68 +111,30 @@ public class MainFragment extends Fragment {
             }
         });
 
-        binding.etTest.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, COUNTRIES);
+        binding.etTest.setAdapter(adapter);
 
-            }
+//        binding.tvTestBadge.setText("1");
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//        binding.tvTestBadge.setOnClickListener(v -> {
+//            binding.tvTestBadge.setText("123");
+//
+//        });
 
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                testBus.setString(s);
-            }
-        });
-        binding.etTest2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                testBus.setString(s);
-            }
-        });
-        binding.etTest3.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                testBus.setString(s);
-            }
-        });
-
-        testBus.getEvent()
+//        testBus.getEvent()
 //                .subscribeOn(Schedulers.io())
 //                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Object>() {
-                    @Override
-                    public void accept(Object o) throws Exception {
-                        if (o.toString().length() > 0) {
-                            binding.btnGo.setEnabled(true);
-                        } else {
-                            binding.btnGo.setEnabled(false);
-                        }
-                    }
-                });
+//                .subscribe(new Consumer<Object>() {
+//                    @Override
+//                    public void accept(Object o) throws Exception {
+//                        if (o.toString().length() > 0) {
+//                            binding.btnGo.setEnabled(true);
+//                        } else {
+//                            binding.btnGo.setEnabled(false);
+//                        }
+//                    }
+//                });
 
 //        String version = "1.0.1";
 //        String compareVersion = "1.0.0";
@@ -192,57 +171,69 @@ public class MainFragment extends Fragment {
 
 //        Log.d(TAG, "initInstance: " + (1 << 0));
 
-        locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        getLatLng();
+        callLocationTracker();
     }
 
-    private void getLatLng() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)) {
+    private void callLocationTracker() {
 
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+        LocationTracker locationTracker = new LocationTracker(getActivity());
+        try {
+            locationTracker.startLocationManager();
+        } catch (PermissionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void checkPermission() {
+
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED /*&& ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED*/) {
+
+            if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
+            } else {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);
             }
-
             return;
         }
-
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-
-        LocationListener locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-
-                Log.d(TAG, "onLocationChanged: " + location.getLatitude());
-                binding.etTest.setText(String.valueOf(location.getLatitude()));
-                binding.etTest2.setText(String.valueOf(location.getLongitude()));
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-
-            }
-        };
-
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 10, locationListener);
     }
+
+    protected synchronized void buildGoogleApiClient() {
+        googleApiClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        googleApiClient.connect();
+    }
+
+    private void updateGPSCoordinates(Location location) {
+        if (location != null) {
+            latitude = location.getLatitude();
+            longitude = location.getLongitude();
+
+            Log.d(TAG, "updateGPSCoordinates: " + latitude + " : " + longitude);
+
+            binding.tvLocation.setText(latitude + " : " + longitude);
+
+            updateGeocoderAddress(location);
+        }
+    }
+
+    private void updateGeocoderAddress(Location location) {
+        Geocoder geocoder = new Geocoder(getActivity(), Locale.US);
+
+        try {
+            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+
+            Address now = addresses.get(0);
+
+            binding.tvAddress.setText(now.getLocality() + " " + now.getThoroughfare() + " " + now.getSubThoroughfare() + " " + now.getSubLocality() + " " + now.getAdminArea() + " " + now.getCountryName() + " " + now.getCountryCode());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void hideKeyboard(View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
@@ -256,24 +247,84 @@ public class MainFragment extends Fragment {
 
         switch (requestCode) {
             case REQUEST_CODE: {
-                // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    getLatLng();
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
+                    checkPermission();
 
                 } else {
-                    getLatLng();
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
-            }
 
-            // other 'case' lines to check for other
-            // permissions this app might request
+                }
+                break;
+            }
         }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.d(TAG, "onConnected: ");
+
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(4000);
+        locationRequest.setFastestInterval(1500);
+
+        checkPermission();
+
+        Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        if (location == null) {
+            // Blank for a moment...
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+        } else {
+            updateGPSCoordinates(location);
+        }
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+
+        final PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            public static final int REQUEST_CHECK_SETTINGS = 0x1;
+
+            @Override
+            public void onResult(@NonNull LocationSettingsResult locationSettingsResult) {
+                Status status = locationSettingsResult.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        Log.i(TAG, "All location settings are satisfied.");
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
+
+                        try {
+                            // Show the dialog by calling startResolutionForResult(), and check the result
+                            // in onActivityResult().
+                            status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
+                        } catch (IntentSender.SendIntentException e) {
+                            Log.i(TAG, "PendingIntent unable to execute request.");
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.d(TAG, "onConnectionSuspended: ");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+        Log.d(TAG, "onConnectionFailed: ");
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d(TAG, "onLocationChanged: " + location.toString());
+        updateGPSCoordinates(location);
     }
 }

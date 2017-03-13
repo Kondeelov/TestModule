@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
         };
         binding.drawerLayout.addDrawerListener(drawerToggle);
 
-        Log.d(TAG, "initInstance: " + binding.testTv.getX());
 //        binding.drawerLayout.setScrimColor(Color.TRANSPARENT);
 
         getSupportActionBar().setHomeButtonEnabled(true);

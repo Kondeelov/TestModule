@@ -12,6 +12,7 @@ import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlaceAutocomplete;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -78,7 +80,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
     private GoogleApiClient googleApiClient;
     private Marker marker;
     private CircleOptions circleOptions;
-    private LatLngBounds latLngBounds;
+    private LatLngBounds latLngBounds = new LatLngBounds(new LatLng(0, 0), new LatLng(0, 0));
 
     public static LocationFragment newInstance() {
         return new LocationFragment();
@@ -110,7 +112,8 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
 
     public void startSearch() {
         try {
-            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(getActivity());
+            AutocompleteFilter autocompleteFilter = new AutocompleteFilter.Builder().setCountry("TH").build();
+            Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).setFilter(autocompleteFilter).build(getActivity());
             startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
         } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
             e.printStackTrace();
@@ -125,7 +128,13 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
 //      Bangkok LatLng
         LatLng location = new LatLng(13.7563, 100.5018);
 
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 9));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, 13));
+
+//        LatLngBounds bangkok = toBounds(location, 200);
+
+//        googleMap.setOnCameraMoveListener(() -> {
+//            Log.d(TAG, "onMapReady: " + bangkok.contains(googleMap.getCameraPosition().target));
+//        });
 
         googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
@@ -184,7 +193,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             Place place = PlaceAutocomplete.getPlace(getActivity(), data);
-            Log.d(TAG, "onActivityResult: " + place.getLatLng().toString());
+//            Log.d(TAG, "onActivityResult: " + place.getLatLng().toString());
 
             gMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 19));
 
@@ -222,6 +231,14 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
 //                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 
                         displayLocationSettingRequest(getActivity());
+                    }
+
+                    Location lastKnownLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if (lastKnownLocation != null) {
+                        if (latLngBounds.contains(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude()))) {
+                            Log.d(TAG, "onLocationChanged: Fuck Yeah!!!");
+                            Toast.makeText(getActivity(), "Yeah!", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     return false;
@@ -366,11 +383,11 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
             // Creating a LatLng object for the current location
             LatLng now = new LatLng(latitude, longitude);
 
-//            Log.d(TAG, "onMyLocationButtonClick: " + now.toString());
-
             gMap.animateCamera(CameraUpdateFactory.newLatLngZoom(now, 16));
 
 //            LatLngBounds latLngBounds = LatLngBounds.createFromAttributes(getActivity(), null);
+
+            Log.d(TAG, "onLocationChanged: " + now.longitude);
 
             if (latLngBounds.contains(now)) {
                 Log.d(TAG, "onLocationChanged: Fuck Yeah!!!");

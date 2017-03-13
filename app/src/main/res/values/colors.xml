@@ -19,5 +19,6 @@
     <color name="colorGreenTranslucent">#5b00ac42</color>
     <color name="colorTranslucentLight">#44000000</color>
     <color name="colorGray">#848484</color>
+    <color name="colorRed" >#ff0000</color>
 
 </resources>
