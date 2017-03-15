@@ -21,10 +21,10 @@
             android:text="Eieieihi" />
 
         <EditText
-            android:id="@+id/btnScan"
+            android:id="@+id/etSms"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Hint" />
+            android:hint="Sms" />
 
         <com.kondee.testmodule.view.TestCircularViews
             android:id="@+id/test"

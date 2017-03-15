@@ -1,6 +1,10 @@
 package com.kondee.testmodule.fragment.activity_main;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.kondee.testmodule.Manifest;
 import com.kondee.testmodule.R;
+import com.kondee.testmodule.broadcastreceiver.SmsReceiver;
 import com.kondee.testmodule.databinding.FragmentSecondBinding;
 import com.kondee.testmodule.view.TestCircularViews;
 
@@ -32,6 +39,7 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
     HandlerThread bgHandlerThread;
     Handler bgHandler;
     AsyncTest asyncTest;
+    private SmsReceiver smsReceiver;
 
     @Override
     public Loader<Object> onCreateLoader(int id, Bundle args) {
@@ -71,9 +79,13 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
     }
 
     private void initInstance() {
+
         binding.test.setOnCircleClickListener(position -> {
             Log.d(TAG, "onClick: " + position);
         });
+
+        smsReceiver = new SmsReceiver();
+
 
 //        thread = new Thread(new Runnable() {
 //            @Override
@@ -258,9 +270,38 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
 //        bgHandlerThread.quit();
 
 //        asyncTest.cancel(true);
-
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerReceiver();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver();
+    }
+
+    private void registerReceiver() {
+        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "registerReceiver: ");
+
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction("android.permission.RECEIVE_SMS");
+            intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+
+            getActivity().registerReceiver(smsReceiver, intentFilter);
+        }
+    }
+
+    private void unregisterReceiver() {
+        if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED
+                || smsReceiver.isOrderedBroadcast()) {
+            getActivity().unregisterReceiver(smsReceiver);
+        }
+    }
     /*******************
      * Listener Zone
      *******************/
