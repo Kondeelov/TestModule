@@ -86,6 +86,10 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
 
         smsReceiver = new SmsReceiver();
 
+        smsReceiver.setOnSmsReceiveListener(otp -> {
+            Log.d(TAG, "initInstance: otp = " + otp);
+            binding.etSms.setText(otp);
+        });
 
 //        thread = new Thread(new Runnable() {
 //            @Override

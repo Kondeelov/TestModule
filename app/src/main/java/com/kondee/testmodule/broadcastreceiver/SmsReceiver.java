@@ -23,7 +23,7 @@ public class SmsReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "Intent recieved: " + intent.getAction());
 
-        if (intent.getAction() == SMS_RECEIVED) {
+        if (intent.getAction().equals(SMS_RECEIVED)) {
             Bundle bundle = intent.getExtras();
             if (bundle != null) {
                 Object[] pdus = (Object[]) bundle.get("pdus");
@@ -37,9 +37,12 @@ public class SmsReceiver extends BroadcastReceiver {
                     }
                     String[] split = messages[0].getDisplayMessageBody().split(" ");
                     for (String s : split) {
-
-                        if (isNumerics(s))
+                        if (isNumerics(s)) {
                             Log.d(TAG, s);
+                            if (listener != null) {
+                                listener.onSmsReceived(s);
+                            }
+                        }
                     }
                 }
 
@@ -54,5 +57,19 @@ public class SmsReceiver extends BroadcastReceiver {
             return false;
         }
         return true;
+    }
+
+    /***********
+     * Listener
+     ***********/
+
+    private onSmsReceiveListener listener;
+
+    public interface onSmsReceiveListener {
+        void onSmsReceived(String otp);
+    }
+
+    public void setOnSmsReceiveListener(onSmsReceiveListener listener) {
+        this.listener = listener;
     }
 }
