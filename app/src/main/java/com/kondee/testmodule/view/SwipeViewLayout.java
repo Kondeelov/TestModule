@@ -12,6 +12,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -60,27 +61,20 @@ public class SwipeViewLayout extends FrameLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        Log.d(TAG, "onFinishInflate: ");
 
         if (getChildCount() > 1) {
             mainView = getChildAt(0);
             secondaryView = getChildAt(1);
         }
 
-        if (mode == swipeMode.behind)
-            mainView.bringToFront();
-        else if (mode == swipeMode.beside) {
-            secondaryView.setX(mainView.getWidth());
-        }
-
-        mainView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Log.d(TAG, "onClick: "+mainViewRect.left);
-//                viewDragHelper.smoothSlideViewTo(mainView, 0, mainViewRect.top);
-//                ViewCompat.postInvalidateOnAnimation(SwipeViewLayout.this);
-            }
+        mainView.setOnClickListener(v -> {
+            closeLayout();
         });
+    }
+
+    private void closeLayout() {
+        viewDragHelper.smoothSlideViewTo(mainView, mainViewRect.left, mainViewRect.top);
+        ViewCompat.postInvalidateOnAnimation(SwipeViewLayout.this);
     }
 
     @Override
@@ -111,6 +105,13 @@ public class SwipeViewLayout extends FrameLayout {
                 mainView.getRight(),
                 mainView.getBottom());
 
+        if (mode == swipeMode.behind)
+            mainView.bringToFront();
+        else if (mode == swipeMode.beside) {
+//            mainView.bringToFront();
+            secondaryView.setX(mainViewRect.right);
+        }
+
         secondaryViewRect.set(secondaryView.getLeft(),
                 secondaryView.getTop(),
                 secondaryView.getRight(),
@@ -119,12 +120,14 @@ public class SwipeViewLayout extends FrameLayout {
         horizontalDragRange = mainView.getWidth() - secondaryView.getWidth();
     }
 
-//    @Override
-//    public void computeScroll() {
-//        super.computeScroll();
-//        viewDragHelper.continueSettling(true);
-//        ViewCompat.postInvalidateOnAnimation(mainView);
-//    }
+    @Override
+    public void computeScroll() {
+        super.computeScroll();
+        if (viewDragHelper.continueSettling(true)) {
+            ViewCompat.postInvalidateOnAnimation(SwipeViewLayout.this);
+        }
+
+    }
 
     private void init() {
 
@@ -139,15 +142,14 @@ public class SwipeViewLayout extends FrameLayout {
         @Override
         public boolean tryCaptureView(View child, int pointerId) {
             viewDragHelper.captureChildView(mainView, pointerId);
+
             return false;
         }
 
         @Override
         public int clampViewPositionHorizontal(View child, int left, int dx) {
-//            Log.d(TAG, "clampViewPositionHorizontal: " + left);
 
             int max = Math.max(left, secondaryViewRect.left - mainViewRect.right);
-            Log.d(TAG, "clampViewPositionHorizontal: " + max);
 
             return Math.min(max, mainViewRect.right - secondaryViewRect.right);
         }
@@ -158,9 +160,37 @@ public class SwipeViewLayout extends FrameLayout {
         }
 
         @Override
+        public void onViewReleased(View releasedChild, float xvel, float yvel) {
+            super.onViewReleased(releasedChild, xvel, yvel);
+
+            if (xvel < 0) {
+                viewDragHelper.settleCapturedViewAt(mainViewRect.left - secondaryViewRect.width(), mainViewRect.top);
+            } else if (xvel > 0) {
+                viewDragHelper.settleCapturedViewAt(mainViewRect.left, mainViewRect.top);
+            } else {
+                if (Math.abs(releasedChild.getX()) >= secondaryView.getWidth() / 2) {
+                    viewDragHelper.settleCapturedViewAt(mainViewRect.left - secondaryViewRect.width(), mainViewRect.top);
+                } else {
+                    viewDragHelper.settleCapturedViewAt(mainViewRect.left, mainViewRect.top);
+                }
+            }
+
+            invalidate();
+        }
+
+        @Override
+        public void onViewDragStateChanged(int state) {
+            super.onViewDragStateChanged(state);
+        }
+
+        @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
 
         }
     };
+
+    /***********
+     * Listener
+     ***********/
 }
