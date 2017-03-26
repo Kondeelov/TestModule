@@ -23,16 +23,14 @@ public class SwipeViewLayout extends FrameLayout {
     private ViewDragHelper viewDragHelper;
     private View mainView;
     private View secondaryView;
-    private swipeMode mode = swipeMode.behind;
+    private swipeMode mode = swipeMode.beside;
     private Rect mainViewRect = new Rect();
     private Rect secondaryViewRect = new Rect();
     private int horizontalDragRange;
 
-
     private enum swipeMode {
         behind, beside
     }
-
 
     public SwipeViewLayout(@NonNull Context context) {
         super(context);
@@ -187,6 +185,9 @@ public class SwipeViewLayout extends FrameLayout {
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
 
+            Log.d(TAG, "onViewPositionChanged: " + left + " " + top);
+            if (mode == swipeMode.beside)
+                secondaryView.setX(secondaryViewRect.left - left);
         }
     };
 
