@@ -78,6 +78,9 @@
             android:name=".activity.TestFourActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".activity.SwipeTestActivity"
+            android:screenOrientation="portrait" />
 
         <receiver android:name=".broadcastreceiver.SmsReceiver">
             <intent-filter>

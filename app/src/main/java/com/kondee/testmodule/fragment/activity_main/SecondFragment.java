@@ -290,7 +290,7 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
 
     private void registerReceiver() {
         if (ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.READ_SMS) == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "registerReceiver: ");
+//            Log.d(TAG, "registerReceiver: ");
 
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction("android.permission.RECEIVE_SMS");
