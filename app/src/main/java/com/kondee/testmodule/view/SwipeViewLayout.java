@@ -17,13 +17,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
-
 public class SwipeViewLayout extends FrameLayout {
     private static final String TAG = "Kondee";
     private ViewDragHelper viewDragHelper;
     private View mainView;
     private View secondaryView;
-    private swipeMode mode = swipeMode.beside;
+    private swipeMode mode = swipeMode.behind;
     private Rect mainViewRect = new Rect();
     private Rect secondaryViewRect = new Rect();
     private int horizontalDragRange;
@@ -106,8 +105,11 @@ public class SwipeViewLayout extends FrameLayout {
         if (mode == swipeMode.behind)
             mainView.bringToFront();
         else if (mode == swipeMode.beside) {
-//            mainView.bringToFront();
-            secondaryView.setX(mainViewRect.right);
+
+            secondaryView.layout(mainViewRect.right + left,
+                    top,
+                    mainViewRect.right + left + secondaryView.getWidth(),
+                    top + secondaryView.getHeight());
         }
 
         secondaryViewRect.set(secondaryView.getLeft(),
@@ -147,9 +149,9 @@ public class SwipeViewLayout extends FrameLayout {
         @Override
         public int clampViewPositionHorizontal(View child, int left, int dx) {
 
-            int max = Math.max(left, secondaryViewRect.left - mainViewRect.right);
+            int max = Math.max(left, -secondaryViewRect.width());
 
-            return Math.min(max, mainViewRect.right - secondaryViewRect.right);
+            return Math.min(max, 0);
         }
 
         @Override
@@ -185,9 +187,13 @@ public class SwipeViewLayout extends FrameLayout {
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
 
-            Log.d(TAG, "onViewPositionChanged: " + left + " " + top);
-            if (mode == swipeMode.beside)
-                secondaryView.setX(secondaryViewRect.left - left);
+            if (mode == swipeMode.beside) {
+                secondaryView.layout(mainViewRect.right + left,
+                        top,
+                        mainViewRect.right + left + secondaryView.getWidth(),
+                        top + secondaryView.getHeight()
+                );
+            }
         }
     };
 

@@ -3,6 +3,7 @@ package com.kondee.testmodule.fragment.activity_main;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -44,6 +45,7 @@ import com.kondee.testmodule.LocationTracker;
 import com.kondee.testmodule.NumericFilter;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.activity.FourthActivity;
+import com.kondee.testmodule.activity.SwipeTestActivity;
 import com.kondee.testmodule.applock.AppLock;
 import com.kondee.testmodule.databinding.FragmentMainBinding;
 import com.kondee.testmodule.exception.PermissionException;
@@ -102,8 +104,10 @@ public class MainFragment extends Fragment implements
             @Override
             public void onClick(View v) {
 
-                AppLock.callAppLockActivityTo(getActivity(), FourthActivity.class, "1111", null, R.drawable.padlock);
+//                AppLock.callAppLockActivityTo(getActivity(), FourthActivity.class, "1111", null, R.drawable.padlock);
 
+                Intent intent = new Intent(getActivity(), SwipeTestActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -120,7 +124,7 @@ public class MainFragment extends Fragment implements
                 android.R.layout.simple_dropdown_item_1line, COUNTRIES);
         binding.etTest.setAdapter(adapter);
 
-        binding.etTest2.setFilters(new InputFilter[]{new AlphabetFilter(),new NumericFilter()});
+        binding.etTest2.setFilters(new InputFilter[]{new AlphabetFilter(), new NumericFilter()});
 
 //        binding.tvTestBadge.setText("1");
 
@@ -218,7 +222,7 @@ public class MainFragment extends Fragment implements
             latitude = location.getLatitude();
             longitude = location.getLongitude();
 
-            Log.d(TAG, "updateGPSCoordinates: " + latitude + " : " + longitude);
+//            Log.d(TAG, "updateGPSCoordinates: " + latitude + " : " + longitude);
 
             binding.tvLocation.setText(latitude + " : " + longitude);
 
@@ -269,7 +273,7 @@ public class MainFragment extends Fragment implements
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        Log.d(TAG, "onConnected: ");
+//        Log.d(TAG, "onConnected: ");
 
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -298,21 +302,21 @@ public class MainFragment extends Fragment implements
                 Status status = locationSettingsResult.getStatus();
                 switch (status.getStatusCode()) {
                     case LocationSettingsStatusCodes.SUCCESS:
-                        Log.i(TAG, "All location settings are satisfied.");
+//                        Log.i(TAG, "All location settings are satisfied.");
                         break;
                     case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
-                        Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
+//                        Log.i(TAG, "Location settings are not satisfied. Show the user a dialog to upgrade location settings ");
 
                         try {
                             // Show the dialog by calling startResolutionForResult(), and check the result
                             // in onActivityResult().
                             status.startResolutionForResult(getActivity(), REQUEST_CHECK_SETTINGS);
                         } catch (IntentSender.SendIntentException e) {
-                            Log.i(TAG, "PendingIntent unable to execute request.");
+//                            Log.i(TAG, "PendingIntent unable to execute request.");
                         }
                         break;
                     case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
-                        Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
+//                        Log.i(TAG, "Location settings are inadequate, and cannot be fixed here. Dialog not created.");
                         break;
                 }
             }
@@ -321,17 +325,17 @@ public class MainFragment extends Fragment implements
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.d(TAG, "onConnectionSuspended: ");
+//        Log.d(TAG, "onConnectionSuspended: ");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "onConnectionFailed: ");
+//        Log.d(TAG, "onConnectionFailed: ");
     }
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.d(TAG, "onLocationChanged: " + location.toString());
+//        Log.d(TAG, "onLocationChanged: " + location.toString());
         updateGPSCoordinates(location);
     }
 }
