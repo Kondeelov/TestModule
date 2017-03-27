@@ -306,6 +306,7 @@ public class SecondFragment extends Fragment implements LoaderManager.LoaderCall
             getActivity().unregisterReceiver(smsReceiver);
         }
     }
+
     /*******************
      * Listener Zone
      *******************/

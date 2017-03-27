@@ -20,6 +20,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.InputFilter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +39,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.kondee.testmodule.AlphabetFilter;
 import com.kondee.testmodule.LocationTracker;
+import com.kondee.testmodule.NumericFilter;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.activity.FourthActivity;
 import com.kondee.testmodule.applock.AppLock;
@@ -46,6 +49,8 @@ import com.kondee.testmodule.databinding.FragmentMainBinding;
 import com.kondee.testmodule.exception.PermissionException;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -114,6 +119,8 @@ public class MainFragment extends Fragment implements
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, COUNTRIES);
         binding.etTest.setAdapter(adapter);
+
+        binding.etTest2.setFilters(new InputFilter[]{new AlphabetFilter(),new NumericFilter()});
 
 //        binding.tvTestBadge.setText("1");
 

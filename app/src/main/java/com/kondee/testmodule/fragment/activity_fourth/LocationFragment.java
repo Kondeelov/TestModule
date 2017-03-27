@@ -461,10 +461,10 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
         builder.setAutoCancel(true)
 //                    .setSmallIcon(R.drawable.star)
 //                    .setContent(remoteViews);
-                .setSmallIcon(R.drawable.ic_audiotrack)
+                .setSmallIcon(android.R.drawable.ic_btn_speak_now)
                 .setContentTitle("Set your title")
                 .setContentText("Pull to view image!")
-                .addAction(R.drawable.ic_media_play, "play", null);
+                .addAction(android.R.drawable.ic_media_play, "play", null);
 
         Bitmap bitmap_image = BitmapFactory.decodeResource(getActivity().getResources(), R.drawable.bg_nav_header);
         NotificationCompat.BigPictureStyle s = new NotificationCompat.BigPictureStyle().bigPicture(bitmap_image);
