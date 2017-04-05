@@ -33,4 +33,11 @@
         <attr name="test" format="string" />
     </declare-styleable>
 
+    <declare-styleable name="SwipeViewLayout">
+        <attr name="swipeMode" format="enum">
+            <enum name="behind" value="0" />
+            <enum name="beside" value="1" />
+        </attr>
+    </declare-styleable>
+
 </resources>

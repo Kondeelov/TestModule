@@ -46,6 +46,8 @@
             android:focusableInTouchMode="false" />
 
         <EditText
+            android:inputType="numberDecimal"
+            android:digits="1234567890"
             android:id="@+id/etTest3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

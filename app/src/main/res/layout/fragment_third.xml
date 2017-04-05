@@ -7,14 +7,14 @@
         android:orientation="vertical">
 
         <EditText
-            android:hint="Input your prefer words"
             android:id="@+id/etSearch"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:hint="Input your prefer words" />
 
         <ListView
             android:id="@+id/listView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 </layout>

@@ -2,27 +2,22 @@ package com.kondee.testmodule.fragment.activity_main;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.GnssStatus;
-import android.location.GpsStatus;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.text.Editable;
 import android.text.InputFilter;
-import android.util.Log;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +29,6 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.LocationAvailability;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -44,17 +38,12 @@ import com.kondee.testmodule.AlphabetFilter;
 import com.kondee.testmodule.LocationTracker;
 import com.kondee.testmodule.NumericFilter;
 import com.kondee.testmodule.R;
-import com.kondee.testmodule.activity.FourthActivity;
 import com.kondee.testmodule.activity.SwipeTestActivity;
-import com.kondee.testmodule.applock.AppLock;
 import com.kondee.testmodule.databinding.FragmentMainBinding;
 import com.kondee.testmodule.exception.PermissionException;
+import com.kondee.testmodule.textwatcher.NumberDecimalTextWatcher;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -126,6 +115,8 @@ public class MainFragment extends Fragment implements
 
         binding.etTest2.setFilters(new InputFilter[]{new AlphabetFilter(), new NumericFilter()});
 
+        binding.etTest3.addTextChangedListener(new NumberDecimalTextWatcher(binding.etTest3) {
+        });
 //        binding.tvTestBadge.setText("1");
 
 //        binding.tvTestBadge.setOnClickListener(v -> {

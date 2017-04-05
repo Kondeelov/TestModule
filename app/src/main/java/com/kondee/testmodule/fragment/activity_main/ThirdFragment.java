@@ -4,6 +4,8 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -14,6 +16,8 @@ import android.widget.ArrayAdapter;
 
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.databinding.FragmentThirdBinding;
+import com.kondee.testmodule.databinding.ItemTestThreeListBinding;
+import com.kondee.testmodule.databinding.ListTestItemBinding;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,11 +63,13 @@ public class ThirdFragment extends Fragment {
 
     private void initInstance(View rootView) {
 
-        Arrays.sort(test);
+//        Arrays.sort(test);
 
         adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_list_item_1, getNameList());
 
         binding.listView.setAdapter(adapter);
+
+
 
         Observable<String> observable1 = Observable.fromIterable(getNameList())
                 .subscribeOn(Schedulers.io())
@@ -72,13 +78,6 @@ public class ThirdFragment extends Fragment {
         Observable<String> observable2 = Observable.fromIterable(getVersionList())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-
-//        Observable<String> observable = Observable.zip(observable1,
-//                observable2,
-//                (o, o2) -> String.valueOf(o) + " " + String.valueOf(o2))
-//                .skip(5)
-//                .subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread());
 
         Observable<Integer> observable = Observable.fromIterable(getIntList())
                 .zipWith(Observable.fromIterable(getReverseIntList()).subscribeOn(Schedulers.io()), new BiFunction<Integer, Integer, Integer>() {
@@ -129,7 +128,8 @@ public class ThirdFragment extends Fragment {
                 "Kitkat",
                 "Lollipop",
                 "Marshmallow",
-                "Nougat"));
+                "Nougat",
+                "O-MG"));
         return nameList;
     }
 
@@ -185,4 +185,5 @@ public class ThirdFragment extends Fragment {
         Collections.reverse(nameList);
         return nameList;
     }
+
 }

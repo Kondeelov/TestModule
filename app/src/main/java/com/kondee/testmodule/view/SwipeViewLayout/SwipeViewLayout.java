@@ -1,6 +1,7 @@
-package com.kondee.testmodule.view;
+package com.kondee.testmodule.view.SwipeViewLayout;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.annotation.AttrRes;
@@ -11,24 +12,37 @@ import android.support.annotation.StyleRes;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
+
+import com.kondee.testmodule.R;
 
 public class SwipeViewLayout extends FrameLayout {
     private static final String TAG = "Kondee";
     private ViewDragHelper viewDragHelper;
     private View mainView;
     private View secondaryView;
-    private swipeMode mode = swipeMode.behind;
+    private swipeMode mode;
     private Rect mainViewRect = new Rect();
     private Rect secondaryViewRect = new Rect();
     private int horizontalDragRange;
+    private ViewConfiguration viewConfiguration;
+    private boolean isOpenBeforeInit = false;
+    private int openLeftPosition;
+
+    public void abort() {
+        viewDragHelper.abort();
+    }
 
     private enum swipeMode {
-        behind, beside
+        behind, beside;
+
+        public static swipeMode getMode(int position) {
+            swipeMode[] values = swipeMode.values();
+            return values[position];
+        }
     }
 
     public SwipeViewLayout(@NonNull Context context) {
@@ -64,14 +78,64 @@ public class SwipeViewLayout extends FrameLayout {
             secondaryView = getChildAt(1);
         }
 
-        mainView.setOnClickListener(v -> {
-            closeLayout();
-        });
+        if (getChildCount() == 1) {
+            mainView = getChildAt(0);
+        }
     }
 
-    private void closeLayout() {
-        viewDragHelper.smoothSlideViewTo(mainView, mainViewRect.left, mainViewRect.top);
+    public void close(boolean animation) {
+        setOpenBeforeInit(false);
+
+        if (animation) {
+            viewDragHelper.smoothSlideViewTo(mainView, mainViewRect.left, mainViewRect.top);
+
+            if (stateChangeListener != null) {
+                stateChangeListener.onStageChange(SwipeViewState.STATE_CLOSE);
+            }
+        } else {
+            viewDragHelper.abort();
+
+            mainView.layout(mainViewRect.left,
+                    mainViewRect.top,
+                    mainViewRect.right,
+                    mainViewRect.bottom);
+
+            secondaryView.layout(secondaryViewRect.left,
+                    secondaryViewRect.top,
+                    secondaryViewRect.right,
+                    secondaryViewRect.bottom);
+        }
         ViewCompat.postInvalidateOnAnimation(SwipeViewLayout.this);
+    }
+
+    public void open(boolean animation) {
+        setOpenBeforeInit(true);
+
+        if (animation) {
+            viewDragHelper.smoothSlideViewTo(mainView, -secondaryView.getWidth(), mainViewRect.top);
+
+            if (stateChangeListener != null) {
+                stateChangeListener.onStageChange(SwipeViewState.STATE_OPEN);
+            }
+        } else {
+            viewDragHelper.abort();
+
+            mainView.layout(mainViewRect.left - secondaryView.getWidth(),
+                    mainViewRect.top,
+                    mainViewRect.right - secondaryView.getWidth(),
+                    mainViewRect.bottom);
+
+            secondaryView.layout(mainViewRect.right - secondaryView.getWidth(),
+                    secondaryViewRect.top,
+                    mainViewRect.right,
+                    secondaryViewRect.bottom);
+        }
+        ViewCompat.postInvalidateOnAnimation(SwipeViewLayout.this);
+    }
+
+
+    private void setOpenBeforeInit(boolean b) {
+        isOpenBeforeInit = b;
     }
 
     @Override
@@ -97,19 +161,29 @@ public class SwipeViewLayout extends FrameLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
+        horizontalDragRange = mainView.getWidth() - secondaryView.getWidth();
+
+        setRect();
+
+        if (isOpenBeforeInit) {
+            open(false);
+        } else {
+            close(false);
+        }
+
+        openLeftPosition = -secondaryView.getWidth();
+    }
+
+    private void setRect() {
         mainViewRect.set(mainView.getLeft(),
                 mainView.getTop(),
                 mainView.getRight(),
                 mainView.getBottom());
 
-        if (mode == swipeMode.behind)
+        if (mode == swipeMode.behind) {
             mainView.bringToFront();
-        else if (mode == swipeMode.beside) {
-
-            secondaryView.layout(mainViewRect.right + left,
-                    top,
-                    mainViewRect.right + left + secondaryView.getWidth(),
-                    top + secondaryView.getHeight());
+        } else if (mode == swipeMode.beside) {
+            secondaryView.offsetLeftAndRight(mainView.getWidth());
         }
 
         secondaryViewRect.set(secondaryView.getLeft(),
@@ -117,7 +191,6 @@ public class SwipeViewLayout extends FrameLayout {
                 secondaryView.getRight(),
                 secondaryView.getBottom());
 
-        horizontalDragRange = mainView.getWidth() - secondaryView.getWidth();
     }
 
     @Override
@@ -131,11 +204,23 @@ public class SwipeViewLayout extends FrameLayout {
 
     private void init() {
 
+        viewConfiguration = ViewConfiguration.get(getContext());
+
         viewDragHelper = ViewDragHelper.create(this, 1.0f, viewDragHelperCallback);
     }
 
     private void initWithAttrs(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 
+        TypedArray a = getContext().getTheme().obtainStyledAttributes(attrs,
+                R.styleable.SwipeViewLayout,
+                defStyleAttr,
+                defStyleRes);
+
+        try {
+            mode = swipeMode.getMode(a.getInt(R.styleable.SwipeViewLayout_swipeMode, 0));
+        } finally {
+            a.recycle();
+        }
     }
 
     ViewDragHelper.Callback viewDragHelperCallback = new ViewDragHelper.Callback() {
@@ -150,6 +235,9 @@ public class SwipeViewLayout extends FrameLayout {
         public int clampViewPositionHorizontal(View child, int left, int dx) {
 
             int max = Math.max(left, -secondaryViewRect.width());
+            if (Math.abs(left) > viewConfiguration.getScaledTouchSlop()) {
+                requestDisallowInterceptTouchEvent(true);
+            }
 
             return Math.min(max, 0);
         }
@@ -164,14 +252,18 @@ public class SwipeViewLayout extends FrameLayout {
             super.onViewReleased(releasedChild, xvel, yvel);
 
             if (xvel < 0) {
-                viewDragHelper.settleCapturedViewAt(mainViewRect.left - secondaryViewRect.width(), mainViewRect.top);
+//                viewDragHelper.settleCapturedViewAt(mainViewRect.left - secondaryViewRect.width(), mainViewRect.top);
+                open(true);
             } else if (xvel > 0) {
-                viewDragHelper.settleCapturedViewAt(mainViewRect.left, mainViewRect.top);
+//                viewDragHelper.settleCapturedViewAt(mainViewRect.left, mainViewRect.top);
+                close(true);
             } else {
                 if (Math.abs(releasedChild.getX()) >= secondaryView.getWidth() / 2) {
-                    viewDragHelper.settleCapturedViewAt(mainViewRect.left - secondaryViewRect.width(), mainViewRect.top);
+//                    viewDragHelper.settleCapturedViewAt(mainViewRect.left - secondaryViewRect.width(), mainViewRect.top);
+                    open(true);
                 } else {
-                    viewDragHelper.settleCapturedViewAt(mainViewRect.left, mainViewRect.top);
+//                    viewDragHelper.settleCapturedViewAt(mainViewRect.left, mainViewRect.top);
+                    close(true);
                 }
             }
 
@@ -181,6 +273,20 @@ public class SwipeViewLayout extends FrameLayout {
         @Override
         public void onViewDragStateChanged(int state) {
             super.onViewDragStateChanged(state);
+
+            switch (state) {
+                case 0:
+                    if (mainView.getLeft() == openLeftPosition) {
+//                        open
+//                        setOpenBeforeInit(true);
+                    } else {
+//                        close
+//                        setOpenBeforeInit(false);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         @Override
@@ -188,16 +294,24 @@ public class SwipeViewLayout extends FrameLayout {
             super.onViewPositionChanged(changedView, left, top, dx, dy);
 
             if (mode == swipeMode.beside) {
-                secondaryView.layout(mainViewRect.right + left,
-                        top,
-                        mainViewRect.right + left + secondaryView.getWidth(),
-                        top + secondaryView.getHeight()
-                );
+                secondaryView.offsetLeftAndRight(dx);
             }
+
+            ViewCompat.postInvalidateOnAnimation(SwipeViewLayout.this);
         }
     };
 
     /***********
      * Listener
      ***********/
+    onStateChangeListener stateChangeListener;
+
+    public interface onStateChangeListener {
+        void onStageChange(SwipeViewState state);
+
+    }
+
+    public void setOnStateChangeListener(onStateChangeListener stateChangeListener) {
+        this.stateChangeListener = stateChangeListener;
+    }
 }
