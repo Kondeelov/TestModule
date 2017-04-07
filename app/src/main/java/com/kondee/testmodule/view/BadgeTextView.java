@@ -1,6 +1,7 @@
 package com.kondee.testmodule.view;
 
 import android.content.Context;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -28,6 +29,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.kondee.testmodule.utils.Utils;
+
+import static android.R.attr.width;
+import static com.kondee.testmodule.R.attr.height;
 
 
 public class BadgeTextView extends AppCompatTextView {
@@ -72,8 +76,7 @@ public class BadgeTextView extends AppCompatTextView {
 
     private void initWithAttrs(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 
-        setGravity(Gravity.CENTER_HORIZONTAL | Gravity.TOP);
-//        getPaint().setTextAlign(Paint.Align.CENTER);
+//        getPaint().setTextAlign(Paint.Align.RIGHT);
 
 //        mShadowRadius = (Utils.dp2px(getContext(), Utils.dp2px(getContext(), 2)));
 //        basePadding = (mShadowRadius * 2);
@@ -87,6 +90,10 @@ public class BadgeTextView extends AppCompatTextView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
+        Rect bound = getBound();
+
+        size = (int) Math.max(bound.right - bound.left, getTextSize());
+
         if (size != 0) {
             newWidthMeasureSpec = MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY);
             newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY);
@@ -94,10 +101,22 @@ public class BadgeTextView extends AppCompatTextView {
 
         super.onMeasure(newWidthMeasureSpec, newHeightMeasureSpec);
 
-//        Log.d(TAG, "onMeasure: " + getMeasuredWidth() + " " + getMeasuredHeight());
-        size = Math.max(getMeasuredWidth(), getMeasuredHeight());
-
         setMeasuredDimension(size, size);
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+
+    }
+
+    private Rect getBound() {
+        CharSequence text = getText();
+        bound = new Rect();
+        Paint textPaint = getPaint();
+        textPaint.getTextBounds(text.toString(), 0, getText().length(), bound);
+
+        return bound;
     }
 
     @Override
@@ -120,40 +139,23 @@ public class BadgeTextView extends AppCompatTextView {
         }
 
         if (text.length() == 1) {
-            bound = new Rect();
-            Paint textPaint = getPaint();
-            textPaint.getTextBounds(getText().toString(), 0, getText().length(), bound);
 
-            int diameter = Math.max(width, height);
-            RectF rectF = new RectF(bound.left, bound.top, bound.right, bound.bottom);
-
-            Drawable drawable = new MyDrawable(rectF);
+            Drawable drawable = new MyDrawable();
 
             setBackgroundDrawable(drawable);
-
-//            Log.d(TAG, "resetBackgroundDrawable: " + getX() + " " + getY());
         }
     }
 
     private class MyDrawable extends ShapeDrawable {
 
-        private RectF rectF;
-
-        public MyDrawable(RectF rectF) {
-
-            this.rectF = rectF;
-        }
-
         @Override
         public void draw(Canvas canvas) {
-//            super.draw(canvas);
-
-//            Log.d(TAG, "draw: " + rectF.height() + " " + BadgeTextView.this.getTextSize());
 
             getPaint().setAntiAlias(true);
+            getPaint().setDither(true);
 
             getPaint().setColor(Color.RED);
-            canvas.drawCircle(BadgeTextView.this.getWidth() / 2, BadgeTextView.this.getHeight() / 2, BadgeTextView.this.getTextSize() / 2, getPaint());
+            canvas.drawCircle(BadgeTextView.this.getWidth() / 2, BadgeTextView.this.getTextSize() / 2, BadgeTextView.this.getTextSize() / 2, getPaint());
         }
     }
 }

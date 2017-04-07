@@ -28,8 +28,10 @@ public class SwipeViewHelper {
             public void onStageChange(SwipeViewState state) {
                 stateMap.put(id, state);
 
-                if (openOnlyOne) {
-                    closeOthers(id, layout);
+                if (state == SwipeViewState.STATE_OPEN) {
+                    if (openOnlyOne) {
+                        closeOthers(id, layout);
+                    }
                 }
             }
         });
@@ -52,8 +54,8 @@ public class SwipeViewHelper {
 
         if (getOpenCount() > 0) {
             for (Map.Entry<String, SwipeViewState> entry : stateMap.entrySet()) {
-                if (!id.equals(entry.getKey())) {
-                    stateMap.put(id, SwipeViewState.STATE_CLOSE);
+                if (!entry.getKey().equals(id)) {
+                    stateMap.put(entry.getKey(), SwipeViewState.STATE_CLOSE);
                 }
             }
 
