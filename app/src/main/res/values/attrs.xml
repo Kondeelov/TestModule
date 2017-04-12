@@ -40,4 +40,9 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="CircularImageView">
+        <attr name="borderColor" format="color" />
+        <attr name="borderWidth" format="dimension" />
+    </declare-styleable>
+
 </resources>

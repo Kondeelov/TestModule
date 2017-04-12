@@ -54,12 +54,14 @@
 
         <com.kondee.testmodule.view.CircularImageView
             android:id="@+id/imvCircle"
-            android:src="@drawable/people_2"
-            android:scaleType="centerCrop"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-        </com.kondee.testmodule.view.CircularImageView>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@color/colorGreen"
+            android:src="@drawable/globe"
+            android:tint="@color/colorAccent"
+            app:borderColor="@color/colorPrimaryDark"
+            app:borderWidth="6dp" />
 
     </LinearLayout>
 </layout>
