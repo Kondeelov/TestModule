@@ -43,7 +43,9 @@
         <EditText
             android:id="@+id/etTest2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
 
         <EditText
             android:id="@+id/etTest3"
@@ -57,9 +59,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/colorGreen"
+            android:background="@color/colorAccent"
             android:src="@drawable/globe"
-            android:tint="@color/colorAccent"
             app:borderColor="@color/colorPrimaryDark"
             app:borderWidth="6dp" />
 

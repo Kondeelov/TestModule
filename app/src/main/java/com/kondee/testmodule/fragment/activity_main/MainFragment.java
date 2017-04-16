@@ -2,6 +2,7 @@ package com.kondee.testmodule.fragment.activity_main;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
@@ -15,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -35,6 +37,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.kondee.testmodule.AlphabetFilter;
+import com.kondee.testmodule.CustomDatePickerDialog;
 import com.kondee.testmodule.LocationTracker;
 import com.kondee.testmodule.NumericFilter;
 import com.kondee.testmodule.R;
@@ -113,7 +116,14 @@ public class MainFragment extends Fragment implements
                 android.R.layout.simple_dropdown_item_1line, COUNTRIES);
         binding.etTest.setAdapter(adapter);
 
-        binding.etTest2.setFilters(new InputFilter[]{new AlphabetFilter(), new NumericFilter()});
+        binding.etTest2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CustomDatePickerDialog dialog = new CustomDatePickerDialog(getActivity());
+
+                dialog.show();
+            }
+        });
 
         binding.etTest3.addTextChangedListener(new NumberDecimalTextWatcher(binding.etTest3) {
         });

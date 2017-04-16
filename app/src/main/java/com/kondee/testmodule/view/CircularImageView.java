@@ -3,12 +3,15 @@ package com.kondee.testmodule.view;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -81,7 +84,6 @@ public class CircularImageView extends android.support.v7.widget.AppCompatImageV
     private void preparePaint() {
         paint.setAntiAlias(true);
         paint.setDither(true);
-        paint.setStyle(Paint.Style.FILL);
 
         circlePaint.setDither(true);
         circlePaint.setAntiAlias(true);
@@ -118,9 +120,13 @@ public class CircularImageView extends android.support.v7.widget.AppCompatImageV
     @Override
     public void setBackground(Drawable background) {
         if (background instanceof ColorDrawable) {
-            if (paint != null) {
-                backgroundColor = ((ColorDrawable) background).getColor();
-            }
+            int color = ((ColorDrawable) background).getColor();
+
+            int red = (color >> 16) & 0xFF;
+            int green = (color >> 8) & 0xFF;
+            int blue = (color) & 0xFF;
+
+            backgroundColor = Color.rgb(red, green, blue);
         }
     }
 
@@ -173,18 +179,29 @@ public class CircularImageView extends android.support.v7.widget.AppCompatImageV
         Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmapWidth - (borderWidth * 2)), (int) (bitmapHeight - (borderWidth * 2)), false);
 
         BitmapShader shader = new BitmapShader(scaledBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        Matrix mShaderMatrix = new Matrix();
+        Matrix shaderMatrix = new Matrix();
 
-        mShaderMatrix.postTranslate(((getMeasuredWidth() - bitmapWidth) / 2) + (borderWidth),
+        shaderMatrix.postTranslate(((getMeasuredWidth() - bitmapWidth) / 2) + (borderWidth),
                 ((getMeasuredHeight() - bitmapHeight) / 2) + (borderWidth));
-        shader.setLocalMatrix(mShaderMatrix);
+
+        shader.setLocalMatrix(shaderMatrix);
         paint.setShader(shader);
 
-        canvas.drawCircle((min / 2) + (borderWidth / 2), (min / 2) + (borderWidth / 2), (min / 2) - borderWidth, paint);
+        float halfMin = ((float) min) / 2;
+
+//        Paint paints = new Paint();
+//        paints.setStyle(Paint.Style.FILL);
+//        paints.setColor(backgroundColor);
+//
+//        canvas.drawCircle(halfMin, halfMin, halfMin - borderWidth, paints);
+
+        canvas.drawCircle(halfMin, halfMin, halfMin - borderWidth, paint);
 
         if (borderWidth != 0) {
-            canvas.drawCircle((getMeasuredWidth() / 2), (getMeasuredHeight() / 2), (min / 2) - (borderWidth / 2), circlePaint);
+            canvas.drawCircle(halfMin, halfMin, halfMin - (borderWidth / 2), circlePaint);
         }
+
+        Log.d(TAG, "drawCircleBitmap: " + getPaddingStart() + " " + getPaddingTop() + " " + getPaddingEnd() + " " + getPaddingBottom());
     }
 
     private Bitmap getBitmapFromDrawable(Drawable drawable) {
@@ -196,32 +213,31 @@ public class CircularImageView extends android.support.v7.widget.AppCompatImageV
 
         if (drawable instanceof BitmapDrawable) {
             bitmap = ((BitmapDrawable) drawable).getBitmap();
+            bitmap = bitmap.copy(Bitmap.Config.ARGB_8888, true);
         } else {
             if (drawable instanceof ColorDrawable) {
                 bitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
             } else {
                 bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
             }
-
-            Canvas canvas = new Canvas(bitmap);
-
-//            canvas.drawColor(backgroundColor);
-//            drawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.colorGreen), PorterDuff.Mode.DST);
-
-            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-            drawable.draw(canvas);
         }
+
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawColor(backgroundColor);
+
+//        canvas.drawBitmap(bitmap, 0, 0, null);
+
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
 
         return bitmap;
     }
 
-    public CircularImageView setBorderWidth(float borderWidth) {
+    public void setBorderWidth(float borderWidth) {
         this.borderWidth = borderWidth;
-        return this;
     }
 
-    public CircularImageView setBorderColor(int borderColor) {
+    public void setBorderColor(int borderColor) {
         this.borderColor = borderColor;
-        return this;
     }
 }

@@ -4,15 +4,26 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <DatePicker
-            android:id="@+id/datePicker"
-            android:datePickerMode="spinner"
-            android:spinnersShown="true"
-            android:calendarViewShown="false"
+        <NumberPicker
+            android:id="@+id/dayPicker"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"
+            android:layout_margin="4dp" />
+
+        <NumberPicker
+            android:id="@+id/monthPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp" />
+
+        <NumberPicker
+            android:id="@+id/yearPicker"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp" />
 
     </LinearLayout>
 </layout>
