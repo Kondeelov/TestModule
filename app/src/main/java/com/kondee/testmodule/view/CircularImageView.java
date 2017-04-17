@@ -201,7 +201,7 @@ public class CircularImageView extends android.support.v7.widget.AppCompatImageV
             canvas.drawCircle(halfMin, halfMin, halfMin - (borderWidth / 2), circlePaint);
         }
 
-        Log.d(TAG, "drawCircleBitmap: " + getPaddingStart() + " " + getPaddingTop() + " " + getPaddingEnd() + " " + getPaddingBottom());
+//        Log.d(TAG, "drawCircleBitmap: " + getPaddingStart() + " " + getPaddingTop() + " " + getPaddingEnd() + " " + getPaddingBottom());
     }
 
     private Bitmap getBitmapFromDrawable(Drawable drawable) {

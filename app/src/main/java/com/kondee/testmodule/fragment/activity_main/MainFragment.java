@@ -20,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,7 @@ import com.kondee.testmodule.exception.PermissionException;
 import com.kondee.testmodule.textwatcher.NumberDecimalTextWatcher;
 
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -119,9 +121,32 @@ public class MainFragment extends Fragment implements
         binding.etTest2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CustomDatePickerDialog dialog = new CustomDatePickerDialog(getActivity());
+//                AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+//                dialog.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//
+//                    }
+//                });
 
-                dialog.show();
+                CustomDatePickerDialog dialog = new CustomDatePickerDialog(getActivity(),
+                        new CustomDatePickerDialog.onDatePickerListener() {
+                            @Override
+                            public void onDatePick(Calendar calendar) {
+                                Log.d(TAG, "onDatePick: " + calendar.getTime().toString());
+                            }
+
+                            @Override
+                            public void onCancel() {
+
+                            }
+                        }
+                );
+
+
+                dialog.create().show();
+
+//                dialog.show();
             }
         });
 
