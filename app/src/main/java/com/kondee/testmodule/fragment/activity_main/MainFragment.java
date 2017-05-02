@@ -1,6 +1,8 @@
 package com.kondee.testmodule.fragment.activity_main;
 
 import android.Manifest;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -24,6 +26,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.CycleInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 
@@ -45,7 +49,9 @@ import com.kondee.testmodule.R;
 import com.kondee.testmodule.activity.SwipeTestActivity;
 import com.kondee.testmodule.databinding.FragmentMainBinding;
 import com.kondee.testmodule.exception.PermissionException;
+import com.kondee.testmodule.model.TestModel2;
 import com.kondee.testmodule.textwatcher.NumberDecimalTextWatcher;
+import com.kondee.testmodule.utils.Utils;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -114,6 +120,13 @@ public class MainFragment extends Fragment implements
             }
         });
 
+        String v = "โหลๆ โดเรมี";
+        String encoded = Utils.encode(v);
+        TestModel2 testModel2 = new TestModel2();
+        testModel2.setTest(encoded);
+
+        binding.etTest.setText(Utils.decode(testModel2.getTest()));
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, COUNTRIES);
         binding.etTest.setAdapter(adapter);
@@ -151,6 +164,24 @@ public class MainFragment extends Fragment implements
         });
 
         binding.etTest3.addTextChangedListener(new NumberDecimalTextWatcher(binding.etTest3) {
+        });
+
+        binding.imvCircle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                AnimatorSet animatorSet = new AnimatorSet();
+
+                ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(binding.imvCircle, "translationX", 0, 10);
+                objectAnimator1.setDuration(300);
+                objectAnimator1.setInterpolator(new CycleInterpolator(3));
+                objectAnimator1.start();
+//                ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(binding.imvCircle, "rotationY", 90, 0);
+
+//                animatorSet.playSequentially(objectAnimator1, objectAnimator2);
+//                animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+//                animatorSet.setDuration(300);
+//                animatorSet.start();
+            }
         });
 //        binding.tvTestBadge.setText("1");
 

@@ -1,5 +1,6 @@
 package com.kondee.testmodule.activity;
 
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
@@ -8,22 +9,26 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,11 +55,12 @@ public class TestFourActivity extends AppCompatActivity {
     private static final String TAG = "Kondee";
 
     ActivityTestFourBinding binding;
-    private TestFourAdapter adapter;
+    private MyRecyclerAdapter adapter;
     List<AnimalDigits> animalDigitsList = new ArrayList<>();
     private TypedArray animalImage;
     private ArrayList<EditText> editTextList;
     private ArrayList<ImageView> imageViewList;
+    private SearchView searchView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,10 +72,14 @@ public class TestFourActivity extends AppCompatActivity {
     }
 
     private void initInstance() {
+        setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         binding.recyclerView.setHasFixedSize(true);
         binding.recyclerView.setLayoutManager(new LinearLayoutManager(TestFourActivity.this, LinearLayoutManager.VERTICAL, false));
-        binding.recyclerView.setAdapter(new MyRecyclerAdapter(getNameList()));
+        adapter = new MyRecyclerAdapter(getNameList());
+        binding.recyclerView.setAdapter(adapter);
     }
 
     public List<String> getNameList() {
@@ -101,13 +111,14 @@ public class TestFourActivity extends AppCompatActivity {
     }
 
     private class MyRecyclerAdapter extends RecyclerView.Adapter<MyViewHolder> {
+        private final List<String> originalList;
         public ListTestItemBinding binding;
         private List<String> nameList;
         //        ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
         SwipeViewHelper swipeViewHelper = new SwipeViewHelper();
 
         public MyRecyclerAdapter(List<String> nameList) {
-
+            this.originalList = nameList;
             this.nameList = nameList;
         }
 
@@ -133,6 +144,78 @@ public class TestFourActivity extends AppCompatActivity {
         public int getItemCount() {
             return nameList.size();
         }
+
+        public Filter getFilter() {
+            return new Filter() {
+                @Override
+                protected FilterResults performFiltering(CharSequence constraint) {
+
+                    FilterResults results = new FilterResults();
+
+                    List<String> list = new ArrayList<>();
+
+                    if (constraint.equals("")) {
+                        list.addAll(originalList);
+                    } else {
+                        for (String name : getNameList()) {
+                            if (name.toLowerCase().contains(constraint)) {
+                                list.add(name);
+                            }
+                        }
+                    }
+
+                    results.values = list;
+                    results.count = list.size();
+
+                    return results;
+                }
+
+                @Override
+                protected void publishResults(CharSequence constraint, FilterResults results) {
+                    nameList = (List<String>) results.values;
+                    notifyDataSetChanged();
+                }
+            };
+        }
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search_test, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        searchView.setIconifiedByDefault(false);
+        searchView.setIconified(false);
+        searchView.setFocusable(true);
+//        searchView.requestFocus();
+//        searchView.requestFocusFromTouch();
+
+        MenuItemCompat.expandActionView(menu.findItem(R.id.search));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     /***********

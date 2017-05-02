@@ -61,7 +61,7 @@ public class CustomDatePickerDialog extends AlertDialog.Builder {
 
         binding.monthPicker.setMinValue(monthMinValue);
         binding.monthPicker.setMaxValue(monthMaxValue);
-        binding.monthPicker.setDisplayedValues(null);
+//        binding.monthPicker.setDisplayedValues(null);
 
         binding.yearPicker.setMinValue(minCalendar.get(Calendar.YEAR));
         binding.yearPicker.setMaxValue(maxCalendar.get(Calendar.YEAR));
@@ -87,96 +87,40 @@ public class CustomDatePickerDialog extends AlertDialog.Builder {
     }
 
     private void updateMaxMinValue(int id, int oldVal, int newVal) {
-        calendar.set(binding.yearPicker.getValue(), binding.monthPicker.getValue(), binding.dayPicker.getValue());
-//        if (id == binding.dayPicker.getId() && oldVal == calendar.getActualMinimum(Calendar.DAY_OF_MONTH) && newVal == calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-//            calendar.add(Calendar.MONTH, -1);
-//        } else if (id == binding.dayPicker.getId() && oldVal == calendar.getActualMaximum(Calendar.DAY_OF_MONTH) && newVal == calendar.getActualMinimum(Calendar.DAY_OF_MONTH)) {
-//            calendar.add(Calendar.MONTH, 1);
-//        } else if (id == binding.monthPicker.getId() && oldVal == monthMinValue && newVal == monthMaxValue && canMonthDown) {
-////            Log.d(TAG, "updateMaxMinValue: 1 " + oldVal + " " + newVal);
-//            canMonthDown = false;
-//            calendar.add(Calendar.YEAR, - 1);
-//            calendar.set(Calendar.MONTH, binding.monthPicker.getValue());
-//            Log.d(TAG, "updateMaxMinValue: " + calendar.get(Calendar.YEAR));
-//        } else if (id == binding.monthPicker.getId() && oldVal == monthMaxValue && newVal == monthMinValue && canMonthUp) {
-////            Log.d(TAG, "updateMaxMinValue: 2 " + oldVal + " " + newVal);
-//            canMonthUp = false;
-//            calendar.add(Calendar.YEAR,  1);
-//            calendar.set(Calendar.MONTH, binding.monthPicker.getValue());
-//            Log.d(TAG, "updateMaxMinValue: " + calendar.get(Calendar.YEAR));
-//        } else {
-//            if (id == binding.monthPicker.getId()) {
-//                canMonthDown = true;
-//                canMonthUp = true;
-//            }
-//        }
-//        else {
-//            calendar.set(binding.yearPicker.getValue(), binding.monthPicker.getValue(), binding.dayPicker.getValue());
-//        }
+        calendar.set(binding.yearPicker.getValue(), binding.monthPicker.getValue() - 1, 1);
 
-//        binding.yearPicker.setValue(calendar.get(Calendar.YEAR));
-//        if (binding.dayPicker.getValue() > calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
-//            binding.dayPicker.setValue(calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-//        }
-//        binding.dayPicker.setMaxValue(calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-//        calendar.set(Calendar.DAY_OF_MONTH, binding.dayPicker.getValue());
+        if (binding.dayPicker.getValue() > calendar.getActualMaximum(Calendar.DAY_OF_MONTH)) {
+            binding.dayPicker.setValue(calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        }
+        binding.dayPicker.setMaxValue(calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.DAY_OF_MONTH, binding.dayPicker.getValue());
 
+        binding.monthPicker.setWrapSelectorWheel(true);
 
-//        if (binding.yearPicker.getValue() == binding.yearPicker.getMinValue()) {
-////            TODO : : >>> Failed here!...
-////            binding.monthPicker.setDisplayedValues(null);
-//            binding.monthPicker.setMinValue(minCalendar.get(Calendar.MONTH));
-//
-////            Log.d(TAG, "updateMaxMinValue: " + minCalendar.get(Calendar.MONTH) + " " + binding.monthPicker.getValue());
-//
-//            if (binding.monthPicker.getValue() <= minCalendar.get(Calendar.MONTH) + 1) {
-//                binding.monthPicker.setWrapSelectorWheel(false);
-////                binding.monthPicker.setDisplayedValues(months);
-//
-////                if (binding.monthPicker.getValue() == ((int) minCalendar.get(Calendar.MONTH))) {
-////                    binding.dayPicker.setMinValue(minCalendar.get(Calendar.DAY_OF_MONTH));
-////                    if (binding.dayPicker.getValue() <= minCalendar.get(Calendar.DAY_OF_MONTH) + 1) {
-////                        binding.dayPicker.setWrapSelectorWheel(false);
-////                    } else {
-////                        binding.dayPicker.setWrapSelectorWheel(true);
-////                    }
-////                } else {
-////                    binding.dayPicker.setMinValue(calendar.getActualMinimum(Calendar.DAY_OF_MONTH));
-////                    binding.dayPicker.setWrapSelectorWheel(true);
-////                }
-//            } else {
-////                binding.monthPicker.setMinValue(0);
-//                binding.monthPicker.setWrapSelectorWheel(true);
-//            }
-//        } else if (binding.yearPicker.getValue() == binding.yearPicker.getMaxValue()) {
-//            binding.monthPicker.setMaxValue(maxCalendar.get(Calendar.MONTH) + 1);
-//            if (binding.monthPicker.getValue() >= maxCalendar.get(Calendar.MONTH) - 1) {
-//                binding.monthPicker.setWrapSelectorWheel(false);
-//
-//                if (binding.monthPicker.getValue() == ((int) maxCalendar.get(Calendar.MONTH))) {
-//                    binding.dayPicker.setMaxValue(maxCalendar.get(Calendar.DAY_OF_MONTH));
-//                    if (binding.dayPicker.getValue() >= maxCalendar.get(Calendar.DAY_OF_MONTH) - 1) {
-//                        binding.dayPicker.setWrapSelectorWheel(false);
-//                    } else {
-//                        binding.dayPicker.setWrapSelectorWheel(true);
-//                    }
-//                } else {
-//                    binding.dayPicker.setMaxValue(calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-//                    binding.dayPicker.setWrapSelectorWheel(true);
-//                }
-//            } else {
-//                binding.monthPicker.setMaxValue(monthMaxValue);
-//                binding.monthPicker.setWrapSelectorWheel(true);
-//            }
-//        } else {
-//            binding.monthPicker.setMinValue(monthMinValue);
-//            binding.monthPicker.setMaxValue(monthMaxValue);
-//            binding.dayPicker.setMinValue(1);
-//            binding.dayPicker.setMaxValue(calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
-//            binding.monthPicker.setWrapSelectorWheel(true);
-//        }
-
-//        binding.monthPicker.setValue(calendar.get(Calendar.MONTH));
+        if (binding.yearPicker.getValue() == ((int) minCalendar.get(Calendar.YEAR))) {
+            binding.monthPicker.setMinValue(minCalendar.get(Calendar.MONTH));
+            binding.monthPicker.setWrapSelectorWheel(true);
+            if (binding.monthPicker.getValue() == ((int) minCalendar.get(Calendar.MONTH))) {
+                binding.monthPicker.setWrapSelectorWheel(false);
+                binding.dayPicker.setMinValue(minCalendar.get(Calendar.DAY_OF_MONTH));
+            } else {
+                binding.dayPicker.setMinValue(1);
+                binding.monthPicker.setWrapSelectorWheel(true);
+            }
+        } else if (binding.yearPicker.getValue() == ((int) maxCalendar.get(Calendar.YEAR))) {
+            binding.monthPicker.setMaxValue(maxCalendar.get(Calendar.MONTH));
+            binding.monthPicker.setWrapSelectorWheel(true);
+            if (binding.monthPicker.getValue() == ((int) maxCalendar.get(Calendar.MONTH))) {
+                binding.monthPicker.setWrapSelectorWheel(false);
+                binding.dayPicker.setMaxValue(maxCalendar.get(Calendar.DAY_OF_MONTH));
+            } else {
+                binding.dayPicker.setMaxValue(calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+                binding.monthPicker.setWrapSelectorWheel(true);
+            }
+        } else {
+            binding.monthPicker.setMinValue(1);
+            binding.monthPicker.setMaxValue(12);
+        }
     }
 
     public void setMaxCalendar(Calendar calendar) {

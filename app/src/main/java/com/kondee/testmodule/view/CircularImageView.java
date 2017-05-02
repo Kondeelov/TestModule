@@ -19,6 +19,7 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.annotation.Px;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -141,6 +142,11 @@ public class CircularImageView extends android.support.v7.widget.AppCompatImageV
     }
 
     @Override
+    public void setPadding(@Px int left, @Px int top, @Px int right, @Px int bottom) {
+        throw new IllegalStateException("Don't set padding. Because you will get unexpected result");
+    }
+
+    @Override
     public void setBackgroundColor(@ColorInt int color) {
         backgroundColor = color;
     }
@@ -189,19 +195,11 @@ public class CircularImageView extends android.support.v7.widget.AppCompatImageV
 
         float halfMin = ((float) min) / 2;
 
-//        Paint paints = new Paint();
-//        paints.setStyle(Paint.Style.FILL);
-//        paints.setColor(backgroundColor);
-//
-//        canvas.drawCircle(halfMin, halfMin, halfMin - borderWidth, paints);
-
         canvas.drawCircle(halfMin, halfMin, halfMin - borderWidth, paint);
 
         if (borderWidth != 0) {
             canvas.drawCircle(halfMin, halfMin, halfMin - (borderWidth / 2), circlePaint);
         }
-
-//        Log.d(TAG, "drawCircleBitmap: " + getPaddingStart() + " " + getPaddingTop() + " " + getPaddingEnd() + " " + getPaddingBottom());
     }
 
     private Bitmap getBitmapFromDrawable(Drawable drawable) {

@@ -16,6 +16,12 @@ import android.widget.TextView;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.manager.Contextor;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 public class Utils {
@@ -58,4 +64,33 @@ public class Utils {
         return (int) (dp * displayMetrics.scaledDensity);
     }
 
+    public static String getBalanceFormat(Object o) {
+        DecimalFormatSymbols symbol = new DecimalFormatSymbols(Locale.FRANCE);
+        symbol.setGroupingSeparator(',');
+        symbol.setDecimalSeparator('.');
+        DecimalFormat format = new DecimalFormat("###,###,###,###,###", symbol);
+        format.setDecimalSeparatorAlwaysShown(false);
+
+        if (o instanceof String) {
+            o = Double.parseDouble(o.toString());
+        }
+
+        return format.format(o);
+    }
+
+    public static String encode(String s) {
+        try {
+            return URLEncoder.encode(s, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
+    }
+
+    public static String decode(String s) {
+        try {
+            return URLDecoder.decode(s, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
+    }
 }
