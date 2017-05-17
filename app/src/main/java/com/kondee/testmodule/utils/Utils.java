@@ -5,15 +5,21 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.TextView;
 
 import com.kondee.testmodule.R;
+import com.kondee.testmodule.activity.TestTwoActivity;
 import com.kondee.testmodule.manager.Contextor;
 
 import java.io.UnsupportedEncodingException;
@@ -26,6 +32,7 @@ import java.util.Locale;
 
 public class Utils {
 
+    private static final String TAG = "Kondee";
     public static SharedPreferences sharedPreferences = Contextor.getInstance().getContext().getSharedPreferences("Current_Language", Context.MODE_PRIVATE);
 
     public static void applyFontedTab(Activity activity, ViewPager viewPager, TabLayout tabLayout) {
@@ -64,6 +71,11 @@ public class Utils {
         return (int) (dp * displayMetrics.scaledDensity);
     }
 
+    public static int dp2px(Context context, float dp) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return (int) (dp * displayMetrics.scaledDensity);
+    }
+
     public static String getBalanceFormat(Object o) {
         DecimalFormatSymbols symbol = new DecimalFormatSymbols(Locale.FRANCE);
         symbol.setGroupingSeparator(',');
@@ -92,5 +104,27 @@ public class Utils {
         } catch (UnsupportedEncodingException e) {
             return "";
         }
+    }
+
+    public static Bitmap takeScreenShot(Activity activity) {
+
+        View v = activity.getWindow().getDecorView();
+        v.setDrawingCacheEnabled(true);
+        v.buildDrawingCache();
+        Bitmap b = v.getDrawingCache();
+
+        Rect frame = new Rect();
+
+        v.getWindowVisibleDisplayFrame(frame);
+        int statusBarHeight = frame.top;
+        Log.d(TAG, "takeScreenShot: statusBarHeight" + statusBarHeight);
+        Point size = new Point();
+        activity.getWindowManager().getDefaultDisplay().getSize(size);
+        int width = size.x;
+        int height = size.y;
+
+        Bitmap bitmap = Bitmap.createBitmap(b, 0, statusBarHeight, width, height - statusBarHeight);
+        v.destroyDrawingCache();
+        return bitmap;
     }
 }

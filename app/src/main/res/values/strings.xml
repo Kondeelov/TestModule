@@ -31,6 +31,12 @@
         <item>ภาษาไทย</item>
     </string-array>
 
+    <string-array name="item_for_multiple_toggle_button">
+        <item>Citizen ID</item>
+        <item>Citizen ID (Old)</item>
+        <item>Passport No.</item>
+    </string-array>
+
     <integer-array name="AnimalNumber">
         <item>@drawable/source_animal_1</item>
         <item>@drawable/source_animal_2</item>

@@ -14,16 +14,25 @@
             android:background="@color/colorPrimary"
             android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hahahahaha" />
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Hahahahaha" />-->
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerView"
+        <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/recyclerView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1" />-->
+
+        <!--<com.kondee.testmodule.view.ZoomableImageView-->
+        <!--android:id="@+id/imvZoom"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+
+        <com.github.chrisbanes.photoview.PhotoView
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
+            android:layout_height="match_parent"
+            android:src="@drawable/source_animal_8" />
     </LinearLayout>
 </layout>

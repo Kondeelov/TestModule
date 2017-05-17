@@ -23,9 +23,6 @@ public class MainApplication extends Application {
                 .setDefaultFontPath("fonts/thaisans.ttf")
                 .setFontAttrId(R.attr.fontPath)
                 .build());
-
-//        Utils.setApplicationLanguage(new Locale(Utils.sharedPreferences.getString("Language", "th")));
-
     }
 
     @Override

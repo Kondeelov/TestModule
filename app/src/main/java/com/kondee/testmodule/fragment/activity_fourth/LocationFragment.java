@@ -205,8 +205,7 @@ public class LocationFragment extends Fragment implements OnMapReadyCallback,
                     .radius(50);
             gMap.addCircle(circleOptions);
 
-            latLngBounds = toBounds(marker.getPosition(), 500);
-
+            latLngBounds = toBounds(marker.getPosition(), 5000);
         }
     }
 

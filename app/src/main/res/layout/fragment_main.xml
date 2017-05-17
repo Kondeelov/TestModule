@@ -10,6 +10,7 @@
         android:orientation="vertical">
 
         <TextView
+            style="@style/TextViewStyle.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/test_change_language" />
@@ -33,7 +34,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dimen_normal"
-            android:layout_marginTop="@dimen/dimen_normal" />
+            android:layout_marginTop="@dimen/dimen_normal"
+            android:maxLines="2" />
 
         <AutoCompleteTextView
             android:id="@+id/etTest"
@@ -53,6 +55,13 @@
             android:layout_height="wrap_content"
             android:digits="1234567890"
             android:inputType="numberDecimal" />
+
+        <com.kondee.testmodule.view.MultiToggleButton
+            android:id="@+id/multiToggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:values="@array/item_for_multiple_toggle_button" />
 
         <com.kondee.testmodule.view.CircularImageView
             android:id="@+id/imvCircle"

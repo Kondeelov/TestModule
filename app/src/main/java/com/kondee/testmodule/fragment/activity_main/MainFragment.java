@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Rect;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -21,11 +22,13 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.CycleInterpolator;
 import android.view.inputmethod.InputMethodManager;
@@ -52,6 +55,7 @@ import com.kondee.testmodule.exception.PermissionException;
 import com.kondee.testmodule.model.TestModel2;
 import com.kondee.testmodule.textwatcher.NumberDecimalTextWatcher;
 import com.kondee.testmodule.utils.Utils;
+import com.kondee.testmodule.view.MultiToggleButton;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -99,6 +103,39 @@ public class MainFragment extends Fragment implements
     private void initInstance() {
 //        testBus = TestBus.newInstance();
         buildGoogleApiClient();
+
+        binding.tvAddress.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+//                Method 1.
+//                ViewTreeObserver obs = binding.tvAddress.getViewTreeObserver();
+//                obs.removeOnGlobalLayoutListener(this);
+//                int height = binding.tvAddress.getHeight();
+//                int scrollY = binding.tvAddress.getScrollY();
+//                Layout layout = binding.tvAddress.getLayout();
+//                int firstVisibleLineNumber = layout.getLineForVertical(scrollY);
+//                int lastVisibleLineNumber = layout.getLineForVertical(height + scrollY);
+//
+//                //check is latest line fully visible
+//                if (binding.tvAddress.getHeight() < layout.getLineBottom(lastVisibleLineNumber)) {
+////                    // TODO you text is cut
+//                }
+
+
+                Log.d(TAG, "onGlobalLayout: " + binding.tvAddress.getLineCount() + " " + binding.tvAddress.getMaxLines());
+//                Method 2.
+                if (binding.tvAddress.getLineCount() > binding.tvAddress.getMaxLines()) {
+                    //                    // TODO you text is cut
+                }
+            }
+        });
+
+        binding.multiToggleButton.setOnStateChangeListener(new MultiToggleButton.onStateChangeListener() {
+            @Override
+            public void onStateChanged(View v, int position, String value) {
+                Log.d(TAG, "onStateChanged() called with: v = [" + v + "], position = [" + position + "], value = [" + value + "]");
+            }
+        });
 
         binding.btnGo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,13 +206,19 @@ public class MainFragment extends Fragment implements
         binding.imvCircle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                AnimatorSet animatorSet = new AnimatorSet();
+                AnimatorSet animatorSet = new AnimatorSet();
 
-                ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(binding.imvCircle, "translationX", 0, 10);
-                objectAnimator1.setDuration(300);
-                objectAnimator1.setInterpolator(new CycleInterpolator(3));
-                objectAnimator1.start();
-//                ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(binding.imvCircle, "rotationY", 90, 0);
+//                ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(binding.imvCircle, "translationX", 0, 10);
+//                objectAnimator1.setDuration(300);
+//                objectAnimator1.setInterpolator(new CycleInterpolator(3));
+//                objectAnimator1.start();
+                ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(binding.imvCircle, "rotation", 0, 90);
+
+//                objectAnimator2.reverse();
+
+//                objectAnimator2.setDuration(300);
+//                objectAnimator2.setInterpolator(new CycleInterpolator(3));
+//                objectAnimator2.start();
 
 //                animatorSet.playSequentially(objectAnimator1, objectAnimator2);
 //                animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());

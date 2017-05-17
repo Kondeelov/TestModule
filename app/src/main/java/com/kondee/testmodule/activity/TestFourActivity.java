@@ -32,7 +32,6 @@ import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.adapter.AnimalChooseAdapter;
 import com.kondee.testmodule.adapter.AnimalChooseViewHolder;
@@ -76,10 +75,11 @@ public class TestFourActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(TestFourActivity.this, LinearLayoutManager.VERTICAL, false));
-        adapter = new MyRecyclerAdapter(getNameList());
-        binding.recyclerView.setAdapter(adapter);
+//        binding.recyclerView.setHasFixedSize(true);
+//        binding.recyclerView.setLayoutManager(new LinearLayoutManager(TestFourActivity.this, LinearLayoutManager.VERTICAL, false));
+//        adapter = new MyRecyclerAdapter(getNameList());
+//        binding.recyclerView.setAdapter(adapter);
+//        binding.imvZoom.setImageResource(R.drawable.source_animal_31);
     }
 
     public List<String> getNameList() {
@@ -181,40 +181,43 @@ public class TestFourActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.search_test, menu);
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.search_test, menu);
 
-        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
-        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-
-        searchView.setIconifiedByDefault(false);
-        searchView.setIconified(false);
-        searchView.setFocusable(true);
+//        SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+//        searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+//        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+//
+//        searchView.setIconifiedByDefault(false);
+//        searchView.setIconified(false);
+//        searchView.setFocusable(true);
 //        searchView.requestFocus();
 //        searchView.requestFocusFromTouch();
 
-        MenuItemCompat.expandActionView(menu.findItem(R.id.search));
+//        MenuItemCompat.expandActionView(menu.findItem(R.id.search));
+//
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//                adapter.getFilter().filter(newText);
+//                return false;
+//            }
+//        });
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                adapter.getFilter().filter(newText);
-                return false;
-            }
-        });
-
-        return true;
-    }
+//        return true;
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+        }
         return super.onOptionsItemSelected(item);
     }
 

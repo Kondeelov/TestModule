@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="TextViewStyle">
+        <item name="fontPath">fonts/waan_regular.ttf</item>
+    </style>
+</resources>
