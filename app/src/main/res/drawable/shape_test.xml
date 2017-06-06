@@ -8,9 +8,9 @@
 
             <stroke
                 android:width="8dp"
-                android:color="@color/colorGreen" />
+                android:color="@color/colorAccent" />
 
-
+            <solid android:color="@color/colorWhite" />
         </shape>
     </item>
 </layer-list>

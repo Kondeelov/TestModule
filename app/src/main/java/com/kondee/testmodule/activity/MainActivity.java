@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.os.Build;
+import android.os.PowerManager;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -21,6 +24,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import com.google.firebase.FirebaseApp;
 import com.kondee.testmodule.adapter.MainFragmentPagerAdapter;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.databinding.ActivityMainBinding;
@@ -62,10 +66,32 @@ public class MainActivity extends AppCompatActivity {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
+        FirebaseApp firebaseApp = FirebaseApp.initializeApp(this);
+
         initInstance();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT_WATCH) {
+            if (!pm.isInteractive()) {
+                Log.d(TAG, "onPause: ");
+            }
+        } else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT_WATCH) {
+            if (!pm.isScreenOn()) {
+                Log.d(TAG, "onPause: ");
+            }
+        }
+    }
+
     private void initInstance() {
+
+//        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+//        vibrator.vibrate(new long[]{1000, 200, 1000, 200, 1000}, 0);
 
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setTitle(R.string.app_name);

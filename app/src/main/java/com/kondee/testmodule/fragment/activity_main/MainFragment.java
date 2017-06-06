@@ -4,12 +4,9 @@ import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.graphics.Rect;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -19,18 +16,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Layout;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.CycleInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 
@@ -44,18 +34,14 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
-import com.kondee.testmodule.AlphabetFilter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.kondee.testmodule.CustomDatePickerDialog;
-import com.kondee.testmodule.LocationTracker;
-import com.kondee.testmodule.NumericFilter;
 import com.kondee.testmodule.R;
-import com.kondee.testmodule.activity.SwipeTestActivity;
 import com.kondee.testmodule.databinding.FragmentMainBinding;
-import com.kondee.testmodule.exception.PermissionException;
-import com.kondee.testmodule.model.TestModel2;
 import com.kondee.testmodule.textwatcher.NumberDecimalTextWatcher;
-import com.kondee.testmodule.utils.Utils;
-import com.kondee.testmodule.view.MultiToggleButton;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -71,9 +57,10 @@ public class MainFragment extends Fragment implements
     private static final float MIN_UPDATE_DISTANCE = 10;
     private static final String TAG = "Kondee";
     private static final int REQUEST_CODE = 12345;
+    private static final java.lang.String CONFIG_TEST_CHANGE_LANGUAGE = "test_change_language";
     FragmentMainBinding binding;
     private static final String[] COUNTRIES = new String[]{
-            "Belgium", "France", "Italy", "Germany", "Spain"
+            "Belgium", "France", "Italy", "Germany", "Spain", "Thailand"
     };
     private LocationManager locationManager;
     private boolean isGPSEnabled;
@@ -104,6 +91,33 @@ public class MainFragment extends Fragment implements
 //        testBus = TestBus.newInstance();
         buildGoogleApiClient();
 
+        FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings remoteConfigSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(true)
+                .build();
+        remoteConfig.setConfigSettings(remoteConfigSettings);
+
+        remoteConfig.setDefaults(R.xml.remote_config_defaults);
+
+        long catchExpiration = 3000;
+
+        if (remoteConfig.getInfo().getConfigSettings().isDeveloperModeEnabled()) {
+            catchExpiration = 0;
+        }
+        remoteConfig.fetch(catchExpiration)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            remoteConfig.activateFetched();
+
+                            updateViews(remoteConfig);
+                        } else {
+                            Log.d(TAG, "onComplete: FAILED!!!");
+                        }
+                    }
+                });
+
         binding.tvAddress.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -122,7 +136,7 @@ public class MainFragment extends Fragment implements
 //                }
 
 
-                Log.d(TAG, "onGlobalLayout: " + binding.tvAddress.getLineCount() + " " + binding.tvAddress.getMaxLines());
+//                Log.d(TAG, "onGlobalLayout: " + binding.tvAddress.getLineCount() + " " + binding.tvAddress.getMaxLines());
 //                Method 2.
                 if (binding.tvAddress.getLineCount() > binding.tvAddress.getMaxLines()) {
                     //                    // TODO you text is cut
@@ -130,12 +144,12 @@ public class MainFragment extends Fragment implements
             }
         });
 
-        binding.multiToggleButton.setOnStateChangeListener(new MultiToggleButton.onStateChangeListener() {
-            @Override
-            public void onStateChanged(View v, int position, String value) {
-                Log.d(TAG, "onStateChanged() called with: v = [" + v + "], position = [" + position + "], value = [" + value + "]");
-            }
-        });
+//        binding.multiToggleButton.setOnStateChangeListener(new MultiToggleButton.onStateChangeListener() {
+//            @Override
+//            public void onStateChanged(View v, int position, String value) {
+//                Log.d(TAG, "onStateChanged() called with: v = [" + v + "], position = [" + position + "], value = [" + value + "]");
+//            }
+//        });
 
         binding.btnGo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -143,8 +157,8 @@ public class MainFragment extends Fragment implements
 
 //                AppLock.callAppLockActivityTo(getActivity(), FourthActivity.class, "1111", null, R.drawable.padlock);
 
-                Intent intent = new Intent(getActivity(), SwipeTestActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(getActivity(), SwipeTestActivity.class);
+//                startActivity(intent);
             }
         });
 
@@ -157,12 +171,12 @@ public class MainFragment extends Fragment implements
             }
         });
 
-        String v = "โหลๆ โดเรมี";
-        String encoded = Utils.encode(v);
-        TestModel2 testModel2 = new TestModel2();
-        testModel2.setTest(encoded);
-
-        binding.etTest.setText(Utils.decode(testModel2.getTest()));
+//        String v = "โหลๆ โดเรมี";
+//        String encoded = Utils.encode(v);
+//        TestModel2 testModel2 = new TestModel2();
+//        testModel2.setTest(encoded);
+//
+//        binding.etTest.setText(Utils.decode(testModel2.getTest()));
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 android.R.layout.simple_dropdown_item_1line, COUNTRIES);
@@ -282,17 +296,10 @@ public class MainFragment extends Fragment implements
 
 //        Log.d(TAG, "initInstance: " + (1 << 0));
 
-        callLocationTracker();
     }
 
-    private void callLocationTracker() {
-
-        LocationTracker locationTracker = new LocationTracker(getActivity());
-        try {
-            locationTracker.startLocationManager();
-        } catch (PermissionException e) {
-            e.printStackTrace();
-        }
+    private void updateViews(FirebaseRemoteConfig remoteConfig) {
+        binding.tvTest.setText(remoteConfig.getString(CONFIG_TEST_CHANGE_LANGUAGE));
     }
 
     private void checkPermission() {

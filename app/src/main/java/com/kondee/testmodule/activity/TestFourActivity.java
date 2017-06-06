@@ -16,6 +16,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -47,6 +48,7 @@ import com.kondee.testmodule.view.SwipeViewLayout.SwipeViewHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class TestFourActivity extends AppCompatActivity {
@@ -75,10 +77,45 @@ public class TestFourActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-//        binding.recyclerView.setHasFixedSize(true);
-//        binding.recyclerView.setLayoutManager(new LinearLayoutManager(TestFourActivity.this, LinearLayoutManager.VERTICAL, false));
-//        adapter = new MyRecyclerAdapter(getNameList());
-//        binding.recyclerView.setAdapter(adapter);
+        binding.recyclerView.setHasFixedSize(true);
+        binding.recyclerView.setLayoutManager(new LinearLayoutManager(TestFourActivity.this, LinearLayoutManager.VERTICAL, false));
+        adapter = new MyRecyclerAdapter(getNameList());
+        binding.recyclerView.setAdapter(adapter);
+
+        ItemTouchHelper.Callback callback = new ItemTouchHelper.Callback() {
+
+            @Override
+            public boolean isItemViewSwipeEnabled() {
+                return false;
+            }
+
+            @Override
+            public boolean isLongPressDragEnabled() {
+                return true;
+            }
+
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int swipeFlag = ItemTouchHelper.START | ItemTouchHelper.END;
+                int dragFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                return makeMovementFlags(dragFlag, swipeFlag);
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                adapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                adapter.onItemDissmiss(viewHolder.getAdapterPosition());
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView);
+
 //        binding.imvZoom.setImageResource(R.drawable.source_animal_31);
     }
 
@@ -178,7 +215,24 @@ public class TestFourActivity extends AppCompatActivity {
             };
         }
 
+        public boolean onItemMove(int fromPosition, int toPosition) {
+            if (fromPosition > toPosition) {
+                for (int i = fromPosition; i < toPosition; i++) {
+                    Collections.swap(nameList, i, i + 1);
+                }
+            } else {
+                for (int i = toPosition; i < fromPosition; i--) {
+                    Collections.swap(nameList, i, i - 1);
+                }
+            }
+            notifyItemMoved(fromPosition, toPosition);
+            return true;
+        }
 
+        public void onItemDissmiss(int position) {
+            nameList.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
 //    @Override

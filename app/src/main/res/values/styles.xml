@@ -57,6 +57,13 @@
     </style>
 
     <style name="Theme.D1NoTitleDim" parent="AppTheme">
-        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--<item name="android:minWidth">320dp</item>-->
+    </style>
+
+    <style name="AlertDialogBlurredBackground" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 </resources>

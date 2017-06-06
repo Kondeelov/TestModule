@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "425873771480",
+    "firebase_url": "https://testmodule-1475551485399.firebaseio.com",
+    "project_id": "testmodule-1475551485399",
+    "storage_bucket": "testmodule-1475551485399.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:425873771480:android:7f4d8ceb9b3d25fe",
+        "android_client_info": {
+          "package_name": "com.kondee.testmodule"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "425873771480-ijs6kkuer0n4v0r9521g3tnradt5fokm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kondee.testmodule",
+            "certificate_hash": "8d1502a3010e1f3845b635d786a76c7de48f03b1"
+          }
+        },
+        {
+          "client_id": "425873771480-2ssaifvutobcqvip374m456m0diurid1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAYUhAnmvbaurT8MgGn5YrvCmGpfNnjxg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "425873771480-2ssaifvutobcqvip374m456m0diurid1.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,6 @@
 package com.kondee.testmodule.activity;
 
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -14,11 +15,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import com.kondee.testmodule.BlurBitmapFactory;
 import com.kondee.testmodule.R;
+import com.kondee.testmodule.TestAlertBlurBackgroundDialog;
 import com.kondee.testmodule.databinding.ActivityTestTwoBinding;
 import com.kondee.testmodule.fragment.TestDialogFragment;
+import com.kondee.testmodule.manager.Contextor;
 import com.kondee.testmodule.utils.Utils;
 
 public class TestTwoActivity extends AppCompatActivity {
@@ -40,24 +44,27 @@ public class TestTwoActivity extends AppCompatActivity {
 //                TestDialogFragment fragment = TestDialogFragment.newInstance();
 //                fragment.show(getSupportFragmentManager(), "Test");
 
-//                binding.imvTest.setImageBitmap(BlurBitmapFactory.getBlurActivity(TestTwoActivity.this));
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(TestTwoActivity.this);
-                builder.setView(R.layout.alert_test_blur);
+//                AlertDialog.Builder builder = new AlertDialog.Builder(TestTwoActivity.this, R.style.Theme_D1NoTitleDim);
+//                builder.setView(R.layout.alert_test_blur);
+//                builder.setRecycleOnMeasureEnabled(true);
 //
-                AlertDialog dialog = builder.create();
-
-                Bitmap blurActivity = BlurBitmapFactory.getBlurActivity(TestTwoActivity.this);
-////                Bitmap blurActivity = BlurBitmapFactory.fastblur(BlurBitmapFactory.takeScreenShot(TestTwoActivity.this), 7);
-                Drawable drawable = new BitmapDrawable(getResources(), blurActivity);
+//                AlertDialog dialog = builder.create();
 //
-                Window window = dialog.getWindow();
-                window.setBackgroundDrawable(drawable);
+//                Bitmap blurActivity = BlurBitmapFactory.getBlurActivity(TestTwoActivity.this);
+//                Drawable drawable = new BitmapDrawable(getResources(), blurActivity);
+//
+//                Window window = dialog.getWindow();
+//
+//                dialog.getWindow().setBackgroundDrawable(drawable);
+//
+//                window.setLayout(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                window.setGravity(Gravity.CENTER);
+//
+//                dialog.show();
 
-                WindowManager.LayoutParams attributes = window.getAttributes();
-                attributes.gravity = Gravity.END | Gravity.BOTTOM;
 
-                dialog.show();
+                TestAlertBlurBackgroundDialog dialog = TestAlertBlurBackgroundDialog.newInstance(TestTwoActivity.this);
+                dialog.show(getSupportFragmentManager(), "test");
             }
         });
     }

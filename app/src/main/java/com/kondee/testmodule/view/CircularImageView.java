@@ -156,46 +156,48 @@ public class CircularImageView extends android.support.v7.widget.AppCompatImageV
         Bitmap bitmap;
         bitmap = getBitmapFromDrawable(getDrawable());
 
-        int densityDpi = new DisplayMetrics().densityDpi;
-        int scaledHeight = bitmap.getScaledHeight(densityDpi);
-        int scaledWidth = bitmap.getScaledWidth(densityDpi);
-
-        int minBitmap = Math.min(scaledHeight, scaledWidth);
-        int maxBitmap = Math.max(scaledHeight, scaledWidth);
-
-        int bitmapWidth;
-        int bitmapHeight;
-        if (scaledHeight > scaledWidth) {
-            bitmapWidth = minBitmap;
-            bitmapHeight = maxBitmap;
-        } else {
-            bitmapWidth = maxBitmap;
-            bitmapHeight = minBitmap;
-        }
-
-        float ratio = ((float) minBitmap) / ((float) min);
-        if (ratio > 0) {
-            bitmapWidth = (int) (bitmapWidth / ratio);
-            bitmapHeight = (int) (bitmapHeight / ratio);
-        } else {
-            bitmapWidth = (int) (bitmapWidth * ratio);
-            bitmapHeight = (int) (bitmapHeight * ratio);
-        }
-
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmapWidth - (borderWidth * 2)), (int) (bitmapHeight - (borderWidth * 2)), false);
-
-        BitmapShader shader = new BitmapShader(scaledBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-        Matrix shaderMatrix = new Matrix();
-
-        shaderMatrix.postTranslate(((getMeasuredWidth() - bitmapWidth) / 2) + (borderWidth),
-                ((getMeasuredHeight() - bitmapHeight) / 2) + (borderWidth));
-
-        shader.setLocalMatrix(shaderMatrix);
-        paint.setShader(shader);
-
         float halfMin = ((float) min) / 2;
 
-        canvas.drawCircle(halfMin, halfMin, halfMin - borderWidth, paint);
+        if (bitmap != null) {
+            int densityDpi = new DisplayMetrics().densityDpi;
+            int scaledHeight = bitmap.getScaledHeight(densityDpi);
+            int scaledWidth = bitmap.getScaledWidth(densityDpi);
+
+            int minBitmap = Math.min(scaledHeight, scaledWidth);
+            int maxBitmap = Math.max(scaledHeight, scaledWidth);
+
+            int bitmapWidth;
+            int bitmapHeight;
+            if (scaledHeight > scaledWidth) {
+                bitmapWidth = minBitmap;
+                bitmapHeight = maxBitmap;
+            } else {
+                bitmapWidth = maxBitmap;
+                bitmapHeight = minBitmap;
+            }
+
+            float ratio = ((float) minBitmap) / ((float) min);
+            if (ratio > 0) {
+                bitmapWidth = (int) (bitmapWidth / ratio);
+                bitmapHeight = (int) (bitmapHeight / ratio);
+            } else {
+                bitmapWidth = (int) (bitmapWidth * ratio);
+                bitmapHeight = (int) (bitmapHeight * ratio);
+            }
+
+            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, (int) (bitmapWidth - (borderWidth * 2)), (int) (bitmapHeight - (borderWidth * 2)), false);
+
+            BitmapShader shader = new BitmapShader(scaledBitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+            Matrix shaderMatrix = new Matrix();
+
+            shaderMatrix.postTranslate(((getMeasuredWidth() - bitmapWidth) / 2) + (borderWidth),
+                    ((getMeasuredHeight() - bitmapHeight) / 2) + (borderWidth));
+
+            shader.setLocalMatrix(shaderMatrix);
+            paint.setShader(shader);
+
+            canvas.drawCircle(halfMin, halfMin, halfMin - borderWidth, paint);
+        }
 
         if (borderWidth != 0) {
             canvas.drawCircle(halfMin, halfMin, halfMin - (borderWidth / 2), circlePaint);

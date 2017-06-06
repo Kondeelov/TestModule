@@ -10,17 +10,38 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tvTest"
             style="@style/TextViewStyle.Large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/test_change_language" />
 
-        <Button
-            android:id="@+id/btnGo"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:drawableLeft="@android:drawable/ic_search_category_default"
-            android:text="@string/go" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnGo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@android:drawable/ic_search_category_default"
+                android:text="@string/go" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.kondee.testmodule.view.BadgeTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@color/colorGreen"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textSize="24sp" />
+            </FrameLayout>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvLocation"
@@ -61,6 +82,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:orientation="horizontal"
+            app:primaryColor="@color/colorGreen"
+            app:secondaryColor="@color/colorWhite"
             app:values="@array/item_for_multiple_toggle_button" />
 
         <com.kondee.testmodule.view.CircularImageView

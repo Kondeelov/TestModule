@@ -11,15 +11,18 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.graphics.drawable.shapes.Shape;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.annotation.IntRange;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextPaint;
 import android.util.AttributeSet;
@@ -28,6 +31,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.kondee.testmodule.R;
 import com.kondee.testmodule.utils.Utils;
 
 import static android.R.attr.width;
@@ -38,6 +42,7 @@ public class BadgeTextView extends AppCompatTextView {
     private static final String TAG = "Kondee";
 
     private static final float SHADOW_RADIUS = 3.5f;
+    private int min;
     private int mShadowRadius;
     private int basePadding;
     private Rect bound;
@@ -45,6 +50,8 @@ public class BadgeTextView extends AppCompatTextView {
     private int size;
     private int newWidthMeasureSpec;
     private int newHeightMeasureSpec;
+    private Paint circlePaint;
+    private int backgroundColor;
 
     public BadgeTextView(Context context) {
         super(context);
@@ -72,27 +79,35 @@ public class BadgeTextView extends AppCompatTextView {
 
     private void init() {
 
+        setGravity(Gravity.CENTER);
     }
 
     private void initWithAttrs(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 
-//        getPaint().setTextAlign(Paint.Align.RIGHT);
+        preparePaint();
+    }
 
-//        mShadowRadius = (Utils.dp2px(getContext(), Utils.dp2px(getContext(), 2)));
-//        basePadding = (mShadowRadius * 2);
-//        float textHeight = getTextSize();
-//        float textWidth = textHeight / 4;
-//        diffWH = (int) (Math.abs(textHeight - textWidth) / 2);
-//        int horizontalPadding = basePadding + diffWH;
-//        setPadding(horizontalPadding, basePadding, horizontalPadding, basePadding);
+    private void preparePaint() {
+        circlePaint = new Paint();
+        circlePaint.setAntiAlias(true);
+        circlePaint.setDither(true);
+        circlePaint.setColor(backgroundColor);
+        circlePaint.setStyle(Paint.Style.FILL);
+    }
+
+    @Override
+    public void setGravity(int gravity) {
+        gravity = Gravity.CENTER;
+        super.setGravity(gravity);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        Rect bound = getBound();
+        bound = getBound();
 
-        size = (int) Math.max(bound.right - bound.left, getTextSize());
+        size = (int) Math.max(bound.width(), getTextSize());
+//        Log.d(TAG, "onMeasure: " + bound.width() + " " + bound.height());
 
         if (size != 0) {
             newWidthMeasureSpec = MeasureSpec.makeMeasureSpec(size, MeasureSpec.EXACTLY);
@@ -102,60 +117,60 @@ public class BadgeTextView extends AppCompatTextView {
         super.onMeasure(newWidthMeasureSpec, newHeightMeasureSpec);
 
         setMeasuredDimension(size, size);
+
+//        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+    }
+
+    @Override
+    public void setBackground(Drawable background) {
+//        super.setBackground(background);
+        if (background instanceof ColorDrawable) {
+            backgroundColor = ((ColorDrawable) background).getColor();
+        }
+    }
+
+    @Override
+    public void setBackgroundDrawable(Drawable background) {
+//        super.setBackgroundDrawable(background);
+        if (background instanceof ColorDrawable) {
+            backgroundColor = ((ColorDrawable) background).getColor();
+        }
+    }
+
+    @Override
+    public void setBackgroundColor(@ColorInt int color) {
+//        super.setBackgroundColor(color);
+        backgroundColor = color;
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
 
+        setPadding(0, -(bound.height() / 4), 0, bound.height() / 4);
     }
 
     private Rect getBound() {
         CharSequence text = getText();
         bound = new Rect();
         Paint textPaint = getPaint();
-        textPaint.getTextBounds(text.toString(), 0, getText().length(), bound);
+        textPaint.getTextBounds(text.toString(), 0, text.length(), bound);
 
         return bound;
     }
 
     @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-
-        resetBackgroundDrawable(w, h);
+    public void setText(CharSequence text, BufferType type) {
+        super.setText(text, type);
     }
 
-    private void resetBackgroundDrawable(int width, int height) {
+    @Override
+    protected void onDraw(Canvas canvas) {
 
-        if (width <= 0 || height <= 0) {
-            return;
-        }
+        min = Math.min(getMeasuredWidth() / 2, getMeasuredHeight() / 2);
 
-        CharSequence text = getText();
+        canvas.drawCircle(getMeasuredWidth() / 2, getMeasuredHeight() / 2, min, circlePaint);
 
-        if (text == null) {
-            return;
-        }
-
-        if (text.length() == 1) {
-
-            Drawable drawable = new MyDrawable();
-
-            setBackgroundDrawable(drawable);
-        }
-    }
-
-    private class MyDrawable extends ShapeDrawable {
-
-        @Override
-        public void draw(Canvas canvas) {
-
-            getPaint().setAntiAlias(true);
-            getPaint().setDither(true);
-
-            getPaint().setColor(Color.RED);
-            canvas.drawCircle(BadgeTextView.this.getWidth() / 2, BadgeTextView.this.getTextSize() / 2, BadgeTextView.this.getTextSize() / 2, getPaint());
-        }
+        super.onDraw(canvas);
     }
 }

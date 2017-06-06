@@ -2,39 +2,40 @@ package com.kondee.testmodule.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.IntRange;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
-import android.widget.TextView;
 
 import com.kondee.testmodule.R;
-import com.kondee.testmodule.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-
-/**
- * Created by Kondee on 5/16/2017.
- */
 
 public class MultiToggleButton extends LinearLayout {
+    private static final String TAG = "Kondee";
     private CharSequence[] values;
-    //    List<Button> buttons = new ArrayList<>();
     HashMap<Button, Boolean> buttonStateMap = new HashMap<>();
     private int primaryColor;
     private int secondaryColor;
     private onStateChangeListener listener;
-    private Integer position;
+    private int position = -1;
 
     public MultiToggleButton(Context context) {
         super(context);
@@ -81,11 +82,11 @@ public class MultiToggleButton extends LinearLayout {
 
         setupView();
 
-        setPadding(Utils.dp2px(getContext(), 2), Utils.dp2px(getContext(), 2), Utils.dp2px(getContext(), 2), Utils.dp2px(getContext(), 2));
-
-        setBackground(ContextCompat.getDrawable(getContext(), R.drawable.background_alert_test_blur));
+        setPadding(dp2px(getContext(), 2), dp2px(getContext(), 2), dp2px(getContext(), 2), dp2px(getContext(), 2));
 
         setGravity(Gravity.CENTER);
+
+        setBackground(ContextCompat.getDrawable(getContext(), R.drawable.background_multi_toggle_button));
     }
 
     private void setupView() {
@@ -97,13 +98,24 @@ public class MultiToggleButton extends LinearLayout {
             Button button = new Button(getContext());
             LayoutParams params = new TableLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 1);
             if (i != values.length - 1) {
-                params.setMarginEnd(Utils.dp2px(getContext(), 0.5f));
+                params.setMarginEnd(dp2px(getContext(), 1.0f));
             }
             button.setLayoutParams(params);
 
+            button.setMinHeight(dp2px(getContext(), 18));
+            button.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
             button.setText(values[i]);
             button.setTextColor(ContextCompat.getColor(getContext(), R.color.colorWhite));
             button.setId(i);
+
+            if (i == 0) {
+                Drawable drawable = ContextCompat.getDrawable(getContext(), R.drawable.background_multi_toggle_button_left);
+                button.setBackground(drawable);
+            } else if (i == values.length - 1) {
+                button.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.background_multi_toggle_button_right));
+            } else {
+                button.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.background_multi_toggle_button_center));
+            }
 
             button.setOnClickListener(new OnClickListener() {
                 @Override
@@ -119,7 +131,7 @@ public class MultiToggleButton extends LinearLayout {
                 }
             });
 
-            if (position != null && position == i) {
+            if (position == i) {
                 buttonStateMap.put(button, true);
             } else {
                 buttonStateMap.put(button, false);
@@ -140,10 +152,12 @@ public class MultiToggleButton extends LinearLayout {
     private void setStateDisplayed() {
         for (Button button : buttonStateMap.keySet()) {
             if (buttonStateMap.get(button)) {
-                button.setBackgroundColor(primaryColor);
+                button.getBackground().setColorFilter(primaryColor, PorterDuff.Mode.MULTIPLY);
+//                button.setBackgroundColor(primaryColor);
                 button.setTextColor(secondaryColor);
             } else {
-                button.setBackgroundColor(secondaryColor);
+                button.getBackground().setColorFilter(secondaryColor, PorterDuff.Mode.SRC_IN);
+//                button.setBackgroundColor(secondaryColor);
                 button.setTextColor(primaryColor);
             }
         }
@@ -161,8 +175,16 @@ public class MultiToggleButton extends LinearLayout {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
 
+        setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
+//        Log.d(TAG, "onMeasure: " + getMeasuredWidth());
+    }
+
+    public static int dp2px(Context context, float dp) {
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        return (int) (dp * displayMetrics.scaledDensity);
     }
 
     /***********
