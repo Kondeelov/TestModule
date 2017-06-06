@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
@@ -64,12 +66,11 @@ public class TestThreeActivity extends AppCompatActivity {
         binding.recyclerView.setNestedScrollingEnabled(false);
 
 
-        binding.recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.recyclerView.setItemAnimator(new DefaultItemAnimator(){
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                Log.d(TAG, "onScrolled: " + recyclerView.computeVerticalScrollOffset());
+            public void onAnimationFinished(RecyclerView.ViewHolder viewHolder) {
+//                super.onAnimationFinished(viewHolder);
+                Log.d(TAG, "onAnimationFinished: ");
             }
         });
 
