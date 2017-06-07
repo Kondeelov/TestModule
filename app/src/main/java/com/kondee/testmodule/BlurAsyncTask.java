@@ -15,7 +15,7 @@ import android.support.v8.renderscript.ScriptIntrinsicBlur;
 
 public class BlurAsyncTask extends AsyncTask<Bitmap, Void, Bitmap> {
 
-    private static final float BLUR_RADIUS = 15.5f;
+    private static final float BLUR_RADIUS = 22.5f;
     private Context context;
 
     public interface onFinished {

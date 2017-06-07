@@ -67,4 +67,14 @@ public class BlurBitmapFactory {
         bitmap = blur(activity, bitmap);
         return bitmap;
     }
+
+    public static Bitmap getBitmapFromView(View view) {
+
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+
+        view.destroyDrawingCache();
+        return bitmap;
+    }
 }

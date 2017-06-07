@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -27,14 +30,16 @@ import com.kondee.testmodule.databinding.AlertTestBlurBinding;
 public class TestAlertBlurBackgroundDialog extends DialogFragment implements BlurAsyncTask.onFinished {
     private static final String TAG = "Kondee";
     private static Activity activity;
+    private static View viewToFocus;
     AlertTestBlurBinding binding;
     private BlurAsyncTask blurAsyncTask;
     private ImageView blurredBackgroundView;
     private FrameLayout.LayoutParams blurBackgroundParams;
 
-    public static TestAlertBlurBackgroundDialog newInstance(Activity activity) {
+    public static TestAlertBlurBackgroundDialog newInstance(Activity activity, View viewToFocus) {
         TestAlertBlurBackgroundDialog fragment = new TestAlertBlurBackgroundDialog();
         TestAlertBlurBackgroundDialog.activity = activity;
+        TestAlertBlurBackgroundDialog.viewToFocus = viewToFocus;
 
         return fragment;
     }
@@ -73,6 +78,20 @@ public class TestAlertBlurBackgroundDialog extends DialogFragment implements Blu
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+
+        if (blurAsyncTask != null) {
+            blurAsyncTask.cancel(true);
+        }
+        if (blurredBackgroundView != null) {
+            ViewGroup parent = (ViewGroup) blurredBackgroundView.getParent();
+            parent.removeView(blurredBackgroundView);
+        }
+        blurredBackgroundView = null;
+    }
+
+    @Override
     public void onDismiss(DialogInterface dialog) {
         super.onDismiss(dialog);
 
@@ -94,10 +113,23 @@ public class TestAlertBlurBackgroundDialog extends DialogFragment implements Blu
 
     @Override
     public void onFinished(Bitmap bitmap) {
+
+        Bitmap newBitmap = createFocusView(bitmap);
+
         blurredBackgroundView = new ImageView(activity);
         blurredBackgroundView.setScaleType(ImageView.ScaleType.FIT_XY);
-        blurredBackgroundView.setImageDrawable(new BitmapDrawable(getActivity().getResources(), bitmap));
+        blurredBackgroundView.setImageDrawable(new BitmapDrawable(getActivity().getResources(), newBitmap));
 
         getActivity().getWindow().addContentView(blurredBackgroundView, blurBackgroundParams);
+    }
+
+    private Bitmap createFocusView(Bitmap bitmap) {
+        Canvas canvas = new Canvas(bitmap);
+        canvas.drawBitmap(BlurBitmapFactory.getBitmapFromView(viewToFocus),
+                viewToFocus.getLeft(),
+                viewToFocus.getTop(),
+                new Paint(Paint.FILTER_BITMAP_FLAG));
+
+        return bitmap;
     }
 }

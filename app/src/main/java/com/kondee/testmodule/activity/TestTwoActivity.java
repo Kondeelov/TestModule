@@ -63,7 +63,7 @@ public class TestTwoActivity extends AppCompatActivity {
 //                dialog.show();
 
 
-                TestAlertBlurBackgroundDialog dialog = TestAlertBlurBackgroundDialog.newInstance(TestTwoActivity.this);
+                TestAlertBlurBackgroundDialog dialog = TestAlertBlurBackgroundDialog.newInstance(TestTwoActivity.this,binding.btnTest);
                 dialog.show(getSupportFragmentManager(), "test");
             }
         });
