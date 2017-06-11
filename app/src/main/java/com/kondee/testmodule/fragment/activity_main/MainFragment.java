@@ -4,6 +4,7 @@ import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
@@ -40,6 +41,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.kondee.testmodule.CustomDatePickerDialog;
 import com.kondee.testmodule.R;
+import com.kondee.testmodule.activity.ExtraTestActivity;
 import com.kondee.testmodule.databinding.FragmentMainBinding;
 import com.kondee.testmodule.textwatcher.NumberDecimalTextWatcher;
 
@@ -157,7 +159,7 @@ public class MainFragment extends Fragment implements
 
 //                AppLock.callAppLockActivityTo(getActivity(), FourthActivity.class, "1111", null, R.drawable.padlock);
 
-//                Intent intent = new Intent(getActivity(), SwipeTestActivity.class);
+//                Intent intent = new Intent(getActivity(), ExtraTestActivity.class);
 //                startActivity(intent);
             }
         });
@@ -295,6 +297,14 @@ public class MainFragment extends Fragment implements
 //        Log.d(TAG, "initInstance: " + a.toString());
 
 //        Log.d(TAG, "initInstance: " + (1 << 0));
+
+        binding.btnGo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ExtraTestActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

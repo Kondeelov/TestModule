@@ -83,7 +83,7 @@
                 android:resource="@xml/searchable" />
         </activity>
         <activity
-            android:name=".activity.SwipeTestActivity"
+            android:name=".activity.ExtraTestActivity"
             android:screenOrientation="portrait" />
 
         <receiver
