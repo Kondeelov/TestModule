@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -199,11 +200,15 @@ public class PatternUnlockView extends View {
     private void drawLineToTouchPoint(Canvas canvas) {
 
         if (stopX > 0 && stopY > 0) {
-            drawLine(canvas,
-                    patternUnlockRects.get(Integer.valueOf(connectionOrder.get(connectionOrder.size() - 1)) - 1).rect.exactCenterX(),
-                    patternUnlockRects.get(Integer.valueOf(connectionOrder.get(connectionOrder.size() - 1)) - 1).rect.exactCenterY(),
-                    stopX,
-                    stopY);
+            try {
+                drawLine(canvas,
+                        patternUnlockRects.get(Integer.valueOf(connectionOrder.get(connectionOrder.size() - 1)) - 1).rect.exactCenterX(),
+                        patternUnlockRects.get(Integer.valueOf(connectionOrder.get(connectionOrder.size() - 1)) - 1).rect.exactCenterY(),
+                        stopX,
+                        stopY);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                Log.d(TAG, "drawLineToTouchPoint: ArrayIndexOutOfBounds");
+            }
         }
     }
 
@@ -237,10 +242,6 @@ public class PatternUnlockView extends View {
                     }
                 }
 
-//                pressedValue += value;
-//                Log.d(TAG, "patternTouchEvent: " + pressedValue);
-
-//                Log.d(TAG, "patternTouchEvent: " + pressedValue);
                 invalidate();
 
                 return true;
@@ -261,12 +262,7 @@ public class PatternUnlockView extends View {
                     }
                 }
 
-//                pressedValue += value;
-//                Log.d(TAG, "patternTou chEvent: " + pressedValue);
-
                 invalidate();
-
-//                Log.d(TAG, "patternTouchEvent: " + pressedValue);
 
                 return true;
             case MotionEvent.ACTION_UP:

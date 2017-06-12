@@ -45,6 +45,7 @@ import static com.kondee.testmodule.R.id.test1;
 import static com.kondee.testmodule.R.id.test2;
 import static com.kondee.testmodule.R.id.test3;
 import static com.kondee.testmodule.R.id.test4;
+import static com.kondee.testmodule.R.id.test5;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -217,6 +218,10 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case test4:
                         setIntentClass(TestFourActivity.class);
+                        binding.drawerLayout.closeDrawers();
+                        return true;
+                    case test5:
+                        setIntentClass(TestFiveActivity.class);
                         binding.drawerLayout.closeDrawers();
                         return true;
                 }

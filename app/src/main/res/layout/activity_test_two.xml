@@ -12,19 +12,30 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent" />-->
 
-        <Button
-            android:id="@+id/btnTest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Test" />
-
-        <ImageView
+        <FrameLayout
             android:id="@+id/imvTest"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/colorGreen"
             android:layout_margin="2dp"
-            android:scaleType="centerInside"
-            android:text="Test" />
+            android:background="@color/colorGreen">
+
+            <Button
+                android:id="@+id/btnTest"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|top"
+                android:layout_marginBottom="100dp"
+                android:layout_marginTop="100dp"
+                android:text="Test" />
+
+            <Button
+                android:id="@+id/btnTest2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:layout_marginBottom="100dp"
+                android:layout_marginTop="100dp"
+                android:text="Test" />
+        </FrameLayout>
     </LinearLayout>
 </layout>

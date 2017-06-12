@@ -12,9 +12,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -22,6 +26,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.kondee.testmodule.databinding.AlertTestBlurBinding;
+import com.kondee.testmodule.manager.Contextor;
+import com.kondee.testmodule.utils.Utils;
 
 /**
  * Created by Kondee on 6/6/2017.
@@ -29,6 +35,7 @@ import com.kondee.testmodule.databinding.AlertTestBlurBinding;
 
 public class TestAlertBlurBackgroundDialog extends DialogFragment implements BlurAsyncTask.onFinished {
     private static final String TAG = "Kondee";
+    private static final int MARGIN = Utils.dp2px(Contextor.getInstance().getContext(), 5);
     private static Activity activity;
     private static View viewToFocus;
     AlertTestBlurBinding binding;
@@ -59,6 +66,25 @@ public class TestAlertBlurBackgroundDialog extends DialogFragment implements Blu
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.alert_test_blur, container, false);
+
+        binding.getRoot().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Window window = getDialog().getWindow();
+                if (window != null) {
+                    WindowManager.LayoutParams attributes = window.getAttributes();
+                    window.setGravity(Gravity.TOP | Gravity.CENTER);
+                    int positionY = (int) (viewToFocus.getY() + viewToFocus.getHeight());
+
+                    if (positionY >= activity.getWindow().getDecorView().getHeight() / 2) {
+                        int height = window.getDecorView().getHeight();
+                        attributes.y = (int) (viewToFocus.getY() - (MARGIN + height));
+                    } else {
+                        attributes.y = positionY + MARGIN;
+                    }
+                }
+            }
+        });
 
         return binding.getRoot();
     }
@@ -108,7 +134,9 @@ public class TestAlertBlurBackgroundDialog extends DialogFragment implements Blu
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        return super.onCreateDialog(savedInstanceState);
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+
+        return dialog;
     }
 
     @Override
@@ -132,4 +160,5 @@ public class TestAlertBlurBackgroundDialog extends DialogFragment implements Blu
 
         return bitmap;
     }
+
 }

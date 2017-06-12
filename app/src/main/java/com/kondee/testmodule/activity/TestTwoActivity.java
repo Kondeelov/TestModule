@@ -1,29 +1,14 @@
 package com.kondee.testmodule.activity;
 
-import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.LinearLayout;
 
-import com.kondee.testmodule.BlurBitmapFactory;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.TestAlertBlurBackgroundDialog;
 import com.kondee.testmodule.databinding.ActivityTestTwoBinding;
-import com.kondee.testmodule.fragment.TestDialogFragment;
-import com.kondee.testmodule.manager.Contextor;
-import com.kondee.testmodule.utils.Utils;
 
 public class TestTwoActivity extends AppCompatActivity {
 
@@ -63,9 +48,14 @@ public class TestTwoActivity extends AppCompatActivity {
 //                dialog.show();
 
 
-                TestAlertBlurBackgroundDialog dialog = TestAlertBlurBackgroundDialog.newInstance(TestTwoActivity.this,binding.btnTest);
+                TestAlertBlurBackgroundDialog dialog = TestAlertBlurBackgroundDialog.newInstance(TestTwoActivity.this, binding.btnTest);
                 dialog.show(getSupportFragmentManager(), "test");
             }
+        });
+
+        binding.btnTest2.setOnClickListener(v -> {
+            TestAlertBlurBackgroundDialog dialog = TestAlertBlurBackgroundDialog.newInstance(TestTwoActivity.this, binding.btnTest2);
+            dialog.show(getSupportFragmentManager(), "test");
         });
     }
 }

@@ -85,6 +85,9 @@
         <activity
             android:name=".activity.ExtraTestActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.TestFiveActivity"
+            android:screenOrientation="portrait" />
 
         <receiver
             android:name=".broadcastreceiver.SmsReceiver"
