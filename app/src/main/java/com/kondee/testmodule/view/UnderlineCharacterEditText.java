@@ -120,6 +120,11 @@ public class UnderlineCharacterEditText extends AppCompatTextView {
 
             start = layout.getPrimaryHorizontal(this.position);
             stop = start + widths[this.position];
+
+            lastStartX = start;
+            lastStopX = stop;
+
+            invalidate();
         }
     }
 
