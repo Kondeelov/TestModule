@@ -6,13 +6,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.kondee.testmodule.view.CustomImageView
+        <com.kondee.testmodule.view.CustomView
             android:id="@+id/imvDetail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="top"
-            android:src="@drawable/background"
-            android:scaleType="centerCrop"
             android:transitionName="imageDetail" />
 
         <TextView

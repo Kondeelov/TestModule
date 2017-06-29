@@ -43,20 +43,24 @@
             </FrameLayout>
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvLocation"
+        <com.kondee.testmodule.view.UnderlineCharacterEditText
+            android:id="@+id/test"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_normal"
-            android:layout_marginTop="@dimen/dimen_normal" />
+            android:layout_height="wrap_content" />
+        <!--<TextView-->
+        <!--android:id="@+id/tvLocation"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginBottom="@dimen/dimen_normal"-->
+        <!--android:layout_marginTop="@dimen/dimen_normal" />-->
 
         <TextView
-            android:id="@+id/tvAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/dimen_normal"
-            android:layout_marginTop="@dimen/dimen_normal"
-            android:maxLines="2" />
+        android:id="@+id/tvAddress"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_normal"
+        android:layout_marginTop="@dimen/dimen_normal"
+        android:maxLines="2" />
 
         <AutoCompleteTextView
             android:id="@+id/etTest"
@@ -96,6 +100,7 @@
             android:src="@drawable/globe"
             app:borderColor="@color/colorPrimaryDark"
             app:borderWidth="6dp" />
+
 
     </LinearLayout>
 </layout>

@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case navItem3:
                         binding.drawerLayout.closeDrawers();
-                        setIntentClass(ThirdActivity.class);
+                        setIntentClass(ImageDetailActivity.class);
                         return true;
                     case navItem4:
                         binding.drawerLayout.closeDrawers();

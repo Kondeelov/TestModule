@@ -292,7 +292,7 @@ public class AppLockView extends View {
 
         for (AppLockKeyButton appLockKeyButton : appLockKeyButtons) {
 
-//            canvas.drawRect(appLockKeyButton.rect, paint);
+//            canvas.drawRect(appLockKeyButton.rect, overlayPaint);
 ////            Log.d(TAG, "drawKeyPads: "+appLockKeyButton.rect.exactCenterX()+" "+appLockKeyButton.rect.exactCenterY());
 ////            Log.d(TAG, "drawKeyPads: "+(appLockKeyButton.rect.exactCenterX()-(textPaint.measureText(appLockKeyButton.value)/2)));
 
@@ -313,7 +313,7 @@ public class AppLockView extends View {
 //            canvas.getClipBounds(appLockKeyButton.rect);
             textPaint.getTextBounds(appLockKeyButton.value, 0, appLockKeyButton.value.length(), rect);
             canvas.drawText(appLockKeyButton.value, appLockKeyButton.rect.exactCenterX(), appLockKeyButton.rect.exactCenterY() + rect.height() / 2, textPaint);
-//            canvas.drawCircle(50, 50, appLockKeyButton.rect.left - appLockKeyButton.rect.right, paint);
+//            canvas.drawCircle(50, 50, appLockKeyButton.rect.left - appLockKeyButton.rect.right, overlayPaint);
 
 //            circlePaint.setAlpha(appLockKeyButton.rippleAlpha);
 //            canvas.drawCircle(appLockKeyButton.rect.exactCenterX(), appLockKeyButton.rect.exactCenterY() - (int) (textPaint.getTextSize() / 2.5),

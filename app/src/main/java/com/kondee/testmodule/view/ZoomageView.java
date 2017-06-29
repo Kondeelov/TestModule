@@ -52,9 +52,7 @@ public class ZoomageView extends android.support.v7.widget.AppCompatImageView {
 
         @Override
         public void onScaleEnd(ScaleGestureDetector detector) {
-//            float[] f = new float[9];
-//            currentMatrix.getValues(f);
-//            Log.d(TAG, "onScaleEnd: " + f[Matrix.MTRANS_X] + " " + f[Matrix.MTRANS_Y]);
+
         }
     });
 
@@ -92,6 +90,7 @@ public class ZoomageView extends android.support.v7.widget.AppCompatImageView {
         @Override
         public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             currentMatrix.setTranslate(e2.getX() - startX, e2.getY() - startY);
+            currentMatrix.postScale(1, 1);
             setImageMatrix(currentMatrix);
 
             return true;
@@ -116,9 +115,7 @@ public class ZoomageView extends android.support.v7.widget.AppCompatImageView {
     }
 
     private void init() {
-        originalMatrix.set(getImageMatrix());
 
-        currentMatrix.set(originalMatrix);
     }
 
     private void initWithAttrs(AttributeSet attrs, int defStyleAttr) {
@@ -126,8 +123,19 @@ public class ZoomageView extends android.support.v7.widget.AppCompatImageView {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+        originalMatrix.set(getImageMatrix());
+
+        currentMatrix.set(originalMatrix);
+
         setScaleType(ScaleType.MATRIX);
+
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
 
         return gestureDetector.onTouchEvent(event) || scaleGestureDetector.onTouchEvent(event);
     }

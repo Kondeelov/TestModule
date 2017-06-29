@@ -37,14 +37,31 @@
 
     <!--</com.kondee.testmodule.view.SwipeViewLayout.SwipeViewLayout>-->
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.kondee.testmodule.view.ZoomageView
+        <!--<com.kondee.testmodule.view.CropView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:src="@drawable/source_animal_23" />-->
+
+        <com.kondee.testmodule.view.UnderlineCharacterEditText
+            android:id="@+id/test"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/source_animal_23" />
-    </LinearLayout>
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/btnTest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="test" />
+
+        <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:id="@+id/recyclerView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+    </FrameLayout>
 </layout>

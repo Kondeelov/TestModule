@@ -44,9 +44,9 @@ public class ImageDetailFragment extends Fragment {
     }
 
     private void initInstance() {
-        Glide.with(getActivity())
-                .load(imgUrl)
-                .centerCrop()
-                .into(binding.imvDetail);
+//        Glide.with(getActivity())
+//                .load(imgUrl)
+//                .centerCrop()
+//                .into(binding.imvDetail);
     }
 }
