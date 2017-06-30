@@ -395,12 +395,12 @@ public class AppLockView extends View {
             SecretKey key = (SecretKey) keyStore.getKey(KEY_NAME, null);
             cipher.init(Cipher.ENCRYPT_MODE, key);
             return true;
-//        } catch (KeyPermanentlyInvalidatedException e) {
+//        } catch (KeyPermanentlyInvalidatedException point) {
 //            return false;
         } catch (KeyStoreException | UnrecoverableKeyException
                 | NoSuchAlgorithmException | CertificateException
                 | IOException | InvalidKeyException e) {
-//            throw new RuntimeException("Failed to get Cipher",e);
+//            throw new RuntimeException("Failed to get Cipher",point);
             e.printStackTrace();
             return false;
         }

@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@color/colorGrayLight">
 
         <ImageView
             android:id="@+id/horizontal_item_text"
-            android:layout_width="match_parent"
+            android:layout_width="280dp"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
@@ -20,13 +20,16 @@
 
         <TextView
             android:id="@+id/text_view"
-            android:layout_width="match_parent"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
             android:alpha="0.35"
             android:background="@color/colorBlue"
+            android:ellipsize="end"
             android:gravity="center"
+            android:maxLines="1"
             android:padding="16dp"
-            android:textColor="@color/white" />
+            android:textColor="@color/colorWhite" />
     </RelativeLayout>
 </layout>

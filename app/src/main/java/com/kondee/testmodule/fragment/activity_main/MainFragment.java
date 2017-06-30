@@ -24,6 +24,7 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.kondee.testmodule.CustomDatePickerDialog;
 import com.kondee.testmodule.R;
+import com.kondee.testmodule.activity.ExtraTestActivity;
 import com.kondee.testmodule.databinding.FragmentMainBinding;
 import com.kondee.testmodule.textwatcher.NumberDecimalTextWatcher;
 
@@ -120,8 +121,8 @@ public class MainFragment extends Fragment {
 //
 //                AppLock.callAppLockActivityTo(getActivity(), FourthActivity.class, "1111", null, R.drawable.padlock);
 //
-//                Intent intent = new Intent(getActivity(), ExtraTestActivity.class);
-//                startActivity(intent);
+                Intent intent = new Intent(getActivity(), ExtraTestActivity.class);
+                startActivity(intent);
 
 //                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 //                intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
@@ -141,7 +142,7 @@ public class MainFragment extends Fragment {
 //
 //                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setBackground(ContextCompat.getDrawable(getActivity(),R.drawable.bg_select));
 
-                binding.test.setPosition(binding.test.getPosition() + 1, true);
+//                binding.test.setPoint(binding.test.getPosition() + 1, true);
             }
         });
 

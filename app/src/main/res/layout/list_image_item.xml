@@ -17,7 +17,7 @@
             android:ellipsize="end"
             android:padding="8dp"
             android:text="Name"
-            android:textColor="@color/white"
+            android:textColor="@color/colorWhite"
             android:textSize="24sp"
             android:transitionName="imageName"
             tools:targetApi="lollipop" />

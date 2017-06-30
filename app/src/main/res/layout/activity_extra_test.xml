@@ -10,7 +10,7 @@
     <!--<LinearLayout-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent"-->
-    <!--android:background="@color/white"-->
+    <!--android:background="@color/colorWhite"-->
     <!--android:orientation="vertical">-->
 
     <!--<TextView-->
@@ -47,21 +47,21 @@
         <!--android:layout_height="match_parent"-->
         <!--android:src="@drawable/source_animal_23" />-->
 
-        <com.kondee.testmodule.view.UnderlineCharacterEditText
-            android:id="@+id/test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+        <!--<com.kondee.testmodule.view.UnderlineCharacterEditText-->
+            <!--android:id="@+id/test"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center" />-->
 
-        <Button
-            android:id="@+id/btnTest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="test" />
+        <!--<Button-->
+            <!--android:id="@+id/btnTest"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="test" />-->
 
-        <!--<android.support.v7.widget.RecyclerView-->
-        <!--android:id="@+id/recyclerView"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent" />-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </FrameLayout>
 </layout>
