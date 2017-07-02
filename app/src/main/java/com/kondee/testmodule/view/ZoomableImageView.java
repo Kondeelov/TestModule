@@ -60,7 +60,7 @@ public class ZoomableImageView extends android.support.v7.widget.AppCompatImageV
                 savedMatrix.set(getImageMatrix());
                 matrix.set(savedMatrix);
                 start.set(event.getX(), event.getY());
-                Log.d(TAG, "mode=DRAG"); // write to LogCat
+                Log.d(TAG, "TouchArea=DRAG"); // write to LogCat
                 mode = DRAG;
                 break;
 
@@ -69,7 +69,7 @@ public class ZoomableImageView extends android.support.v7.widget.AppCompatImageV
             case MotionEvent.ACTION_POINTER_UP: // second finger lifted
 
                 mode = NONE;
-                Log.d(TAG, "mode=NONE");
+                Log.d(TAG, "TouchArea=NONE");
                 break;
 
             case MotionEvent.ACTION_POINTER_DOWN: // first and second finger down
@@ -80,7 +80,7 @@ public class ZoomableImageView extends android.support.v7.widget.AppCompatImageV
                     savedMatrix.set(matrix);
                     midPoint(mid, event);
                     mode = ZOOM;
-                    Log.d(TAG, "mode=ZOOM");
+                    Log.d(TAG, "TouchArea=ZOOM");
                 }
                 break;
 

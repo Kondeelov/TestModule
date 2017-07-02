@@ -164,9 +164,9 @@ public class ExtraTestActivity extends AppCompatActivity {
         lists.add(courseModelList);
         lists.add(courseModelList);
 
-        binding.recyclerView.setHasFixedSize(true);
-        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        binding.recyclerView.setAdapter(new CourseAdapter(this, lists));
+//        binding.recyclerView.setHasFixedSize(true);
+//        binding.recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+//        binding.recyclerView.setAdapter(new CourseAdapter(this, lists));
 
     }
 
