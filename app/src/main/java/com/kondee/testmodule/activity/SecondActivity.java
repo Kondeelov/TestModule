@@ -1,26 +1,14 @@
 package com.kondee.testmodule.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Fade;
-import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.kondee.testmodule.R;
-import com.kondee.testmodule.adapter.MyRecyclerAdapter;
-import com.kondee.testmodule.fragment.ImageDetailFragment;
 import com.kondee.testmodule.fragment.activity_second.MainFragmentActivitySecond;
 import com.kondee.testmodule.databinding.ActivitySecondBinding;
-import com.kondee.testmodule.model.Modeller;
-import com.kondee.testmodule.transition.DetailsTransition;
-import com.kondee.testmodule.utils.Utils;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 

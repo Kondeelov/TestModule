@@ -94,6 +94,8 @@ public class TestFourActivity extends AppCompatActivity {
                 return true;
             }
 
+
+
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 int swipeFlag = ItemTouchHelper.START | ItemTouchHelper.END;
@@ -116,7 +118,6 @@ public class TestFourActivity extends AppCompatActivity {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
         itemTouchHelper.attachToRecyclerView(binding.recyclerView);
 
-//        binding.imvZoom.setImageResource(R.drawable.source_animal_31);
     }
 
     public List<String> getNameList() {

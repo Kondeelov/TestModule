@@ -27,6 +27,7 @@ import android.widget.TableLayout;
 import com.kondee.testmodule.R;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class MultiToggleButton extends LinearLayout {
     private static final String TAG = "Kondee";
@@ -150,7 +151,8 @@ public class MultiToggleButton extends LinearLayout {
     }
 
     private void setStateDisplayed() {
-        for (Button button : buttonStateMap.keySet()) {
+        for (Map.Entry<Button, Boolean> buttonMap : buttonStateMap.entrySet()) {
+            Button button = buttonMap.getKey();
             if (buttonStateMap.get(button)) {
                 button.getBackground().setColorFilter(primaryColor, PorterDuff.Mode.MULTIPLY);
 //                button.setBackgroundColor(primaryColor);

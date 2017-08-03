@@ -66,7 +66,7 @@ public class TestThreeActivity extends AppCompatActivity {
         binding.recyclerView.setNestedScrollingEnabled(false);
 
 
-        binding.recyclerView.setItemAnimator(new DefaultItemAnimator(){
+        binding.recyclerView.setItemAnimator(new DefaultItemAnimator() {
             @Override
             public void onAnimationFinished(RecyclerView.ViewHolder viewHolder) {
 //                super.onAnimationFinished(viewHolder);
@@ -159,7 +159,11 @@ public class TestThreeActivity extends AppCompatActivity {
                     return false;
                 }
 
-                totalAmount = totalAmount + Integer.valueOf(holder.binding.etAmount.getText().toString());
+                try {
+                    totalAmount = totalAmount + Integer.parseInt(holder.binding.etAmount.getText().toString());
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
             }
 
             if (totalAmount == 0) {

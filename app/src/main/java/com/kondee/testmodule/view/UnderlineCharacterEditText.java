@@ -82,6 +82,10 @@ public class UnderlineCharacterEditText extends AppCompatTextView {
     }
 
     public void setPosition(int position, boolean animate) {
+        if (getText().length() == 0) {
+            return;
+        }
+
         if (position >= getText().length()) {
             this.position = 0;
         } else {

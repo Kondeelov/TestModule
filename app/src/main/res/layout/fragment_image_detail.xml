@@ -6,29 +6,34 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.kondee.testmodule.view.CustomView
-            android:id="@+id/imvDetail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="top"
-            android:transitionName="imageDetail" />
+        <!--<com.kondee.testmodule.view.CustomView-->
+            <!--android:id="@+id/imvDetail"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:gravity="top"-->
+            <!--android:transitionName="imageDetail" />-->
 
-        <TextView
-            android:id="@+id/tvName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/textview_background"
-            android:padding="8dp"
-            android:text="Name"
-            android:transitionName="imageName" />
+        <!--<TextView-->
+            <!--android:id="@+id/tvName"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@color/textview_background"-->
+            <!--android:padding="8dp"-->
+            <!--android:text="Name"-->
+            <!--android:transitionName="imageName" />-->
 
-        <TextView
-            android:id="@+id/tvDescription"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="8dp"
-            android:text="Description"
-            android:textSize="20dp" />
+        <!--<TextView-->
+            <!--android:id="@+id/tvDescription"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:padding="8dp"-->
+            <!--android:text="Description"-->
+            <!--android:textSize="20dp" />-->
+
+        <com.kondee.testmodule.view.UnderlineCharacterEditText
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </layout>

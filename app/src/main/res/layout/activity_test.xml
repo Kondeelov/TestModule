@@ -27,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="330dp"
             android:layout_gravity="bottom|center"
+            android:gravity="center"
             android:clipToPadding="false"
             android:foregroundGravity="center"
             android:overScrollMode="never"

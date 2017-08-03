@@ -178,22 +178,30 @@ public class PatternUnlockView extends View {
     private void drawCirclePattern(Canvas canvas) {
         for (int i = 0; i < connectionOrder.size(); i++) {
 
-            canvas.drawCircle(patternUnlockRects.get(Integer.valueOf(connectionOrder.get(i)) - 1).rect.exactCenterX(),
-                    patternUnlockRects.get(Integer.valueOf(connectionOrder.get(i)) - 1).rect.exactCenterY(),
-                    pressPinRadius,
-                    pressedPinPaint);
+            try {
+                canvas.drawCircle(patternUnlockRects.get(Integer.parseInt(connectionOrder.get(i)) - 1).rect.exactCenterX(),
+                        patternUnlockRects.get(Integer.parseInt(connectionOrder.get(i)) - 1).rect.exactCenterY(),
+                        pressPinRadius,
+                        pressedPinPaint);
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void drawLinePattern(Canvas canvas) {
 
         for (int i = 0; i < connectionOrder.size() - 1; i++) {
-            drawLine(canvas,
-                    patternUnlockRects.get(Integer.valueOf(connectionOrder.get(i)) - 1).rect.exactCenterX(),
-                    patternUnlockRects.get(Integer.valueOf(connectionOrder.get(i)) - 1).rect.exactCenterY(),
-                    patternUnlockRects.get(Integer.valueOf(connectionOrder.get(i + 1)) - 1).rect.exactCenterX(),
-                    patternUnlockRects.get(Integer.valueOf(connectionOrder.get(i + 1)) - 1).rect.exactCenterY()
-            );
+            try {
+                drawLine(canvas,
+                        patternUnlockRects.get(Integer.parseInt(connectionOrder.get(i)) - 1).rect.exactCenterX(),
+                        patternUnlockRects.get(Integer.parseInt(connectionOrder.get(i)) - 1).rect.exactCenterY(),
+                        patternUnlockRects.get(Integer.parseInt(connectionOrder.get(i + 1)) - 1).rect.exactCenterX(),
+                        patternUnlockRects.get(Integer.parseInt(connectionOrder.get(i + 1)) - 1).rect.exactCenterY()
+                );
+            } catch (NumberFormatException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -201,11 +209,15 @@ public class PatternUnlockView extends View {
 
         if (stopX > 0 && stopY > 0) {
             try {
-                drawLine(canvas,
-                        patternUnlockRects.get(Integer.valueOf(connectionOrder.get(connectionOrder.size() - 1)) - 1).rect.exactCenterX(),
-                        patternUnlockRects.get(Integer.valueOf(connectionOrder.get(connectionOrder.size() - 1)) - 1).rect.exactCenterY(),
-                        stopX,
-                        stopY);
+                try {
+                    drawLine(canvas,
+                            patternUnlockRects.get(Integer.parseInt(connectionOrder.get(connectionOrder.size() - 1)) - 1).rect.exactCenterX(),
+                            patternUnlockRects.get(Integer.parseInt(connectionOrder.get(connectionOrder.size() - 1)) - 1).rect.exactCenterY(),
+                            stopX,
+                            stopY);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
             } catch (ArrayIndexOutOfBoundsException e) {
                 Log.d(TAG, "drawLineToTouchPoint: ArrayIndexOutOfBounds");
             }

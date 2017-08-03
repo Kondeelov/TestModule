@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.transition.Fade;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +14,7 @@ import android.view.ViewGroup;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.adapter.MyRecyclerAdapter;
 import com.kondee.testmodule.databinding.FragmentMainActivitysecondBinding;
-import com.kondee.testmodule.fragment.ImageDetailFragment;
+import com.kondee.testmodule.fragment.activity_third.ImageDetailFragment;
 import com.kondee.testmodule.model.Modeller;
 import com.kondee.testmodule.transition.DetailsTransition;
 

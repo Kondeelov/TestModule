@@ -42,7 +42,11 @@ public class AnimalChooseViewHolder extends RecyclerView.ViewHolder {
 
         for (EditText editText : editTextList) {
             if (!editText.getText().toString().equals("")) {
-                integerList.add(Integer.valueOf(editText.getText().toString()) - 1);
+                try {
+                    integerList.add(Integer.parseInt(editText.getText().toString()) - 1);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
             }
         }
 

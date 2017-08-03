@@ -55,5 +55,4 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
             return 0;
         return fragmentList.size();
     }
-
 }

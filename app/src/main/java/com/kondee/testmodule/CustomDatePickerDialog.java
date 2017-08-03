@@ -17,13 +17,11 @@ public class CustomDatePickerDialog extends AlertDialog.Builder {
     private static final String TAG = "Kondee";
     private CustomDialogDatePickerBinding binding;
     private Calendar calendar;
-    private String[] months = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+//    private String[] months = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
     private Calendar maxCalendar;
     private Calendar minCalendar;
     int monthMinValue = 1;
     int monthMaxValue = 12;
-    private boolean canMonthUp = true;
-    private boolean canMonthDown = true;
 
     public CustomDatePickerDialog(@NonNull Context context, onDatePickerListener listener) {
         this(context, listener, Calendar.getInstance());

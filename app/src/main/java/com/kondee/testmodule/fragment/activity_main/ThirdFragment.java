@@ -43,7 +43,7 @@ public class ThirdFragment extends Fragment {
 
     private static final String TAG = "Kondee";
     FragmentThirdBinding binding;
-    String[] test = {"Hello", "It's", "Me", "I", "Forgot", "That", "Can", "Heal", "You", "And", "Must", "Be"};
+//    String[] test = {"Hello", "It's", "Me", "I", "Forgot", "That", "Can", "Heal", "You", "And", "Must", "Be"};
     private ArrayAdapter adapter;
 
     public static ThirdFragment newInstance() {

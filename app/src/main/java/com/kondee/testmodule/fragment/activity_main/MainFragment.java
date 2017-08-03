@@ -5,18 +5,22 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,7 +29,10 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.kondee.testmodule.CustomDatePickerDialog;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.activity.ExtraTestActivity;
+import com.kondee.testmodule.activity.MainActivity;
+import com.kondee.testmodule.databinding.CustomToastBinding;
 import com.kondee.testmodule.databinding.FragmentMainBinding;
+import com.kondee.testmodule.service.OverlayShowingService;
 import com.kondee.testmodule.textwatcher.NumberDecimalTextWatcher;
 
 import java.util.Calendar;
@@ -40,6 +47,7 @@ public class MainFragment extends Fragment {
     private static final String TAG = "Kondee";
     private static final int REQUEST_CODE = 12345;
     private static final java.lang.String CONFIG_TEST_CHANGE_LANGUAGE = "test_change_language";
+    private static final int SHOW_OVERLAY_PERMISSION = 123;
     FragmentMainBinding binding;
     private static final String[] COUNTRIES = new String[]{
             "Belgium", "France", "Italy", "Germany", "Spain", "Thailand"
@@ -120,9 +128,9 @@ public class MainFragment extends Fragment {
             public void onClick(View v) {
 //
 //                AppLock.callAppLockActivityTo(getActivity(), FourthActivity.class, "1111", null, R.drawable.padlock);
-//
-                Intent intent = new Intent(getActivity(), ExtraTestActivity.class);
-                startActivity(intent);
+
+//                Intent intent = new Intent(getActivity(), ExtraTestActivity.class);
+//                startActivity(intent);
 
 //                Intent intent = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
 //                intent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
@@ -143,6 +151,35 @@ public class MainFragment extends Fragment {
 //                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setBackground(ContextCompat.getDrawable(getActivity(),R.drawable.bg_select));
 
 //                binding.test.setPoint(binding.test.getPosition() + 1, true);
+
+
+//                /***************
+//                 * Custom Toast
+//                 ***************/
+//                CustomToastBinding toastBinding = CustomToastBinding.inflate(LayoutInflater.from(getActivity()), null, false);
+//                Toast toast = new Toast(getActivity());
+//
+//                toast.setGravity(Gravity.TOP | Gravity.FILL_HORIZONTAL , 0, 0);
+//                toast.setDuration(Toast.LENGTH_SHORT);
+//                toast.setView(toastBinding.getRoot());
+//                toastBinding.textView.setText("EieieiHiii!!!");
+//                toast.show();
+
+
+                /******************
+                 * System Overlay
+                 ******************/
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if (!Settings.canDrawOverlays(getActivity())) {
+                        Intent intentSetting = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                        startActivityForResult(intentSetting, SHOW_OVERLAY_PERMISSION);
+                    } else {
+                        startOverlayService();
+                    }
+                } else {
+                    startOverlayService();
+                }
             }
         });
 
@@ -233,6 +270,11 @@ public class MainFragment extends Fragment {
 //                });
     }
 
+    private void startOverlayService() {
+        Intent systemOverlay = new Intent(getActivity(), OverlayShowingService.class);
+        getActivity().startService(systemOverlay);
+    }
+
     private void updateViews(FirebaseRemoteConfig remoteConfig) {
         binding.tvTest.setText(remoteConfig.getString(CONFIG_TEST_CHANGE_LANGUAGE));
     }
@@ -262,6 +304,11 @@ public class MainFragment extends Fragment {
 
                         binding.etTest.setText(number);
                     }
+                }
+                break;
+            case SHOW_OVERLAY_PERMISSION:
+                if (requestCode == RESULT_OK) {
+                    startOverlayService();
                 }
                 break;
         }

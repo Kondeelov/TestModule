@@ -32,16 +32,16 @@ public class ThirdActivity extends AppCompatActivity {
 
     private void initInstance() {
 
-        setSupportActionBar(binding.toolbar);
+//        setSupportActionBar(binding.toolbar);
+//
+//        getSupportActionBar().setTitle(R.string.app_name);
+//        getSupportActionBar().setHomeButtonEnabled(true);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getSupportActionBar().setTitle(R.string.app_name);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-//        getSupportFragmentManager().beginTransaction()
-//                .add(binding.contentContainer.getId(), MainFragmentActivityThird.newInstance(), "MainFragmentActivityThird")
-//                .commit();
+        getSupportFragmentManager().beginTransaction()
+                .add(binding.contentContainer.getId(), MainFragmentActivityThird.newInstance(), "MainFragmentActivityThird")
+                .commit();
     }
 
     @Override

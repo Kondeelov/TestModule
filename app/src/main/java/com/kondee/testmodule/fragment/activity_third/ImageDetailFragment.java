@@ -1,4 +1,4 @@
-package com.kondee.testmodule.fragment;
+package com.kondee.testmodule.fragment.activity_third;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.databinding.FragmentImageDetailBinding;
 
@@ -30,7 +29,7 @@ public class ImageDetailFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        imgUrl = getArguments().getString("imgUrl");
+//        imgUrl = getArguments().getString("imgUrl");
     }
 
     @Nullable

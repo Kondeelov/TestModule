@@ -49,6 +49,7 @@ import static com.kondee.testmodule.R.id.test5;
 
 public class MainActivity extends AppCompatActivity {
 
+    public MainFragmentPagerAdapter adapter = new MainFragmentPagerAdapter(getSupportFragmentManager());
     ActivityMainBinding binding;
     private static String TAG = "Kondee";
     ActionBarDrawerToggle drawerToggle;
@@ -132,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.tabLayout.setupWithViewPager(binding.viewPager);
 
-        binding.viewPager.setAdapter(new MainFragmentPagerAdapter(getSupportFragmentManager()));
+        binding.viewPager.setAdapter(adapter);
         binding.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -197,7 +198,8 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     case navItem3:
                         binding.drawerLayout.closeDrawers();
-                        setIntentClass(ImageDetailActivity.class);
+                        setIntentClass(ThirdActivity.class);
+//                        setIntentClass(ImageDetailActivity.class);
                         return true;
                     case navItem4:
                         binding.drawerLayout.closeDrawers();
