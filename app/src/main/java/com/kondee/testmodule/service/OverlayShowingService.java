@@ -1,5 +1,7 @@
 package com.kondee.testmodule.service;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Service;
 import android.content.Intent;
@@ -7,9 +9,7 @@ import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -19,11 +19,9 @@ import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.kondee.testmodule.R;
-import com.kondee.testmodule.utils.Utils;
-import com.kondee.testmodule.view.AssistiveTouchView;
+import com.kondee.testmodule.view.AssistiveTouch.AssistiveTouchView;
 
 /**
  * Created by Kondee on 7/18/2017.
@@ -143,12 +141,12 @@ public class OverlayShowingService extends Service {
 //                            assisistiveTouchView.setVisibility(View.GONE);
 //                            contentContainer.removeAllViews();
 
-                            assisistiveTouchView.animate().scaleX(0).scaleY(0).alpha(0.2f).setInterpolator(new AccelerateInterpolator()).start();
+//                            hideAssistiveTouchView();
 
                             /***Home Key Action***/
-//                            Intent intent = new Intent(Intent.ACTION_MAIN);
-//                            intent.addCategory(Intent.CATEGORY_HOME);
-//                            startActivity(intent);
+                            Intent intent = new Intent(Intent.ACTION_MAIN);
+                            intent.addCategory(Intent.CATEGORY_HOME);
+                            startActivity(intent);
                         } else {
 
                             windowManager.getDefaultDisplay().getSize(outSize);
@@ -182,6 +180,16 @@ public class OverlayShowingService extends Service {
         contentContainer.addView(assisistiveTouchView);
 
         windowManager.addView(contentContainer, layoutParams);
+    }
+
+    private void hideAssistiveTouchView() {
+        assisistiveTouchView.animate().scaleX(0).scaleY(0).alpha(0.2f).setInterpolator(new AccelerateInterpolator()).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                assisistiveTouchView.setVisibility(View.GONE);
+            }
+        }).start();
     }
 
     /***********

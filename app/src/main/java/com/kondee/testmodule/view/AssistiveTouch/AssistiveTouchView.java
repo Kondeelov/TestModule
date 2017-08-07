@@ -1,4 +1,4 @@
-package com.kondee.testmodule.view;
+package com.kondee.testmodule.view.AssistiveTouch;
 
 import android.annotation.TargetApi;
 import android.content.Context;
