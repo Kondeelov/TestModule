@@ -2,6 +2,8 @@ package com.kondee.testmodule.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Build;
 import android.support.annotation.Nullable;
@@ -18,7 +20,10 @@ import com.kondee.testmodule.utils.Utils;
 
 public class AssistiveTouchView extends View {
 
-//    private static final int SIZE = Utils.dp2px();
+    private final int SIZE = Utils.dp2px(getContext(), 48);
+    private final int RADIUS = (SIZE - Utils.dp2px(getContext(), 8)) / 2;
+    private Paint circlePaint = new Paint();
+    private int color;
 
     public AssistiveTouchView(Context context) {
         super(context);
@@ -46,12 +51,22 @@ public class AssistiveTouchView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int newWidthMeasureSpec = MeasureSpec.makeMeasureSpec(SIZE, MeasureSpec.EXACTLY);
+        int newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(SIZE, MeasureSpec.EXACTLY);
+        super.onMeasure(newWidthMeasureSpec, newHeightMeasureSpec);
 
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        setMeasuredDimension(SIZE, SIZE);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+        drawCircle(canvas);
     }
 
     private void init() {
-
+//        setBackgroundColor(Color.TRANSPARENT);
     }
 
     private void initWithAttrs(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -59,10 +74,18 @@ public class AssistiveTouchView extends View {
     }
 
     private void preparePaint() {
-        Paint circlePaint = new Paint();
         circlePaint.setAntiAlias(true);
         circlePaint.setDither(true);
-        circlePaint.setColor(ContextCompat.getColor(getContext(), R.color.colorWhite));
         circlePaint.setStyle(Paint.Style.FILL);
+        setColor(ContextCompat.getColor(getContext(), R.color.colorWhite));
+    }
+
+    private void drawCircle(Canvas canvas) {
+        canvas.drawCircle(getMeasuredWidth() / 2, getMeasuredHeight() / 2, RADIUS, circlePaint);
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+        circlePaint.setColor(color);
     }
 }

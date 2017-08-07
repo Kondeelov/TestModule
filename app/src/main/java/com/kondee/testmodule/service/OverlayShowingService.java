@@ -1,26 +1,29 @@
 package com.kondee.testmodule.service;
 
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.IBinder;
-import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.support.transition.TransitionManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
+import android.view.ViewConfiguration;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.utils.Utils;
+import com.kondee.testmodule.view.AssistiveTouchView;
 
 /**
  * Created by Kondee on 7/18/2017.
@@ -30,7 +33,12 @@ public class OverlayShowingService extends Service {
 
     private static final String TAG = "Kondee";
     private WindowManager windowManager;
-    private TextView textView;
+    private AssistiveTouchView assisistiveTouchView;
+    private GestureDetector gestureDetector;
+    private WindowManager.LayoutParams layoutParams;
+    private int jumpTapTimeout;
+    private ViewConfiguration viewConfiguration;
+    private FrameLayout contentContainer;
 
     @Nullable
     @Override
@@ -42,11 +50,18 @@ public class OverlayShowingService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        gestureDetector = new GestureDetector(this, simpleOnGestureListener);
+        viewConfiguration = ViewConfiguration.get(this);
+        jumpTapTimeout = ViewConfiguration.getJumpTapTimeout();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        initFloatingItem();
+        if (assisistiveTouchView == null) {
+            initFloatingItem();
+        } else {
+            stopSelf();
+        }
 
         return START_NOT_STICKY;
     }
@@ -54,22 +69,22 @@ public class OverlayShowingService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (textView != null) {
-            windowManager.removeView(textView);
-            textView = null;
+        if (assisistiveTouchView != null) {
+            windowManager.removeView(contentContainer);
+            contentContainer = null;
         }
     }
 
     private void initFloatingItem() {
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
-        textView = new TextView(this);
-        textView.setBackground(ContextCompat.getDrawable(this, R.drawable.shape_button_transparent_pressed));
-        textView.setText("Hola!");
-        textView.setPadding(Utils.dp2px(this, 4), Utils.dp2px(this, 4), Utils.dp2px(this, 4), Utils.dp2px(this, 4));
-        textView.setTextColor(ContextCompat.getColor(this, R.color.colorWhite));
+        assisistiveTouchView = new AssistiveTouchView(this);
+        assisistiveTouchView.setBackground(ContextCompat.getDrawable(this, R.drawable.shape_button_transparent_pressed));
+        assisistiveTouchView.setColor(ContextCompat.getColor(this, R.color.colorWhite));
 
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
+        contentContainer = new FrameLayout(this);
+
+        layoutParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_PRIORITY_PHONE,
@@ -79,20 +94,24 @@ public class OverlayShowingService extends Service {
 
         layoutParams.gravity = Gravity.START | Gravity.CENTER;
 
-        textView.setOnTouchListener(new View.OnTouchListener() {
+        assisistiveTouchView.setOnTouchListener(new View.OnTouchListener() {
 
+            private int action;
             private ValueAnimator translationX;
-            int initialX = 0;
-            int initialY = 0;
-            float initialTouchX = 0;
-            float initialTouchY = 0;
+            private int initialX;
+            private int initialY;
+            float initialTouchX;
+            float initialTouchY;
             Point outSize = new Point();
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
+                boolean a = false;
+//                boolean b = gestureDetector.onTouchEvent(event);
+
                 translationX = new ValueAnimator();
-                translationX.setDuration(450);
+                translationX.setDuration(350);
                 translationX.setInterpolator(new DecelerateInterpolator());
 
                 switch (event.getAction()) {
@@ -102,39 +121,105 @@ public class OverlayShowingService extends Service {
                         initialTouchX = event.getRawX();
                         initialTouchY = event.getRawY();
 
-                        return true;
+                        action = event.getAction();
+
+                        a = true;
+////                        return true;
+                        break;
                     case MotionEvent.ACTION_MOVE:
                         layoutParams.x = (int) (initialX + (event.getRawX() - initialTouchX));
                         layoutParams.y = (int) (initialY + (event.getRawY() - initialTouchY));
-                        windowManager.updateViewLayout(textView, layoutParams);
-                        return true;
+                        windowManager.updateViewLayout(contentContainer, layoutParams);
+
+                        action = event.getAction();
+
+                        a = true;
+//                        return true;
+                        break;
                     case MotionEvent.ACTION_UP:
+                        if (action == MotionEvent.ACTION_DOWN && (event.getEventTime() - event.getDownTime()) <= jumpTapTimeout) {
+//                            TransitionManager.beginDelayedTransition(contentContainer);
 
-                        windowManager.getDefaultDisplay().getSize(outSize);
+//                            assisistiveTouchView.setVisibility(View.GONE);
+//                            contentContainer.removeAllViews();
 
-                        if (layoutParams.x <= outSize.x / 2) {
-                            translationX.setFloatValues(layoutParams.x, 0);
+                            assisistiveTouchView.animate().scaleX(0).scaleY(0).alpha(0.2f).setInterpolator(new AccelerateInterpolator()).start();
 
+                            /***Home Key Action***/
+//                            Intent intent = new Intent(Intent.ACTION_MAIN);
+//                            intent.addCategory(Intent.CATEGORY_HOME);
+//                            startActivity(intent);
                         } else {
-                            translationX.setFloatValues(layoutParams.x, outSize.x);
+
+                            windowManager.getDefaultDisplay().getSize(outSize);
+
+                            if (layoutParams.x <= outSize.x / 2) {
+                                translationX.setFloatValues(layoutParams.x, 0);
+
+                            } else {
+                                translationX.setFloatValues(layoutParams.x, (outSize.x - contentContainer.getWidth()));
+                            }
+
+                            translationX.start();
+
+                            translationX.addUpdateListener(animation -> {
+                                float animatedValue = (float) animation.getAnimatedValue();
+                                layoutParams.x = (int) animatedValue;
+                                windowManager.updateViewLayout(contentContainer, layoutParams);
+                            });
                         }
 
-                        translationX.start();
-
-                        translationX.addUpdateListener(animation -> {
-                            float animatedValue = (float) animation.getAnimatedValue();
-                            layoutParams.x = (int) animatedValue;
-                            windowManager.updateViewLayout(textView, layoutParams);
-                        });
-
-                        return true;
+                        a = true;
+//                        return true;
+                        break;
                 }
-                return false;
+                return a;
             }
         });
 
 //        layoutParams.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL;
 
-        windowManager.addView(textView, layoutParams);
+        contentContainer.addView(assisistiveTouchView);
+
+        windowManager.addView(contentContainer, layoutParams);
     }
+
+    /***********
+     * Listener
+     ***********/
+
+    GestureDetector.SimpleOnGestureListener simpleOnGestureListener = new GestureDetector.SimpleOnGestureListener() {
+
+        int initialX;
+        int initialY;
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            initialX = layoutParams.x;
+            initialY = layoutParams.y;
+            return true;
+        }
+
+//        @Override
+//        public boolean onSingleTapUp(MotionEvent e) {
+//            Log.d(TAG, "onSingleTapUp: ");
+//            return true;
+//        }
+
+//        @Override
+//        public boolean onSingleTapConfirmed(MotionEvent e) {
+//            Log.d(TAG, "onSingleTapConfirmed: ");
+//            return true;
+//        }
+
+        @Override
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+//            float diffX = e2.getRawX() - e1.getRawX();
+//            float diffY = e2.getRawY() - e1.getRawY();
+//            layoutParams.x = (int) (initialX + diffX);
+//            layoutParams.y = (int) (initialY + diffY);
+//            windowManager.updateViewLayout(contentContainer, layoutParams);
+            return true;
+        }
+    };
 }
