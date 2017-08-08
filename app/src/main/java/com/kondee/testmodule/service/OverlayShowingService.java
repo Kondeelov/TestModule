@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.app.Service;
+import android.app.admin.DevicePolicyManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
@@ -12,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -37,6 +40,7 @@ public class OverlayShowingService extends Service {
     private int jumpTapTimeout;
     private ViewConfiguration viewConfiguration;
     private FrameLayout contentContainer;
+    private DevicePolicyManager mDPM;
 
     @Nullable
     @Override
@@ -51,6 +55,7 @@ public class OverlayShowingService extends Service {
         gestureDetector = new GestureDetector(this, simpleOnGestureListener);
         viewConfiguration = ViewConfiguration.get(this);
         jumpTapTimeout = ViewConfiguration.getJumpTapTimeout();
+        mDPM = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
     }
 
     @Override
@@ -144,9 +149,12 @@ public class OverlayShowingService extends Service {
 //                            hideAssistiveTouchView();
 
                             /***Home Key Action***/
-                            Intent intent = new Intent(Intent.ACTION_MAIN);
-                            intent.addCategory(Intent.CATEGORY_HOME);
-                            startActivity(intent);
+//                            Intent intent = new Intent(Intent.ACTION_MAIN);
+//                            intent.addCategory(Intent.CATEGORY_HOME);
+//                            startActivity(intent);
+
+                            mDPM.lockNow();
+
                         } else {
 
                             windowManager.getDefaultDisplay().getSize(outSize);

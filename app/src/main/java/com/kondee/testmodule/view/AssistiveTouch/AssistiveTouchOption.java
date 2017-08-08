@@ -3,19 +3,17 @@ package com.kondee.testmodule.view.AssistiveTouch;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v4.util.SparseArrayCompat;
 import android.util.AttributeSet;
-import android.util.SparseIntArray;
 import android.view.View;
 
 import com.kondee.testmodule.utils.Utils;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Kondee on 8/7/2017.
@@ -23,7 +21,8 @@ import java.util.List;
 
 public class AssistiveTouchOption extends View {
 
-    private SparseArrayCompat<Rect> rectSparseArrayCompat = new SparseArrayCompat<>(9);
+    private final Paint paint = new Paint();
+    private SparseArrayCompat<Rect> rectArray = new SparseArrayCompat<>(9);
     private final int SIZE = Utils.dp2px(getContext(), 224);
     private final int WIDTH = Utils.dp2px(getContext(), 224);
     private final int HEIGHT = Utils.dp2px(getContext(), 224);
@@ -62,6 +61,17 @@ public class AssistiveTouchOption extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        drawRect(canvas);
+    }
+
+    private void drawRect(Canvas canvas) {
+        for (int i = 0; i < rectArray.size(); i++) {
+            if (i % 2 == 0) {
+                Rect rect = rectArray.get(i);
+                RectF rectF = new RectF(rect);
+                canvas.drawRoundRect(rectF, Utils.dp2px(getContext(), 2), Utils.dp2px(getContext(), 2), paint);
+            }
+        }
     }
 
     private void init() {
@@ -70,6 +80,15 @@ public class AssistiveTouchOption extends View {
 
     private void initWithAttrs(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
 //        TODO : AssistiveTouchOption
+
+        preparePaint();
+    }
+
+    private void preparePaint() {
+        paint.setDither(true);
+        paint.setAntiAlias(true);
+        paint.setStyle(Paint.Style.FILL);
+        paint.setColor(Color.WHITE);
     }
 
     private void prepareRect() {
@@ -80,7 +99,7 @@ public class AssistiveTouchOption extends View {
                 startX = 0;
                 startY += HEIGHT;
             }
-            rectSparseArrayCompat.put(i, new Rect(startX, startY, startX + WIDTH, startY + HEIGHT));
+            rectArray.put(i, new Rect(startX, startY, startX + WIDTH, startY + HEIGHT));
             startX += WIDTH;
         }
     }
