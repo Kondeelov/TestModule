@@ -1,6 +1,9 @@
 package com.kondee.testmodule.fragment.activity_main;
 
 import android.app.Activity;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
@@ -30,11 +33,13 @@ import com.kondee.testmodule.CustomDatePickerDialog;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.activity.ExtraTestActivity;
 import com.kondee.testmodule.activity.MainActivity;
+import com.kondee.testmodule.broadcastreceiver.DeviceAdminBroadcastReceiver;
 import com.kondee.testmodule.databinding.CustomToastBinding;
 import com.kondee.testmodule.databinding.FragmentMainBinding;
 import com.kondee.testmodule.service.OverlayShowingService;
 import com.kondee.testmodule.textwatcher.NumberDecimalTextWatcher;
 
+import java.util.Arrays;
 import java.util.Calendar;
 
 import static android.app.Activity.RESULT_OK;
@@ -48,6 +53,7 @@ public class MainFragment extends Fragment {
     private static final int REQUEST_CODE = 12345;
     private static final java.lang.String CONFIG_TEST_CHANGE_LANGUAGE = "test_change_language";
     private static final int SHOW_OVERLAY_PERMISSION = 123;
+    private static final int REQUEST_CODE_ENABLE_ADMIN = 1234;
     FragmentMainBinding binding;
     private static final String[] COUNTRIES = new String[]{
             "Belgium", "France", "Italy", "Germany", "Spain", "Thailand"
@@ -68,6 +74,24 @@ public class MainFragment extends Fragment {
     }
 
     private void initInstance() {
+
+
+        Class<? extends MainFragment> aClass = getClass();
+        Log.d(TAG, "initInstance: name " + aClass.getName() + " " + aClass.getCanonicalName() + " " + aClass.getSimpleName());
+
+        Log.d(TAG, "initInstance: annotation " + Arrays.toString(aClass.getAnnotations()));
+
+        Log.d(TAG, "initInstance: declareField " + Arrays.toString(aClass.getDeclaredFields()));
+
+        Log.d(TAG, "initInstance: field " + Arrays.toString(aClass.getFields()));
+
+        Log.d(TAG, "initInstance: package " + aClass.getPackage().getName());
+
+        Log.d(TAG, "initInstance: methods " + Arrays.toString(aClass.getMethods()));
+
+        Log.d(TAG, "initInstance: superClass " + aClass.getSuperclass().getName());
+
+
         FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
         FirebaseRemoteConfigSettings remoteConfigSettings = new FirebaseRemoteConfigSettings.Builder()
                 .setDeveloperModeEnabled(true)
@@ -170,16 +194,7 @@ public class MainFragment extends Fragment {
                  * System Overlay
                  ******************/
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (!Settings.canDrawOverlays(getActivity())) {
-                        Intent intentSetting = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                        startActivityForResult(intentSetting, SHOW_OVERLAY_PERMISSION);
-                    } else {
-                        startOverlayService();
-                    }
-                } else {
-                    startOverlayService();
-                }
+                checkDeviceAdminActive();
             }
         });
 
@@ -270,9 +285,35 @@ public class MainFragment extends Fragment {
 //                });
     }
 
+    private void checkSystemOverlayPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!Settings.canDrawOverlays(getActivity())) {
+                Intent intentSetting = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
+                startActivityForResult(intentSetting, SHOW_OVERLAY_PERMISSION);
+            } else {
+                startOverlayService();
+            }
+        } else {
+            startOverlayService();
+        }
+    }
+
     private void startOverlayService() {
+
         Intent systemOverlay = new Intent(getActivity(), OverlayShowingService.class);
         getActivity().startService(systemOverlay);
+    }
+
+    private void checkDeviceAdminActive() {
+        DevicePolicyManager mDPM = (DevicePolicyManager) getActivity().getSystemService(Context.DEVICE_POLICY_SERVICE);
+
+        if (!mDPM.isAdminActive(new ComponentName(getActivity(), DeviceAdminBroadcastReceiver.class))) {
+            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, new ComponentName(getActivity(), DeviceAdminBroadcastReceiver.class));
+            startActivityForResult(intent, REQUEST_CODE_ENABLE_ADMIN);
+        } else {
+            checkSystemOverlayPermission();
+        }
     }
 
     private void updateViews(FirebaseRemoteConfig remoteConfig) {
@@ -307,8 +348,13 @@ public class MainFragment extends Fragment {
                 }
                 break;
             case SHOW_OVERLAY_PERMISSION:
-                if (requestCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     startOverlayService();
+                }
+                break;
+            case REQUEST_CODE_ENABLE_ADMIN:
+                if (resultCode == RESULT_OK) {
+                    checkDeviceAdminActive();
                 }
                 break;
         }

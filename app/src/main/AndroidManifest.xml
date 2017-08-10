@@ -91,7 +91,6 @@
             android:name=".activity.TestFiveActivity"
             android:screenOrientation="portrait" />
 
-
         <receiver
             android:name=".broadcastreceiver.SmsReceiver"
             android:permission="android.permission.BROADCAST_SMS">
@@ -109,6 +108,17 @@
             android:name="io.card.payment.CardIOActivity"
             android:configChanges="keyboardHidden|orientation" />
         <activity android:name="io.card.payment.DataEntryActivity" />
+
+        <receiver
+            android:name=".broadcastreceiver.DeviceAdminBroadcastReceiver"
+            android:permission="android.permission.BIND_DEVICE_ADMIN">
+            <meta-data
+                android:name="android.app.device_admin"
+                android:resource="@xml/device_admin" />
+            <intent-filter>
+                <action android:name="android.app.action.DEVICE_ADMIN_ENABLED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -3,10 +3,14 @@ package com.kondee.testmodule.service;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.app.Activity;
+import android.app.KeyguardManager;
 import android.app.Service;
 import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.os.IBinder;
@@ -24,6 +28,7 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 
 import com.kondee.testmodule.R;
+import com.kondee.testmodule.broadcastreceiver.DeviceAdminBroadcastReceiver;
 import com.kondee.testmodule.view.AssistiveTouch.AssistiveTouchView;
 
 /**
@@ -41,6 +46,7 @@ public class OverlayShowingService extends Service {
     private ViewConfiguration viewConfiguration;
     private FrameLayout contentContainer;
     private DevicePolicyManager mDPM;
+    private final DeviceAdminBroadcastReceiver deviceAdminBroadcastReceiver = new DeviceAdminBroadcastReceiver();
 
     @Nullable
     @Override
@@ -56,6 +62,13 @@ public class OverlayShowingService extends Service {
         viewConfiguration = ViewConfiguration.get(this);
         jumpTapTimeout = ViewConfiguration.getJumpTapTimeout();
         mDPM = (DevicePolicyManager) getSystemService(Context.DEVICE_POLICY_SERVICE);
+
+//        Intent intent = new Intent(this, DeviceAdminBroadcastReceiver.class);
+//        intent.setAction("android.app.action.DEVICE_ADMIN_ENABLED");
+//        sendBroadcast(intent);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.app.action.DEVICE_ADMIN_ENABLED");
+        registerReceiver(deviceAdminBroadcastReceiver, intentFilter);
     }
 
     @Override
@@ -76,6 +89,7 @@ public class OverlayShowingService extends Service {
             windowManager.removeView(contentContainer);
             contentContainer = null;
         }
+        unregisterReceiver(deviceAdminBroadcastReceiver);
     }
 
     private void initFloatingItem() {
@@ -130,6 +144,7 @@ public class OverlayShowingService extends Service {
 ////                        return true;
                         break;
                     case MotionEvent.ACTION_MOVE:
+//                        if (event.getEventTime() - event.getDownTime() >= jumpTapTimeout) {
                         layoutParams.x = (int) (initialX + (event.getRawX() - initialTouchX));
                         layoutParams.y = (int) (initialY + (event.getRawY() - initialTouchY));
                         windowManager.updateViewLayout(contentContainer, layoutParams);
@@ -137,6 +152,7 @@ public class OverlayShowingService extends Service {
                         action = event.getAction();
 
                         a = true;
+//                        }
 //                        return true;
                         break;
                     case MotionEvent.ACTION_UP:
@@ -153,7 +169,9 @@ public class OverlayShowingService extends Service {
 //                            intent.addCategory(Intent.CATEGORY_HOME);
 //                            startActivity(intent);
 
-                            mDPM.lockNow();
+                            /***Lock Screen - But it will require password all the time.***/
+//                            mDPM.lockNow();
+                            mDPM.setMaximumTimeToLock(new ComponentName(getBaseContext(), DeviceAdminBroadcastReceiver.class), 1000);
 
                         } else {
 
