@@ -32,12 +32,14 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import com.kondee.testmodule.CustomDatePickerDialog;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.activity.ExtraTestActivity;
+import com.kondee.testmodule.activity.ImageDetailActivity;
 import com.kondee.testmodule.activity.MainActivity;
 import com.kondee.testmodule.broadcastreceiver.DeviceAdminBroadcastReceiver;
 import com.kondee.testmodule.databinding.CustomToastBinding;
 import com.kondee.testmodule.databinding.FragmentMainBinding;
 import com.kondee.testmodule.service.OverlayShowingService;
 import com.kondee.testmodule.textwatcher.NumberDecimalTextWatcher;
+import com.kondee.testmodule.view.CardExpireDateSpinnerHelper;
 
 import java.util.Arrays;
 import java.util.Calendar;
@@ -76,20 +78,20 @@ public class MainFragment extends Fragment {
     private void initInstance() {
 
 
-        Class<? extends MainFragment> aClass = getClass();
-        Log.d(TAG, "initInstance: name " + aClass.getName() + " " + aClass.getCanonicalName() + " " + aClass.getSimpleName());
-
-        Log.d(TAG, "initInstance: annotation " + Arrays.toString(aClass.getAnnotations()));
-
-        Log.d(TAG, "initInstance: declareField " + Arrays.toString(aClass.getDeclaredFields()));
-
-        Log.d(TAG, "initInstance: field " + Arrays.toString(aClass.getFields()));
-
-        Log.d(TAG, "initInstance: package " + aClass.getPackage().getName());
-
-        Log.d(TAG, "initInstance: methods " + Arrays.toString(aClass.getMethods()));
-
-        Log.d(TAG, "initInstance: superClass " + aClass.getSuperclass().getName());
+//        Class<? extends MainFragment> aClass = getClass();
+//        Log.d(TAG, "initInstance: name " + aClass.getName() + " " + aClass.getCanonicalName() + " " + aClass.getSimpleName());
+//
+//        Log.d(TAG, "initInstance: annotation " + Arrays.toString(aClass.getAnnotations()));
+//
+//        Log.d(TAG, "initInstance: declareField " + Arrays.toString(aClass.getDeclaredFields()));
+//
+//        Log.d(TAG, "initInstance: field " + Arrays.toString(aClass.getFields()));
+//
+//        Log.d(TAG, "initInstance: package " + aClass.getPackage().getName());
+//
+//        Log.d(TAG, "initInstance: methods " + Arrays.toString(aClass.getMethods()));
+//
+//        Log.d(TAG, "initInstance: superClass " + aClass.getSuperclass().getName());
 
 
         FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.getInstance();
@@ -194,7 +196,18 @@ public class MainFragment extends Fragment {
                  * System Overlay
                  ******************/
 
-                checkDeviceAdminActive();
+//                checkDeviceAdminActive();
+
+
+//                Intent intent = new Intent(getActivity(), ImageDetailActivity.class);
+//                startActivity(intent);
+
+                CardExpireDateSpinnerHelper alert = new CardExpireDateSpinnerHelper(getContext(), new CardExpireDateSpinnerHelper.onDateSetListener() {
+                    @Override
+                    public void onDateSet(int year, int month) {
+
+                    }
+                }, Calendar.getInstance().get(Calendar.YEAR), Calendar.getInstance().get(Calendar.MONTH));
             }
         });
 

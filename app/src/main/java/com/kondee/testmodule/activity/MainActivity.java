@@ -5,14 +5,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.PowerManager;
-import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -20,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
@@ -28,13 +26,17 @@ import com.google.firebase.FirebaseApp;
 import com.kondee.testmodule.adapter.MainFragmentPagerAdapter;
 import com.kondee.testmodule.R;
 import com.kondee.testmodule.databinding.ActivityMainBinding;
-import com.kondee.testmodule.fragment.activity_main.SecondFragment;
 import com.kondee.testmodule.utils.Utils;
 
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
-import io.card.payment.CardIOActivity;
-import io.card.payment.CreditCard;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.internal.operators.observable.ObservableDebounceTimed;
+import io.reactivex.schedulers.Schedulers;
+import io.reactivex.subjects.BehaviorSubject;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import static com.kondee.testmodule.R.id.navItem1;
@@ -54,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
     private static String TAG = "Kondee";
     ActionBarDrawerToggle drawerToggle;
     Class<?> intentClass;
+    CompositeDisposable compositeDisposable;
+    private ObservableDebounceTimed<Object> objectObservableDebounceTimed;
+    private Observable<Long> timer = Observable.timer(10, TimeUnit.SECONDS);
+    private Observable<Boolean> just = Observable.just(true);
+    //    Observable<> behaviorSubject = PublishSubject.create();
+    BehaviorSubject<Boolean> behaviorSubject = BehaviorSubject.create();
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -69,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         FirebaseApp firebaseApp = FirebaseApp.initializeApp(this);
+
+        compositeDisposable = new CompositeDisposable();
 
         initInstance();
     }
@@ -90,7 +100,44 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (compositeDisposable != null) {
+            compositeDisposable.clear();
+        }
+    }
+
     private void initInstance() {
+
+//
+//        compositeDisposable.add(
+//
+//        );
+
+//        just.subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(aLong -> {
+//                    Log.d(TAG, "initInstance: Time out!");
+//                });
+//
+//        Observable.merge(just, behaviorSubject)
+//                .debounce(10, TimeUnit.SECONDS)
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(serializable -> {
+//                    Log.d(TAG, "initInstance: Completed!");
+//                });
+
+
+        behaviorSubject.debounce(10, TimeUnit.SECONDS)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aBoolean -> {
+
+                });
+
+        behaviorSubject.onNext(true);
 
 //        Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 //        vibrator.vibrate(new long[]{1000, 200, 1000, 200, 1000}, 0);
@@ -269,5 +316,14 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             overridePendingTransition(R.anim.anim_fade_in, R.anim.anim_fade_out);
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+
+            behaviorSubject.onNext(true);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

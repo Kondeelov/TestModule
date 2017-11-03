@@ -66,4 +66,8 @@
     <style name="AlertDialogBlurredBackground" parent="@android:style/Theme.Holo.Light.Dialog.NoActionBar">
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
+
+    <style name="CardExpirePicker" parent="Theme.AppCompat.Light.NoActionBar">
+
+    </style>
 </resources>

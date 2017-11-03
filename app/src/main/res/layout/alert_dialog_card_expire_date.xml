@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/colorWhite"
+        android:gravity="center"
+        android:maxWidth="144dp"
+        android:orientation="horizontal">
+
+        <NumberPicker
+            android:id="@+id/month"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/dimen_normal"
+            android:theme="@style/CardExpirePicker" />
+
+        <NumberPicker
+            android:id="@+id/year"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:theme="@style/CardExpirePicker" />
+    </LinearLayout>
+</layout>
