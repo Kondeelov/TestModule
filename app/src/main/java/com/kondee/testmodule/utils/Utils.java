@@ -10,8 +10,10 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.provider.Settings;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -126,5 +128,18 @@ public class Utils {
         Bitmap bitmap = Bitmap.createBitmap(b, 0, statusBarHeight, width, height - statusBarHeight);
         v.destroyDrawingCache();
         return bitmap;
+    }
+
+    @SuppressWarnings("MissingPermission")
+    public static String getDeviceID(Context context) {
+        String result = "";
+        TelephonyManager telephonyManager = (TelephonyManager)context.getSystemService("phone");
+        if(telephonyManager.getDeviceId() != null && !telephonyManager.getDeviceId().equals("")) {
+            result = telephonyManager.getDeviceId();
+        } else {
+            result = Settings.Secure.getString(context.getContentResolver(), "android_id");
+        }
+
+        return result;
     }
 }

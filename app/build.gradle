@@ -3,6 +3,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'TestModule'
+            keyPassword 'Kondee14022537'
+            storeFile file('D:/Android/TestModule/app/keystore.jks')
+            storePassword 'Kondee14022537'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion '26.0.2'
     defaultConfig {
@@ -22,6 +30,7 @@ android {
     }
     buildTypes {
         release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

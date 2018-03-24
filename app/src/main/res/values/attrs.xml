@@ -49,6 +49,10 @@
         <attr name="values" format="reference" />
         <attr name="primaryColor" format="color" />
         <attr name="secondaryColor" format="color" />
+        <attr name="selectedTextColor" format="color" />
+        <attr name="unselectedTextColor" format="color" />
+        <attr name="backgroundColor" format="color" />
+        <attr name="backgroundRadius" format="dimension" />
     </declare-styleable>
 
 </resources>

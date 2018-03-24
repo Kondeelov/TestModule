@@ -80,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
 
         compositeDisposable = new CompositeDisposable();
 
+//        Log.d(TAG, "onCreate: "+Utils.getDeviceID(this));
+
         initInstance();
     }
 

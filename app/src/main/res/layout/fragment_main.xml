@@ -95,6 +95,10 @@
             android:orientation="horizontal"
             app:primaryColor="@color/colorGreen"
             app:secondaryColor="@color/colorWhite"
+            app:selectedTextColor="@color/colorWhite"
+            app:unselectedTextColor="@color/colorGrayLight"
+            app:backgroundColor="@color/colorGrayLight"
+            app:backgroundRadius="4dp"
             app:values="@array/item_for_multiple_toggle_button" />
 
         <com.kondee.testmodule.view.CircularImageView

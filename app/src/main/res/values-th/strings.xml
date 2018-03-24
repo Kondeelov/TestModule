@@ -1,12 +1,100 @@
 <resources>
-    <string name="app_name">เทสต์มอดจูลส์</string>
-    <string name="select_language">เลือกภาษา</string>
-    <string name="go">ไป!</string>
-    <string name="test_change_language">ทดสอบการเปลี่ยนภาษา</string>
-    <string name="test_module_page_no_2">เทสต์มอจูลส์sน้า 2</string>
-    <string name="fragment_page_no_2">เฟรกเมนต์หน้า 2</string>
-    <string name="scan">แสกน</string>
-    <string name="label_one">หนึ่ง</string>
-    <string name="label_two">สอง</string>
-    <string name="text_click_me">คลิกฉัน</string>
+    <string name="app_name">TestModule</string>
+    <string name="select_language">Select Language</string>
+    <string name="go">Go!</string>
+    <string name="test_change_language">Test Change Language</string>
+    <string name="test_module_page_no_2">Test Module Page No.2</string>
+    <string name="fragment_page_no_2">Fragment Page No.2</string>
+    <string name="scan">Scan</string>
+    <string name="label_one">ONE</string>
+    <string name="label_two">TWO</string>
+    <string name="drawer_opened">Drawer Opened</string>
+    <string name="drawer_closed">Drawer Closed</string>
+    <string name="string_bottom_sheet_behavior">android.support.design.widget.BottomSheetBehavior</string>
+    <string name="text_pull_to_show_more">Pull to show more</string>
+    <string name="text_more_contet_to_user">more contet to user</string>
+    <string name="text_click_me">Click Me</string>
+    <string name="label_series">Series</string>
+    <string name="label_set">Set</string>
+    <string name="label_3_40">3/40</string>
+    <string name="label_amount">Amount</string>
+    <string name="result_3_40">Result 3/40</string>
+    <string name="label_ok">OK</string>
+    <string name="label_random">Random</string>
+    <string name="label_name">Name</string>
+    <string name="label_lak">LAK</string>
+    <string name="label_purchase">Purchase</string>
+    <string name="label_cancel">Cancel</string>
+
+    <string-array name="language_item">
+        <item>English</item>
+        <item>ภาษาไทย</item>
+    </string-array>
+
+    <string-array name="item_for_multiple_toggle_button">
+        <item>Citizen ID</item>
+        <item>Citizen ID (Old)</item>
+        <item>Passport No.</item>
+    </string-array>
+
+    <integer-array name="AnimalNumber">
+        <item>@drawable/source_animal_1</item>
+        <item>@drawable/source_animal_2</item>
+        <item>@drawable/source_animal_3</item>
+        <item>@drawable/source_animal_4</item>
+        <item>@drawable/source_animal_5</item>
+        <item>@drawable/source_animal_6</item>
+        <item>@drawable/source_animal_7</item>
+        <item>@drawable/source_animal_8</item>
+        <item>@drawable/source_animal_9</item>
+        <item>@drawable/source_animal_10</item>
+        <item>@drawable/source_animal_11</item>
+        <item>@drawable/source_animal_12</item>
+        <item>@drawable/source_animal_13</item>
+        <item>@drawable/source_animal_14</item>
+        <item>@drawable/source_animal_15</item>
+        <item>@drawable/source_animal_16</item>
+        <item>@drawable/source_animal_17</item>
+        <item>@drawable/source_animal_18</item>
+        <item>@drawable/source_animal_19</item>
+        <item>@drawable/source_animal_20</item>
+        <item>@drawable/source_animal_21</item>
+        <item>@drawable/source_animal_22</item>
+        <item>@drawable/source_animal_23</item>
+        <item>@drawable/source_animal_24</item>
+        <item>@drawable/source_animal_25</item>
+        <item>@drawable/source_animal_26</item>
+        <item>@drawable/source_animal_27</item>
+        <item>@drawable/source_animal_28</item>
+        <item>@drawable/source_animal_29</item>
+        <item>@drawable/source_animal_30</item>
+        <item>@drawable/source_animal_31</item>
+        <item>@drawable/source_animal_32</item>
+        <item>@drawable/source_animal_33</item>
+        <item>@drawable/source_animal_34</item>
+        <item>@drawable/source_animal_35</item>
+        <item>@drawable/source_animal_36</item>
+        <item>@drawable/source_animal_37</item>
+        <item>@drawable/source_animal_38</item>
+        <item>@drawable/source_animal_39</item>
+        <item>@drawable/source_animal_40</item>
+    </integer-array>
+
+
+    <string-array name="list_of_countries">
+        <item>a</item>
+        <item>and</item>
+        <item>a12</item>
+        <item>b</item>
+        <item>c</item>
+        <item>d</item>
+        <item>e</item>
+        <item>f</item>
+        <item>g</item>
+        <item>h</item>
+        <item>i</item>
+        <item>j</item>
+        <item>k</item>
+        <item>l</item>
+    </string-array>
 </resources>
